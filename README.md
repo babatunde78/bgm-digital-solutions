@@ -69,3 +69,37 @@ Use your payment platform dashboard for product-file access, orders, refunds, co
 
 ## Security
 Never put payment secret keys, API keys, passwords, private download URLs, or customer data into `products.js`, HTML, GitHub, or other public frontend files.
+
+## Paystack secure payment upgrade
+
+This version includes Vercel serverless endpoints:
+- `POST /api/initialize-payment` — initializes payment from the server.
+- `GET /api/verify-payment?reference=...` — verifies status, currency and authoritative server-side amount.
+- `POST /api/paystack-webhook` — validates Paystack's HMAC-SHA512 signature before processing successful charges.
+
+### 1. Configure Vercel environment variables
+In Vercel: Project → Settings → Environment Variables.
+Add:
+- `PAYSTACK_SECRET_KEY` = your Paystack TEST secret key first (`sk_test_...`). Never commit this value to GitHub.
+- `SITE_URL` = `https://bgm-digital-solutions.vercel.app`
+Apply them to Production (and Preview if you want branch testing), then redeploy.
+
+### 2. Configure products and prices
+Edit `api/_products.js`. Amounts are in kobo: NGN 5,000 = `500000`. Set a real amount and `enabled: true` only when the product is ready.
+Edit the matching item in `products.js`: set its display price and `paymentEnabled:true`.
+The browser's displayed price is not trusted for charging; the backend catalogue is authoritative.
+
+### 3. Paystack dashboard
+While testing, remain in Paystack Test Mode. In API Keys & Webhooks set the webhook URL to:
+`https://bgm-digital-solutions.vercel.app/api/paystack-webhook`
+The callback URL is supplied programmatically as:
+`https://bgm-digital-solutions.vercel.app/payment-success.html`
+
+### 4. Test before going live
+Use Paystack test keys/test payment methods. Confirm successful, failed and abandoned flows. Confirm that a modified browser price cannot change the server-side amount. Confirm the callback verifies the reference. Check Vercel function logs for webhook requests.
+
+### 5. Digital delivery
+The code deliberately does NOT expose permanent product download links. Before selling downloadable files, add durable storage/database + idempotent fulfillment (a unique transaction reference) and send an expiring/signed download link or use a fulfillment provider. This prevents duplicate fulfillment and casual sharing of private file URLs.
+
+### 6. Live launch
+Only after tests pass, replace the Vercel `PAYSTACK_SECRET_KEY` with your LIVE secret key, redeploy, and make a small real transaction. Do not place either test or live secret keys in GitHub, HTML, `products.js`, screenshots, chat messages, or public documentation.
