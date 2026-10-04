@@ -7,5 +7,64 @@ function render(){let q=search.value.toLowerCase().trim(),cat=category.value;let
 function details(id){let p=PRODUCTS.find(x=>x.id===id);content.innerHTML=`<span class="tag">${esc(p.category)}</span><h2>${esc(p.name)}</h2><p>${esc(p.description)}</p><h3>What's included</h3><ul>${p.features.map(f=>`<li>${esc(f)}</li>`).join('')}</ul><div class="price">${esc(p.price)}</div>${p.status==='service'&&p.checkoutUrl?`<a class="btn primary" href="${esc(p.checkoutUrl)}">Send enquiry</a>`:p.paymentEnabled?`<button class="btn primary" onclick="startPayment('${esc(p.id)}')">Proceed to secure checkout</button>`:`<p class="notice">Secure delivery is being configured for this product. Checkout will activate after its private buyer files are uploaded and tested.</p>`}`;modal.hidden=false;document.body.style.overflow='hidden'}
 window.details=details;document.querySelector('#close').onclick=close;modal.onclick=e=>{if(e.target===modal)close()};function close(){modal.hidden=true;document.body.style.overflow=''}search.oninput=render;category.onchange=render;render();
 
-async function startPayment(productId){const email=prompt('Enter the email address for your receipt and secure product delivery:');if(!email)return;const choice=prompt('Choose payment currency: NGN or USD','NGN');if(!choice)return;const currency=choice.trim().toUpperCase();if(!['NGN','USD'].includes(currency)){alert('Please enter NGN or USD.');return;}try{const r=await fetch('/api/initialize-payment',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,productId,currency})});const d=await r.json();if(!r.ok)throw new Error(d.error||'Unable to start payment.');location.href=d.authorization_url;}catch(e){alert(e.message)}}
-window.startPayment=startPayment;
+async function startPayment(productId) {
+    const email = prompt(
+        'Enter the email address for your receipt and secure product delivery:'
+    );
+
+    if (!email) return;
+
+    const choice = prompt(
+        'Choose payment currency: NGN or USD',
+        'NGN'
+    );
+
+    if (!choice) return;
+
+    const currency = choice.trim().toUpperCase();
+
+    if (!['NGN', 'USD'].includes(currency)) {
+        alert('Please enter NGN or USD.');
+        return;
+    }
+
+    try {
+        const r = await fetch('/api/initialize-payment', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email,
+                productId,
+                currency
+            })
+        });
+
+        const d = await r.json();
+
+        if (!r.ok) {
+            throw new Error(
+                d.error || 'Unable to start payment.'
+            );
+        }
+
+        if (!d.authorization_url) {
+            throw new Error(
+                'Paystack checkout URL was not returned by the server.'
+            );
+        }
+
+        alert(
+            'Payment initialized successfully. Click OK to continue to Paystack.'
+        );
+
+        window.location.assign(d.authorization_url);
+
+    } catch (e) {
+        console.error('Payment initialization error:', e);
+        alert('Payment error: ' + e.message);
+    }
+}
+
+window.startPayment = startPayment;
