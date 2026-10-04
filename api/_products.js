@@ -16,12 +16,12 @@ module.exports = {
   blobPathnames: ["PREMIUM_Buyer_Package.zip"]
 },
   "remote-job-2026-2027": {
-    name: "How to Get a Remote Job: 2026/2027 Edition",
-    amounts: { NGN: 1000000, USD: 1200 },
-    enabled: false,
-    deliveryReady: false,
-    blobPathnames: []
-  },
+  name: "How to Get a Remote Job: 2026/2027 Edition",
+  amounts: { NGN: 1000000, USD: 1200 },
+  enabled: true,
+  deliveryReady: true,
+  blobPathnames: ["remote-job-2026-2027-buyer-package.zip"]
+},
   "scholarships-abroad": {
     name: "How to Win Scholarships Abroad",
     amounts: { NGN: 1200000, USD: 1500 },
