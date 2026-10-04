@@ -168,49 +168,106 @@ search.oninput = render;
 category.onchange = render;
 
 
-/* -------------------------------------------------------
-   SECURE PAYSTACK CHECKOUT
-------------------------------------------------------- */
+// -------------------------------------------------------
+// Secure checkout modal
+// -------------------------------------------------------
 
-async function startPayment(productId) {
-    const email = prompt(
-        'Enter the email address for your receipt and secure product delivery:'
-    );
+const checkoutModal = document.querySelector('#checkout-modal');
+const checkoutForm = document.querySelector('#checkout-form');
+const checkoutClose = document.querySelector('#checkout-close');
+const checkoutEmail = document.querySelector('#checkout-email');
+const checkoutCurrency = document.querySelector('#checkout-currency');
+const checkoutProductName = document.querySelector('#checkout-product-name');
+const checkoutError = document.querySelector('#checkout-error');
+const checkoutSubmit = document.querySelector('#checkout-submit');
 
-    if (!email) return;
+let selectedProductId = null;
 
-    const cleanEmail = email.trim();
+function startPayment(productId) {
+    const product = PRODUCTS.find(p => p.id === productId);
 
-    if (!cleanEmail || !cleanEmail.includes('@')) {
-        alert('Please enter a valid email address.');
+    if (!product) {
+        alert('Product information could not be found.');
         return;
     }
 
-    const choice = prompt(
-        'Choose payment currency: NGN or USD',
-        'NGN'
-    );
+    selectedProductId = productId;
 
-    if (!choice) return;
+    checkoutProductName.textContent =
+        `${product.name} — ${product.price}`;
 
-    const currency = choice.trim().toUpperCase();
+    checkoutEmail.value = '';
+    checkoutCurrency.value = 'NGN';
+
+    checkoutError.hidden = true;
+    checkoutError.textContent = '';
+
+    checkoutSubmit.disabled = false;
+    checkoutSubmit.textContent = 'Continue to secure payment';
+
+    checkoutModal.hidden = false;
+    document.body.style.overflow = 'hidden';
+
+    setTimeout(() => checkoutEmail.focus(), 50);
+}
+
+function closeCheckout() {
+    checkoutModal.hidden = true;
+    document.body.style.overflow = '';
+    selectedProductId = null;
+}
+
+checkoutClose.addEventListener('click', closeCheckout);
+
+checkoutModal.addEventListener('click', function (event) {
+    if (event.target === checkoutModal) {
+        closeCheckout();
+    }
+});
+
+checkoutForm.addEventListener('submit', async function (event) {
+    event.preventDefault();
+
+    const email = checkoutEmail.value.trim();
+    const currency = checkoutCurrency.value;
+
+    checkoutError.hidden = true;
+    checkoutError.textContent = '';
+
+    if (!selectedProductId) {
+        checkoutError.textContent =
+            'No product has been selected. Please close this window and try again.';
+        checkoutError.hidden = false;
+        return;
+    }
+
+    if (!email || !checkoutEmail.checkValidity()) {
+        checkoutError.textContent =
+            'Please enter a valid email address.';
+        checkoutError.hidden = false;
+        checkoutEmail.focus();
+        return;
+    }
 
     if (!['NGN', 'USD'].includes(currency)) {
-        alert('Please enter NGN or USD.');
+        checkoutError.textContent =
+            'Please select a valid payment currency.';
+        checkoutError.hidden = false;
         return;
     }
+
+    checkoutSubmit.disabled = true;
+    checkoutSubmit.textContent = 'Opening secure payment…';
 
     try {
         const response = await fetch('/api/initialize-payment', {
             method: 'POST',
-
             headers: {
                 'Content-Type': 'application/json'
             },
-
             body: JSON.stringify({
-                email: cleanEmail,
-                productId: productId,
+                email: email,
+                productId: selectedProductId,
                 currency: currency
             })
         });
@@ -219,7 +276,7 @@ async function startPayment(productId) {
 
         if (!response.ok) {
             throw new Error(
-                data.error || 'Unable to start payment.'
+                data.error || 'Unable to initialize payment.'
             );
         }
 
@@ -229,30 +286,30 @@ async function startPayment(productId) {
             );
         }
 
-        console.log(
-            'Redirecting to Paystack:',
-            data.authorization_url
-        );
-
+        // This exact redirect method has already been verified
+        // successfully with the Paystack initialization endpoint.
         window.location.href = data.authorization_url;
 
     } catch (error) {
-        console.error(
-            'Payment initialization error:',
-            error
-        );
+        console.error('Payment initialization error:', error);
 
-        alert(
-            'We could not open the secure payment page. Please try again.'
-        );
+        checkoutError.textContent =
+            'We could not open the secure payment page. Please try again.';
+
+        checkoutError.hidden = false;
+
+        checkoutSubmit.disabled = false;
+        checkoutSubmit.textContent = 'Continue to secure payment';
     }
-}
+});
 
 window.startPayment = startPayment;
-
 
 /* -------------------------------------------------------
    INITIAL PRODUCT RENDER
 ------------------------------------------------------- */
 
 render();
+
+
+

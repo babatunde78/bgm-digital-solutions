@@ -7,5 +7,69 @@
 <section id="faq" class="faq"><div class="heading"><span class="eyebrow">FAQ</span><h2>Buying & support</h2></div><details><summary>How do I receive a digital product?</summary><p>Click Buy Now and complete checkout with the listed payment provider. Product access or delivery is handled according to that product's checkout page.</p></details><details><summary>Which payment methods are available?</summary><p>Available methods depend on the checkout provider, currency and buyer location. The secure checkout page will show the methods available to you.</p></details><details><summary>Can I request a customized version?</summary><p>Yes. Use the contact section and describe the workflow, organization, desired output and any existing files or templates.</p></details><details><summary>Do you offer refunds?</summary><p>Refund eligibility depends on the nature of the product and the policy displayed at checkout. Review the product description and checkout terms before purchasing.</p></details></section>
 <section id="contact" class="contact"><div><span class="eyebrow">CONTACT</span><h2>Need a custom solution?</h2><p>Tell us what you are trying to automate or improve.</p></div><div><a class="btn primary" href="mailto:badmurs0@gmail.com?subject=BGM%20Digital%20Solutions%20Enquiry">Email badmurs0@gmail.com</a><p class="small">For product support, include the product name and the email address used at checkout. Never send card details or passwords by email.</p></div></section></main>
 <footer><div><strong>BGM Digital Solutions</strong><p>Smart Automation. Better Business.</p></div><div><a href="mailto:badmurs0@gmail.com">Email</a> · <a href="https://github.com/babatunde78" target="_blank" rel="noopener">GitHub</a> · <a href="https://www.linkedin.com/in/babatunde-gbadamosi-b3aab0153/" target="_blank" rel="noopener">LinkedIn</a></div><p>© <span id="year"></span> BGM Digital Solutions. All rights reserved.</p></footer>
-<div id="modal" class="modal" hidden><div class="modal-card"><button id="close" aria-label="Close">×</button><div id="modal-content"></div></div></div>
-<script src="products.js"></script><script src="app.js"></script></body></html>
+<div id="modal" class="modal" hidden>
+    <div class="modal-card">
+        <button id="close" aria-label="Close">×</button>
+        <div id="modal-content"></div>
+    </div>
+</div>
+
+<!-- Secure checkout modal -->
+<div id="checkout-modal" class="modal" hidden>
+    <div class="modal-card">
+        <button id="checkout-close" type="button" aria-label="Close">×</button>
+
+        <span class="eyebrow">SECURE CHECKOUT</span>
+        <h2>Complete your purchase</h2>
+
+        <p id="checkout-product-name"></p>
+
+        <form id="checkout-form">
+            <label for="checkout-email">
+                Email address
+            </label>
+
+            <input
+                id="checkout-email"
+                type="email"
+                autocomplete="email"
+                placeholder="you@example.com"
+                required
+            >
+
+            <label for="checkout-currency">
+                Payment currency
+            </label>
+
+            <select id="checkout-currency" required>
+                <option value="NGN">NGN — Nigerian Naira</option>
+                <option value="USD">USD — US Dollar</option>
+            </select>
+
+            <p class="small">
+                Your email is used for payment verification and secure
+                digital-product access.
+            </p>
+
+            <button
+                id="checkout-submit"
+                class="btn primary"
+                type="submit"
+            >
+                Continue to secure payment
+            </button>
+
+            <p
+                id="checkout-error"
+                class="notice"
+                hidden
+            ></p>
+        </form>
+    </div>
+</div>
+
+<script src="products.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
+
