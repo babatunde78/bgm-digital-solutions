@@ -25,6 +25,9 @@ module.exports = async function handler(req, res) {
     res.setHeader('Cache-Control','private, no-store');
     Readable.fromWeb(result.stream).pipe(res);
   } catch(e) {
-    res.status(500).end('Secure download is temporarily unavailable.');
-  }
+  console.error('SECURE DOWNLOAD ERROR:', e);
+  res.status(500).end('Secure download is temporarily unavailable.');
+}
 };
+
+
