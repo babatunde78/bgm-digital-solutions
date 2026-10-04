@@ -14,10 +14,19 @@ module.exports = async function handler(req, res) {
     let metadata = d.metadata || {};
     if (typeof metadata === 'string') { try { metadata = JSON.parse(metadata); } catch {} }
     const product = PRODUCTS[metadata.product_id];
-    if (product && d.status === 'success' && d.amount === product.amount && d.currency === product.currency) {
+    const expectedAmount = product?.amounts?.[d.currency];
+
+if (
+  product &&
+  d.status === 'success' &&
+  Number.isInteger(expectedAmount) &&
+  d.amount === expectedAmount
+) {
       // PRODUCTION TODO: write reference to a database with a UNIQUE constraint, then fulfill once.
       // Never expose a permanent private download URL here.
     }
   }
   return res.status(200).json({received:true});
 }
+
+

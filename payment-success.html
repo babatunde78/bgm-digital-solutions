@@ -1,6 +1,178 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Your purchase | BGM Digital Solutions</title><link rel="stylesheet" href="styles.css"></head><body><main class="section"><div class="container"><div class="card"><div class="card-body"><span class="eyebrow">SECURE DELIVERY</span><h1 id="title">Verifying your payment</h1><p id="message">Please wait while BGM securely confirms the transaction with Paystack.</p><div id="download" hidden><p><a id="download-link" class="btn primary" href="#">Download your buyer package</a></p><p class="small">This secure link expires in 10 minutes. If it expires, reload this confirmation page to verify the transaction again and receive a fresh link.</p></div><p id="reference" class="small"></p><p><a class="btn" href="/">Return to store</a></p></div></div></div></main><script>
-const p=new URLSearchParams(location.search),r=p.get('reference')||p.get('trxref');
-const m=document.getElementById('message'),t=document.getElementById('title'),box=document.getElementById('download'),link=document.getElementById('download-link'),ref=document.getElementById('reference');
-if(!r){t.textContent='Transaction reference missing';m.textContent='No transaction reference was supplied. Please contact support if you completed payment.'}
-else{ref.textContent='Transaction reference: '+r;fetch('/api/verify-payment?reference='+encodeURIComponent(r)).then(async x=>({ok:x.ok,data:await x.json()})).then(({ok,data})=>{if(ok&&data.verified){t.textContent='Your purchase is ready';m.textContent='Payment confirmed for '+data.product.name+'. Use the secure button below to download your buyer package.';link.href=data.downloadUrl;box.hidden=false;}else{t.textContent='Payment not verified';m.textContent=data.error||'Payment has not been verified.';}}).catch(()=>{t.textContent='Verification unavailable';m.textContent='We could not verify the payment right now. Please contact support with your transaction reference.';});}
-</script></body></html>
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Your purchase | BGM Digital Solutions</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+<main class="section">
+<div class="container">
+<div class="card">
+<div class="card-body">
+
+<span class="eyebrow">SECURE DELIVERY</span>
+
+<h1 id="title">Verifying your payment</h1>
+
+<p id="message">
+Please wait while BGM securely confirms the transaction with Paystack.
+</p>
+
+<div id="downloads" hidden>
+    <div id="download-list"></div>
+
+    <p class="small">
+        These secure download links expire in 10 minutes.
+        If they expire, reload this confirmation page to verify
+        the transaction again and receive fresh links.
+    </p>
+</div>
+
+<p id="reference" class="small"></p>
+
+<p>
+<a class="btn" href="/">Return to store</a>
+</p>
+
+</div>
+</div>
+</div>
+</main>
+
+<script>
+
+const params = new URLSearchParams(location.search);
+
+const reference =
+    params.get('reference') ||
+    params.get('trxref');
+
+const message =
+    document.getElementById('message');
+
+const title =
+    document.getElementById('title');
+
+const downloadsBox =
+    document.getElementById('downloads');
+
+const downloadList =
+    document.getElementById('download-list');
+
+const referenceBox =
+    document.getElementById('reference');
+
+
+if (!reference) {
+
+    title.textContent =
+        'Transaction reference missing';
+
+    message.textContent =
+        'No transaction reference was supplied. Please contact support if you completed payment.';
+
+} else {
+
+    referenceBox.textContent =
+        'Transaction reference: ' + reference;
+
+    fetch(
+        '/api/verify-payment?reference=' +
+        encodeURIComponent(reference)
+    )
+
+    .then(async response => ({
+        ok: response.ok,
+        data: await response.json()
+    }))
+
+    .then(({ ok, data }) => {
+
+        if (ok && data.verified) {
+
+            title.textContent =
+                'Your purchase is ready';
+
+            const downloads =
+                Array.isArray(data.downloads)
+                    ? data.downloads
+                    : [];
+
+            if (!downloads.length && data.downloadUrl) {
+
+                downloads.push({
+                    name: 'Buyer package',
+                    url: data.downloadUrl
+                });
+
+            }
+
+            message.textContent =
+                'Payment confirmed for ' +
+                data.product.name +
+                '. Use the secure download' +
+                (downloads.length > 1 ? ' buttons' : ' button') +
+                ' below to access your purchase.';
+
+            downloadList.innerHTML = '';
+
+            downloads.forEach((item, index) => {
+
+                const wrapper =
+                    document.createElement('p');
+
+                const link =
+                    document.createElement('a');
+
+                link.className =
+                    'btn primary';
+
+                link.href =
+                    item.url;
+
+                link.textContent =
+                    downloads.length > 1
+                        ? `Download ${index + 1}: ${item.name}`
+                        : 'Download your buyer package';
+
+                wrapper.appendChild(link);
+
+                downloadList.appendChild(wrapper);
+
+            });
+
+            downloadsBox.hidden = false;
+
+        } else {
+
+            title.textContent =
+                'Payment not verified';
+
+            message.textContent =
+                data.error ||
+                'Payment has not been verified.';
+
+        }
+
+    })
+
+    .catch(() => {
+
+        title.textContent =
+            'Verification unavailable';
+
+        message.textContent =
+            'We could not verify the payment right now. Please contact support with your transaction reference.';
+
+    });
+
+}
+
+</script>
+
+</body>
+</html>
