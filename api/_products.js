@@ -9,12 +9,12 @@ module.exports = {
     blobPathnames: ["PREMIUM_Buyer_Package_With_EPUB.zip"]
   },
   "ai-side-hustles": {
-    name: "AI Side Hustles Blueprint",
-    amounts: { NGN: 1200000, USD: 1500 },
-    enabled: false,
-    deliveryReady: false,
-    blobPathnames: []
-  },
+  name: "AI Side Hustles Blueprint",
+  amounts: { NGN: 1200000, USD: 1500 },
+  enabled: true,
+  deliveryReady: true,
+  blobPathnames: ["PREMIUM_Buyer_Package.zip"]
+},
   "remote-job-2026-2027": {
     name: "How to Get a Remote Job: 2026/2027 Edition",
     amounts: { NGN: 1000000, USD: 1200 },
@@ -44,3 +44,7 @@ module.exports = {
     blobPathnames: []
   }
 };
+
+
+
+
