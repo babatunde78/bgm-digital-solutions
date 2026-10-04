@@ -23,12 +23,12 @@ module.exports = {
   blobPathnames: ["remote-job-2026-2027-buyer-package.zip"]
 },
   "scholarships-abroad": {
-    name: "How to Win Scholarships Abroad",
-    amounts: { NGN: 1200000, USD: 1500 },
-    enabled: false,
-    deliveryReady: false,
-    blobPathnames: []
-  },
+  name: "How to Win Scholarships Abroad",
+  amounts: { NGN: 1200000, USD: 1500 },
+  enabled: true,
+  deliveryReady: true,
+  blobPathnames: ["scholarships-abroad-buyer-package.zip"]
+},
   "first-upwork-client": {
     name: "How to Get Your First Upwork Client",
     amounts: { NGN: 1000000, USD: 1200 },
@@ -44,7 +44,5 @@ module.exports = {
     blobPathnames: []
   }
 };
-
-
 
 
