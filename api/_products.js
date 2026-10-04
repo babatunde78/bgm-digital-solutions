@@ -30,12 +30,12 @@ module.exports = {
   blobPathnames: ["scholarships-abroad-buyer-package.zip"]
 },
   "first-upwork-client": {
-    name: "How to Get Your First Upwork Client",
-    amounts: { NGN: 1000000, USD: 1200 },
-    enabled: false,
-    deliveryReady: false,
-    blobPathnames: []
-  },
+  name: "How to Get Your First Upwork Client",
+  amounts: { NGN: 1000000, USD: 1200 },
+  enabled: true,
+  deliveryReady: true,
+  blobPathnames: ["first-upwork-client-buyer-package.zip"]
+},
   "five-guide-bundle": {
     name: "BGM Five-Guide Bundle",
     amounts: { NGN: 3500000, USD: 3900 },
