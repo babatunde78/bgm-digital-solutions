@@ -48,7 +48,18 @@ module.exports = {
     "scholarships-abroad-buyer-package.zip",
     "first-upwork-client-buyer-package.zip"
   ]
-}
+
+  "bgm-collections-bank": {
+    name: "BGM University Collections-to-Bank Evidence Assistant",
+    amounts: {
+      NGN: 5490000
+    },
+    enabled: true,
+    deliveryReady: false,
+    blobPathnames: []
+  }
+};
+
 };
 
 
