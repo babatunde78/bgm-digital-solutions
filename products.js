@@ -7,6 +7,29 @@ window.PRODUCTS = [
   {id:"first-upwork-client",name:"How to Get Your First Upwork Client",category:"Career Guides",price:"₦10,000 / $12",short:"A practical guide to portfolios, proposals, job screening and safe project delivery on Upwork.",description:"Designed for skilled beginners seeking a disciplined route to their first Upwork contract without unrealistic income promises.",features:["Portfolio preparation","Job screening and proposal guidance","Pricing and delivery resources","Buyer companion files"],paymentEnabled:true,status:"live"},
   {id:"five-guide-bundle",name:"BGM Five-Guide Bundle",category:"Bundles",price:"₦35,000 / $39",short:"All five BGM guides in one digital collection at a bundled price.",description:"Includes the five BGM guides and their supplied companion buyer materials. Digital delivery only; no guaranteed jobs, scholarships, clients or earnings.",features:["All five guides","Companion buyer materials","One purchase","Best-value bundle"],paymentEnabled:true,status:"live",badge:"BEST VALUE"},
   {id:"payroll-payslip",name:"Payroll & Payslip Automation System",category:"Business Software",price:"Contact for deployment",short:"A configurable payroll and payslip workflow for organizations that want to reduce repetitive monthly processing.",description:"A configurable solution concept covering salary components, deductions, branded payslips and distribution workflows.",features:["Configurable salary components","Branded payslip output","Organizational deployment","Workflow automation"],checkoutUrl:"mailto:badmurs0@gmail.com?subject=Payroll%20and%20Payslip%20Automation%20Enquiry",status:"service"}
+  {id:"payroll-payslip",name:"Payroll & Payslip Automation System",status:"service"}
+
+  {
+    id: "bgm-collections-bank",
+    name: "BGM University Collections-to-Bank Evidence Assistant",
+    category: "Business Software",
+    price: "₦54,900",
+    short: "An offline Excel toolkit for reconciling university receipts, Paystack settlements, bank deposits and cashbook records.",
+    description: "An evidence-based reconciliation toolkit for university bursaries and treasury departments. Compare institutional receipts, processor transactions, settlement deductions, bank deposits and cashbook entries. Identify unmatched transactions, investigate differences and document reconciliation evidence.",
+    features: [
+      "Institutional receipt and Paystack transaction reconciliation",
+      "Settlement fees, refunds and net deposit analysis",
+      "Bank deposit and cashbook comparison",
+      "Exception register and reconciliation evidence",
+      "Clean and fictional demonstration Excel workbooks",
+      "Sample CSV files, field mappings and operating guide",
+      "Offline operation without banking credentials"
+    ],
+    paymentEnabled: true,
+    status: "live"
+  }
+];
+
 ];
 
 
