@@ -49,16 +49,19 @@ module.exports = {
     "first-upwork-client-buyer-package.zip"
   ]
 },
-  "bgm-collections-bank": {
-    name: "BGM University Collections-to-Bank Evidence Assistant",
-    amounts: {
-      NGN: 5490000
-    },
-    enabled: true,
-    deliveryReady: false,
-    blobPathnames: []
-  }
-};
+ 
+"bgm-collections-bank": {
+  name: "BGM University Collections-to-Bank Evidence Assistant",
+  amounts: {
+    NGN: 5490000
+  },
+  enabled: true,
+  deliveryReady: true,
+  blobPathnames: [
+    "BGM_University_Collections_to_Bank_Evidence_Assistant.zip"
+  ]
+}
+
 
 
 
