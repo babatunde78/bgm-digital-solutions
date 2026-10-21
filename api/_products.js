@@ -60,7 +60,9 @@ module.exports = {
   blobPathnames: [
     "BGM_University_Collections_to_Bank_Evidence_Assistant.zip"
   ]
-},
+  }
+};
+
 
 
 
