@@ -1,5 +1,5 @@
 
-const PRODUCTS = require('./_products');
+const { getProduct } = require('./_catalog');
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -22,7 +22,7 @@ module.exports = async function handler(req, res) {
       });
     }
 
-    const product = PRODUCTS[productId];
+    const product = await getProduct(productId);
 
     if (!product || !product.enabled) {
       return res.status(400).json({
@@ -54,10 +54,21 @@ module.exports = async function handler(req, res) {
       });
     }
 
-    const origin = (
-      process.env.SITE_URL ||
-      `https://${req.headers.host}`
-    ).replace(/\/+$/, '');
+    // Resolve the callback against the site's origin, never its hash or path.
+    // A SITE_URL containing #products would otherwise put the success page
+    // inside the fragment and return buyers to the home page.
+    const configuredSite = process.env.SITE_URL || `https://${req.headers.host}`;
+    let origin;
+    try {
+      const parsedSite = new URL(configuredSite);
+      if (!['https:', 'http:'].includes(parsedSite.protocol)) {
+        throw new Error('Unsupported SITE_URL protocol');
+      }
+      origin = parsedSite.origin;
+    } catch (error) {
+      console.error('Invalid SITE_URL configuration');
+      return res.status(500).json({ error: 'Payment callback is not configured correctly.' });
+    }
 
     const response = await fetch(
       'https://api.paystack.co/transaction/initialize',
