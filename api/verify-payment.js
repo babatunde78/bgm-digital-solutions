@@ -17,7 +17,7 @@ module.exports = async function handler(req, res) {
 
     if (
       !v.valid ||
-      !v.product.deliveryReady ||
+      !v.product?.deliveryReady ||
       !v.product.blobPathnames?.length
     ) {
       return res.status(400).json({

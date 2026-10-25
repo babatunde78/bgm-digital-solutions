@@ -1,6 +1,6 @@
 const { get } = require('@vercel/blob');
 const { Readable } = require('node:stream');
-const PRODUCTS = require('./_products');
+const { getProduct } = require('./_catalog');
 const { verify } = require('./_delivery-token');
 const { verifyTransaction } = require('./_paystack');
 
@@ -28,7 +28,7 @@ module.exports = async function handler(req, res) {
       return res.status(403).end('Purchase verification failed.');
     }
 
-    const product = PRODUCTS[payload.productId];
+    const product = await getProduct(payload.productId);
 
     if (!product || !product.deliveryReady) {
       return res.status(404).end('Product delivery is not configured.');
