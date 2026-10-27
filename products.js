@@ -19,8 +19,8 @@ window.PRODUCTS = [
       "Business demonstrations and workflows",
       "Secure digital buyer package"
     ],
-    paymentEnabled: true,
-    status: "live"
+    paymentEnabled: false,
+status: "draft"
   },
 
   {
