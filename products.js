@@ -36,8 +36,8 @@ status: "draft"
       "Worksheets and implementation resources",
       "Buyer package delivery"
     ],
-    paymentEnabled: true,
-    status: "live"
+    paymentEnabled: false,
+status: "draft"
   },
 
   {
@@ -53,8 +53,8 @@ status: "draft"
       "Interview preparation",
       "Companion resources"
     ],
-    paymentEnabled: true,
-    status: "live"
+   paymentEnabled: false,
+status: "draft"
   },
 
   {
@@ -70,8 +70,8 @@ status: "draft"
       "Research and reference guidance",
       "Worksheets and resources"
     ],
-    paymentEnabled: true,
-    status: "live"
+    paymentEnabled: false,
+status: "draft"
   },
 
   {
@@ -87,8 +87,8 @@ status: "draft"
       "Pricing and delivery resources",
       "Buyer companion files"
     ],
-    paymentEnabled: true,
-    status: "live"
+    paymentEnabled: false,
+status: "draft"
   },
 
   {
@@ -104,8 +104,8 @@ status: "draft"
       "One purchase",
       "Best-value bundle"
     ],
-    paymentEnabled: true,
-    status: "live",
+    paymentEnabled: false,
+status: "draft",
     badge: "BEST VALUE"
   },
 
@@ -143,7 +143,7 @@ status: "draft"
       "Sample CSV files, field mappings and operating guide",
       "Offline operation without banking credentials"
     ],
-    paymentEnabled: true,
-    status: "live"
+   paymentEnabled: false,
+status: "draft"
   }
 ];
