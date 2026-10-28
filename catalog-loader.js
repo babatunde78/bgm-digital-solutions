@@ -1,4 +1,3 @@
-
 // Supabase is the authority for directly purchasable products.
 // Retain locally defined enquiry-only services, but never expose stale
 // static Buy Now buttons if the API fails or a product is Draft.

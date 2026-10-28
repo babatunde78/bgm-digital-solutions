@@ -1,4 +1,3 @@
-
 const LEGACY = require('./_products');
 const URL = process.env.SUPABASE_URL;
 const KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;

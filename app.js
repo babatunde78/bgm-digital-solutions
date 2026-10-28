@@ -32,6 +32,7 @@ function esc(s = '') {
     );
 }
 
+function marketplaceLinks(p){const names={amazon:'Amazon',gumroad:'Gumroad',selar:'Selar',payhip:'Payhip'};return Object.entries(p.channels||{}).filter(([k,v])=>names[k]&&/^https:\/\//.test(v)).map(([k,v])=>`<a class="buy" href="${esc(v)}" target="_blank" rel="noopener noreferrer">Buy on ${names[k]}</a>`).join(' ')}
 function render() {
     const q = search.value.toLowerCase().trim();
     const cat = category.value;
@@ -89,6 +90,7 @@ function render() {
                            </a>`
                     }
 
+                  ${marketplaceLinks(p)}
                 </div>
             </div>
         </article>
@@ -143,6 +145,7 @@ function details(id) {
                   are uploaded and tested.
                </p>`
         }
+        <div class="card-actions">${marketplaceLinks(p)}</div>
     `;
 
     modal.hidden = false;
