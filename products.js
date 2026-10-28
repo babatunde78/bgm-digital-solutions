@@ -19,8 +19,8 @@ window.PRODUCTS = [
       "Business demonstrations and workflows",
       "Secure digital buyer package"
     ],
-    paymentEnabled: true,
-    status: "live"
+    paymentEnabled: false,
+status: "draft"
   },
 
   {
@@ -36,8 +36,8 @@ window.PRODUCTS = [
       "Worksheets and implementation resources",
       "Buyer package delivery"
     ],
-    paymentEnabled: true,
-    status: "live"
+    paymentEnabled: false,
+status: "draft"
   },
 
   {
@@ -53,8 +53,8 @@ window.PRODUCTS = [
       "Interview preparation",
       "Companion resources"
     ],
-    paymentEnabled: true,
-    status: "live"
+   paymentEnabled: false,
+status: "draft"
   },
 
   {
@@ -70,8 +70,8 @@ window.PRODUCTS = [
       "Research and reference guidance",
       "Worksheets and resources"
     ],
-    paymentEnabled: true,
-    status: "live"
+    paymentEnabled: false,
+status: "draft"
   },
 
   {
@@ -87,8 +87,8 @@ window.PRODUCTS = [
       "Pricing and delivery resources",
       "Buyer companion files"
     ],
-    paymentEnabled: true,
-    status: "live"
+    paymentEnabled: false,
+status: "draft"
   },
 
   {
@@ -104,8 +104,8 @@ window.PRODUCTS = [
       "One purchase",
       "Best-value bundle"
     ],
-    paymentEnabled: true,
-    status: "live",
+    paymentEnabled: false,
+status: "draft",
     badge: "BEST VALUE"
   },
 
@@ -143,7 +143,7 @@ window.PRODUCTS = [
       "Sample CSV files, field mappings and operating guide",
       "Offline operation without banking credentials"
     ],
-    paymentEnabled: true,
-    status: "live"
+   paymentEnabled: false,
+status: "draft"
   }
 ];
