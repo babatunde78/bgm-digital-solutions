@@ -6,7 +6,24 @@ async function query(path,options={}){
  if(!enabled()) throw Error('Product database is not configured');
  const r=await fetch(URL.replace(/\/$/,'')+'/rest/v1/'+path,{...options,headers:{apikey:KEY,Authorization:'Bearer '+KEY,'Content-Type':'application/json',...(options.headers||{})}});
  const text=await r.text();let data;try{data=text?JSON.parse(text):null}catch{data=text}
- if(!r.ok)throw Error('Database request failed: HTTP '+r.status);
+ 
+if (!r.ok) {
+  const details =
+    data && typeof data === 'object'
+      ? {
+          code: data.code || null,
+          message: data.message || null,
+          hint: data.hint || null
+        }
+      : { message: String(data).slice(0, 300) };
+
+  console.error('Supabase catalogue request failed', {
+    status: r.status,
+    details
+  });
+
+  throw Error('Database request failed: HTTP ' + r.status);
+}
  return data;
 }
 function normal(p){return {name:p.name,amounts:p.amounts||{},enabled:p.status==='published',deliveryReady:Boolean(p.delivery_ready),blobPathnames:p.blob_pathnames||[]}}
