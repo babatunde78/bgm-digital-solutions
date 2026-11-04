@@ -46,6 +46,10 @@ test('worker endpoint requires a constant-time checked bearer secret',async()=>{
   process.env.CRON_SECRET='synthetic-worker-secret';
   const res=response();await require('../api/process-payments')({method:'GET',headers:{authorization:'Bearer wrong'}},res);assert.equal(res.statusCode,401);
 });
+test('deployment readiness checks are protected by the worker credential',async()=>{
+  process.env.CRON_SECRET='synthetic-worker-secret';
+  const res=response();await require('../api/process-payments')({method:'GET',headers:{},query:{check:'readiness'}},res);assert.equal(res.statusCode,401);
+});
 test('invalid download tokens never fetch storage or payment data',async()=>{
   const res=response();await require('../api/download')({method:'GET',headers:{},query:{token:'invalid'}},res);assert.equal(res.statusCode,401);
 });
