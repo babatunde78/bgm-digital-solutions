@@ -2,7 +2,7 @@
 /*
  * BGM Digital Solutions — Product Catalogue
  * Display prices only.
- * Authoritative payment amounts are in api/_products.js.
+ * Current products and authoritative payment amounts come from the Supabase catalogue API.
  */
 
 window.PRODUCTS = [

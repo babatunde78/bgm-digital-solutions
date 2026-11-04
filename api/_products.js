@@ -1,5 +1,5 @@
-// Authoritative server-side catalogue. Amounts are in the currency subunit
-// (kobo for NGN, cents for USD). Never trust a browser-supplied amount.
+// Historical catalogue used only to verify purchases made before durable order storage.
+// Current products and prices are authoritative in Supabase. Amounts use currency subunits.
 module.exports = {
   "500-business-prompts": {
     name: "500 ChatGPT Prompts for Business Owners",

@@ -1,0 +1,148 @@
+[
+  {
+    "id": "500-business-prompts",
+    "name": "500 ChatGPT Prompts for Business Owners",
+    "category": "Business Resources",
+    "short": "500 practical prompts for planning, marketing, sales, customer service and everyday business operations.",
+    "description": "A practical workbook containing 500 organized business prompts, input guidance, follow-ups, demonstrations and business workflows.",
+    "features": [
+      "500 core prompts in 20 chapters",
+      "Input guidance and follow-ups",
+      "Business demonstrations and workflows",
+      "Secure digital buyer package"
+    ],
+    "amounts": {
+      "NGN": 750000,
+      "USD": 900
+    },
+    "blob_pathnames": [
+      "PREMIUM_Buyer_Package_With_EPUB.zip"
+    ]
+  },
+  {
+    "id": "ai-side-hustles",
+    "name": "AI Side Hustles Blueprint",
+    "category": "Business Resources",
+    "short": "A practical guide to selecting, validating and delivering AI-assisted service opportunities.",
+    "description": "Covers practical AI-assisted offers, workflows, pricing and capacity planning, customer acquisition and quality-controlled delivery.",
+    "features": [
+      "20 opportunity profiles",
+      "Practical walkthroughs",
+      "Worksheets and implementation resources",
+      "Buyer package delivery"
+    ],
+    "amounts": {
+      "NGN": 1200000,
+      "USD": 1500
+    },
+    "blob_pathnames": [
+      "PREMIUM_Buyer_Package.zip"
+    ]
+  },
+  {
+    "id": "remote-job-2026-2027",
+    "name": "How to Get a Remote Job: 2026/2027 Edition",
+    "category": "Career Guides",
+    "short": "A structured guide to remote-job readiness, applications, interviews and safer vacancy screening.",
+    "description": "A practical guide to identifying suitable remote roles, preparing credible evidence and applications, screening vacancies and preparing for interviews.",
+    "features": [
+      "Remote role screening",
+      "CV and application guidance",
+      "Interview preparation",
+      "Companion resources"
+    ],
+    "amounts": {
+      "NGN": 1000000,
+      "USD": 1200
+    },
+    "blob_pathnames": [
+      "remote-job-2026-2027-buyer-package.zip"
+    ]
+  },
+  {
+    "id": "scholarships-abroad",
+    "name": "How to Win Scholarships Abroad",
+    "category": "Education Guides",
+    "short": "A practical guide to finding suitable funding opportunities and preparing credible applications.",
+    "description": "Covers eligibility, funding coverage, application planning, research proposals, references, interviews and scam detection.",
+    "features": [
+      "Eligibility and funding checks",
+      "Application planning",
+      "Research and reference guidance",
+      "Worksheets and resources"
+    ],
+    "amounts": {
+      "NGN": 1200000,
+      "USD": 1500
+    },
+    "blob_pathnames": [
+      "scholarships-abroad-buyer-package.zip"
+    ]
+  },
+  {
+    "id": "first-upwork-client",
+    "name": "How to Get Your First Upwork Client",
+    "category": "Career Guides",
+    "short": "A practical guide to portfolios, proposals, job screening and safe project delivery on Upwork.",
+    "description": "Designed for skilled beginners seeking a disciplined route to their first Upwork contract without unrealistic income promises.",
+    "features": [
+      "Portfolio preparation",
+      "Job screening and proposal guidance",
+      "Pricing and delivery resources",
+      "Buyer companion files"
+    ],
+    "amounts": {
+      "NGN": 1000000,
+      "USD": 1200
+    },
+    "blob_pathnames": [
+      "first-upwork-client-buyer-package.zip"
+    ]
+  },
+  {
+    "id": "five-guide-bundle",
+    "name": "BGM Five-Guide Bundle",
+    "category": "Bundles",
+    "short": "All five BGM guides in one digital collection at a bundled price.",
+    "description": "Includes the five BGM guides and their supplied companion buyer materials. Digital delivery only; no guaranteed jobs, scholarships, clients or earnings.",
+    "features": [
+      "All five guides",
+      "Companion buyer materials",
+      "One purchase",
+      "Best-value bundle"
+    ],
+    "amounts": {
+      "NGN": 3500000,
+      "USD": 3900
+    },
+    "blob_pathnames": [
+      "PREMIUM_Buyer_Package_With_EPUB.zip",
+      "PREMIUM_Buyer_Package.zip",
+      "remote-job-2026-2027-buyer-package.zip",
+      "scholarships-abroad-buyer-package.zip",
+      "first-upwork-client-buyer-package.zip"
+    ]
+  },
+  {
+    "id": "bgm-collections-bank",
+    "name": "BGM University Collections-to-Bank Evidence Assistant",
+    "category": "Business Software",
+    "short": "An offline Excel toolkit for reconciling university receipts, Paystack settlements, bank deposits and cashbook records.",
+    "description": "An evidence-based reconciliation toolkit for university bursaries and treasury departments. Compare institutional receipts, processor transactions, settlement deductions, bank deposits and cashbook entries. Identify unmatched transactions, investigate differences and document reconciliation evidence.",
+    "features": [
+      "Institutional receipt and Paystack transaction reconciliation",
+      "Settlement fees, refunds and net deposit analysis",
+      "Bank deposit and cashbook comparison",
+      "Exception register and reconciliation evidence",
+      "Clean and fictional demonstration Excel workbooks",
+      "Sample CSV files, field mappings and operating guide",
+      "Offline operation without banking credentials"
+    ],
+    "amounts": {
+      "NGN": 5490000
+    },
+    "blob_pathnames": [
+      "BGM_University_Collections_to_Bank_Evidence_Assistant.zip"
+    ]
+  }
+]

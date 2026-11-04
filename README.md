@@ -47,6 +47,12 @@ Callbacks and scheduled processing share one verification function. Webhooks val
 
 See [the deployment guide](SECURE-DELIVERY-DEPLOY.md) for the required migration, environment matrix, scheduler setup, publication checks and live acceptance test. The original [audit](PAYSTACK-AUDIT-AND-IMPLEMENTATION-PLAN.md) records the pre-implementation findings.
 
+## Import existing uploaded products
+
+The bearer-protected operator inventory is `GET /api/process-payments?check=inventory`. It lists private file metadata and current catalogue records without returning permanent Blob URLs. It is unavailable to visitors.
+
+`POST /api/sync-products` accepts `{"ids":["ai-side-hustles", "remote-job-2026-2027"]}` with the operator bearer credential. It imports known definitions from `lib/product-import.json`, validates all private files before publishing, and preserves existing rows, prices and draft decisions. Bundle files follow the currently mapped five guides. The JSON definitions are an import source; Supabase remains authoritative after import. Unknown ZIPs need an identified product, description and price before publication.
+
 ## Operator recovery
 
 After verifying the buyer's checkout identity and paid reference, an operator with private development credentials can create a one-time, one-hour access link:
