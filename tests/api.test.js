@@ -58,4 +58,17 @@ test('paused email disables recovery without touching the email provider',async(
   const res=response();await require('../api/recover-purchase')({method:'POST',headers:{origin:'https://store.example','content-type':'application/json'},body:{email:'buyer@example.com',reference:'bgm-reference'}},res);
   assert.equal(res.statusCode,503);assert.equal(res.data.code,'email_paused');
 });
+test('published catalogue selects status and enables checkout without exposing private asset paths',async()=>{
+  Object.assign(process.env,{CHECKOUT_ENABLED:'true',BLOB_STORE_ID:'store_synthetic',CRON_SECRET:'synthetic',PAYSTACK_CURRENCIES:'NGN'});
+  const product={id:'guide',name:'Guide',category:'Resources',short:'Guide',description:'Guide',features:[],amounts:{NGN:750000},status:'published',delivery_ready:true,blob_pathnames:['private/v1.zip']};
+  global.fetch=async address=>{
+    const selected=new URL(address).searchParams.get('select').split(',');
+    return reply([Object.fromEntries(selected.map(field=>[field,product[field]]))]);
+  };
+  const res=response();await require('../api/catalog')({method:'GET',headers:{}},res);
+  assert.equal(res.statusCode,200);
+  assert.equal(res.data.products[0].paymentEnabled,true);
+  assert.equal(res.data.products[0].assets,undefined);
+  assert.equal(res.data.products[0].blob_pathnames,undefined);
+});
 module.exports={response,reply};

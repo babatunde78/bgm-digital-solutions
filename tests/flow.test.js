@@ -58,12 +58,16 @@ test('checkout -> webhook -> durable fulfillment -> download -> email recovery -
       await db.query(`update public.${route} set ${entries.map(([k],i)=>`${k}=$${count+i+1}`).join(',')}${where}`,[...values,...entries.map(([,v])=>v)]);
       return json(null);
     }
-    return json((await db.query(`select * from public.${route}${where}${url.searchParams.has('limit')?' limit '+Number(url.searchParams.get('limit')):''}`,values)).rows);
+    const selected=url.searchParams.get('select')||'*';
+    assert(selected==='*'||selected.split(',').every(field=>/^[a-z_]+$/.test(field)));
+    return json((await db.query(`select ${selected} from public.${route}${where}${url.searchParams.has('limit')?' limit '+Number(url.searchParams.get('limit')):''}`,values)).rows);
   };
   function res(){const chunks=[];const r=new Writable({write(chunk,encoding,cb){chunks.push(Buffer.from(chunk));cb()}});r.statusCode=200;r.headers={};r.setHeader=(k,v)=>{r.headers[k]=v};r.status=n=>{r.statusCode=n;return r};r.json=data=>{r.data=data;r.end();return r};r.bytes=()=>Buffer.concat(chunks).toString();return r}
   const cookie=crypto.randomBytes(32).toString('base64url');
   const headers={origin:'https://store.example',cookie:`bgm_session=${cookie}`,'content-type':'application/json'};
   async function invoke(name,method,body,query={},customHeaders=headers){const r=res();await require(`../api/${name}`)({method,headers:customHeaders,body,query},r);return r}
+  const catalogue=await invoke('catalog','GET');
+  assert.equal(catalogue.statusCode,200);assert.equal(catalogue.data.products[0].paymentEnabled,true);
   const input={email:'buyer@example.com',productId:'guide',currency:'NGN',amount:1,idempotencyKey:crypto.randomUUID()};
   const initialized=await invoke('initialize-payment','POST',input);
   assert.equal(initialized.statusCode,200);assert(initialized.data.reference);
