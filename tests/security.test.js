@@ -65,6 +65,14 @@ test('session cookie parser and hashed credentials are stable', () => {
   assert.equal(session({headers:{cookie:'bgm_session=short'}}),null);
   assert.match(hash(value),/^[a-f0-9]{64}$/);
 });
+test('connected Blob authentication does not require the unrelated VERCEL flag or email', () => {
+  const {checkoutChecks,ready}=require('../lib/config');
+  Object.assign(process.env,{SITE_URL:'https://store.example',CHECKOUT_ENABLED:'true',SUPABASE_URL:'https://db.example',SUPABASE_SERVICE_ROLE_KEY:'synthetic',BLOB_STORE_ID:'store_synthetic',CRON_SECRET:'synthetic',EMAIL_ENABLED:'false'});
+  delete process.env.VERCEL;delete process.env.BLOB_READ_WRITE_TOKEN;
+  assert.equal(checkoutChecks().storage,true);
+  assert.equal(ready(),true);
+  process.env.CHECKOUT_ENABLED='false';assert.equal(ready(),false);
+});
 test('refund and success event keys are stable across webhook retries', () => {
   const charge={event:'charge.success',data:{id:1,reference:'bgm-ref',domain:'test'}};
   assert.equal(eventRecord(charge).event_key,'test:charge.success:1');
