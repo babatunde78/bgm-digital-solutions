@@ -1,120 +1,60 @@
+'use strict';
+const storage = require('../lib/storage');
+const { endpoint, sameOrigin, body, email, requireSession, HttpError } = require('../lib/http');
+const { rpc, query, rateLimit } = require('../lib/db');
+const { getProduct } = require('../lib/catalog');
+const config = require('../lib/config');
+const paystack = require('../lib/paystack');
 
-const PRODUCTS = require('./_products');
-
-module.exports = async function handler(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({
-      error: 'Method not allowed'
-    });
+module.exports = endpoint('POST', async (req, res) => {
+  sameOrigin(req);
+  const sessionHash = requireSession(req);
+  if (!config.ready()) throw new HttpError(503, 'Checkout is temporarily unavailable. Please contact us with questions.', 'checkout_unavailable');
+  const input = body(req);
+  const buyerEmail = email(input.email);
+  if (typeof input.productId !== 'string' || !/^[a-zA-Z0-9_-]{1,100}$/.test(input.productId) ||
+      typeof input.currency !== 'string' || !config.currencies().includes(input.currency) ||
+      typeof input.idempotencyKey !== 'string' || !/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(input.idempotencyKey)) {
+    throw new HttpError(400, 'Please select a valid product and currency.');
   }
-
-  try {
-    const { email, productId, currency = 'NGN' } = req.body || {};
-
-    const normalizedCurrency = String(currency).toUpperCase();
-
-    if (
-      typeof email !== 'string' ||
-      !/^\S+@\S+\.\S+$/.test(email.trim())
-    ) {
-      return res.status(400).json({
-        error: 'A valid email address is required.'
-      });
+  await rateLimit(req, 'checkout', 10);
+  const existing = await query(`store_orders?environment=eq.${config.mode()}&idempotency_key=eq.${input.idempotencyKey}&select=*&limit=1`);
+  let order = existing[0];
+  if (order) {
+    if (order.session_hash !== sessionHash || order.email !== buyerEmail || order.product_id !== input.productId || order.currency !== input.currency) {
+      throw new HttpError(409, 'This checkout belongs to another purchase. Please reopen checkout.');
     }
-
-    const product = PRODUCTS[productId];
-
-    if (!product || !product.enabled) {
-      return res.status(400).json({
-        error: 'Product is not available.'
-      });
-    }
-
-    if (!product.deliveryReady) {
-      return res.status(400).json({
-        error: 'Secure delivery for this product is not active yet.'
-      });
-    }
-
-    const amount = product.amounts?.[normalizedCurrency];
-
-    if (!Number.isInteger(amount) || amount < 100) {
-      return res.status(400).json({
-        error: 'This currency is not available for the selected product.'
-      });
-    }
-
-    const secretKey = process.env.PAYSTACK_SECRET_KEY;
-
-    if (!secretKey) {
-      console.error('Paystack secret key is missing');
-
-      return res.status(500).json({
-        error: 'Payment service is not configured.'
-      });
-    }
-
-    const origin = (
-      process.env.SITE_URL ||
-      `https://${req.headers.host}`
-    ).replace(/\/+$/, '');
-
-    const response = await fetch(
-      'https://api.paystack.co/transaction/initialize',
-      {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${secretKey}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          email: email.trim(),
-          amount: String(amount),
-          currency: normalizedCurrency,
-          callback_url: `${origin}/payment-success.html`,
-          metadata: JSON.stringify({
-            product_id: productId,
-            product_name: product.name,
-            delivery: 'bgm-private-blob'
-          })
-        })
+  } else {
+    const product = await getProduct(input.productId);
+    if (!product?.available || !Object.hasOwn(product.amounts, input.currency)) throw new HttpError(400, 'This product or currency is not available.', 'product_unavailable');
+    await Promise.all(product.assets.map(async path => {
+      const metadata = await storage.head(path);
+      if (!new URL(metadata.url).hostname.endsWith('.private.blob.vercel-storage.com') || metadata.size <= 0) {
+        throw new HttpError(503, 'Private delivery is not ready for this product.', 'delivery_unavailable');
       }
-    );
-
-    const data = await response.json();
-
-    if (!response.ok || !data.status) {
-      console.error('Paystack initialization failed', {
-        statusCode: response.status,
-        message: data.message
-      });
-
-      return res.status(502).json({
-        error: 'Payment initialization failed. Please try again.'
-      });
-    }
-
-    if (!data.data?.authorization_url || !data.data?.reference) {
-      console.error('Paystack returned incomplete checkout data');
-
-      return res.status(502).json({
-        error: 'Payment service returned an incomplete response.'
-      });
-    }
-
-    return res.status(200).json({
-      authorization_url: data.data.authorization_url,
-      reference: data.data.reference
-    });
-
-  } catch (error) {
-    console.error('Payment initialization exception', {
-      message: error.message
-    });
-
-    return res.status(500).json({
-      error: 'Unable to initialize payment.'
+    }));
+    order = await rpc('store_create_order', {
+      p_key: input.idempotencyKey, p_session: sessionHash, p_email: buyerEmail, p_environment: config.mode(),
+      p_product: product.id, p_name: product.name, p_amount: product.amounts[input.currency], p_currency: input.currency, p_assets: product.assets
     });
   }
-};
-
+  if (order.revoked_at) throw new HttpError(403, 'This order is unavailable. Please contact support.');
+  if (order.status === 'paid') return res.status(200).json({ reference: order.reference, authorization_url: `${config.siteUrl()}/payment-success.html?reference=${encodeURIComponent(order.reference)}` });
+  if (order.authorization_url) return res.status(200).json({ reference: order.reference, authorization_url: order.authorization_url });
+  if (!await rpc('store_claim_initialization', { p_order: order.id })) {
+    return res.status(202).json({ status: 'initializing', reference: order.reference, error: 'This checkout is being resolved. Wait and retry this same purchase. Contact support with this reference if it remains unavailable.' });
+  }
+  const data = await paystack.request('transaction/initialize', {
+    method: 'POST', body: JSON.stringify({
+      reference: order.reference, email: order.email, amount: String(order.amount), currency: order.currency,
+      callback_url: `${config.siteUrl()}/payment-success.html`,
+      metadata: { order_id: order.id, product_id: order.product_id, delivery: 'bgm-private-blob' }
+    })
+  });
+  let url; try { url = new URL(data.authorization_url); } catch { throw new HttpError(502, 'Payment provider returned an invalid checkout link.'); }
+  if (data.reference !== order.reference || url.protocol !== 'https:' || url.hostname !== 'checkout.paystack.com' || url.username || url.password) {
+    throw new HttpError(502, 'Payment provider returned unexpected checkout details.');
+  }
+  await query(`store_orders?id=eq.${order.id}`, { method: 'PATCH', body: JSON.stringify({ authorization_url: url.href }) });
+  return res.status(200).json({ authorization_url: url.href, reference: order.reference });
+});

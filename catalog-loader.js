@@ -14,6 +14,11 @@
   } catch (error) {
     console.error('Catalogue unavailable; checkout disabled:', error);
     window.PRODUCTS = services;
+    const notice = document.createElement('p');
+    notice.className = 'notice';
+    notice.setAttribute('role', 'status');
+    notice.textContent = 'The product catalogue is temporarily unavailable. Please try again shortly or ask us on WhatsApp.';
+    document.querySelector('#product-grid').before(notice);
   } finally {
     const script = document.createElement('script');
     script.src = 'app.js';

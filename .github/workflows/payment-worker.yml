@@ -1,0 +1,22 @@
+name: Process payment inbox and emails
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+permissions: {}
+concurrency:
+  group: payment-worker
+  cancel-in-progress: false
+jobs:
+  process:
+    if: vars.STORE_WORKER_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Process durable payment work
+        env:
+          STORE_URL: ${{ vars.STORE_URL }}
+          CRON_SECRET: ${{ secrets.STORE_CRON_SECRET }}
+        run: |
+          if [ -z "$STORE_URL" ] || [ -z "$CRON_SECRET" ]; then exit 1; fi
+          curl --fail --silent --show-error --max-time 180 --header "Authorization: Bearer $CRON_SECRET" "$STORE_URL/api/process-payments"

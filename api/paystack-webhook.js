@@ -1,32 +1,18 @@
-const crypto = require('crypto');
-const PRODUCTS = require('./_products');
-module.exports = async function handler(req, res) {
-  if (req.method !== 'POST') return res.status(405).end();
-  const secret = process.env.PAYSTACK_SECRET_KEY;
-  if (!secret) return res.status(500).end();
-  const raw = typeof req.body === 'string' ? req.body : JSON.stringify(req.body || {});
-  const hash = crypto.createHmac('sha512', secret).update(raw).digest('hex');
-  const signature = req.headers['x-paystack-signature'];
-  if (!signature || !crypto.timingSafeEqual(Buffer.from(hash), Buffer.from(String(signature)))) return res.status(401).end();
-  const event = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
-  if (event.event === 'charge.success') {
-    const d = event.data || {};
-    let metadata = d.metadata || {};
-    if (typeof metadata === 'string') { try { metadata = JSON.parse(metadata); } catch {} }
-    const product = PRODUCTS[metadata.product_id];
-    const expectedAmount = product?.amounts?.[d.currency];
-
-if (
-  product &&
-  d.status === 'success' &&
-  Number.isInteger(expectedAmount) &&
-  d.amount === expectedAmount
-) {
-      // PRODUCTION TODO: write reference to a database with a UNIQUE constraint, then fulfill once.
-      // Never expose a permanent private download URL here.
-    }
+'use strict';
+const { endpoint, HttpError } = require('../lib/http');
+const { query } = require('../lib/db');
+const { mode } = require('../lib/config');
+const { rawBody, validSignature, eventRecord } = require('../lib/webhooks');
+module.exports = endpoint('POST', async (req, res) => {
+  const raw = await rawBody(req);
+  if (!validSignature(raw, req.headers)) throw new HttpError(401, 'Invalid signature');
+  let event; try { event = JSON.parse(raw.toString('utf8')); } catch { throw new HttpError(400, 'Invalid JSON'); }
+  const record = eventRecord(event);
+  if (record) {
+    if (record.environment !== mode()) throw new HttpError(400, 'Wrong payment environment');
+    await query('store_events?on_conflict=event_key', {
+      method: 'POST', headers: { Prefer: 'resolution=ignore-duplicates' }, body: JSON.stringify(record)
+    });
   }
-  return res.status(200).json({received:true});
-}
-
-
+  return res.status(200).json({ received: true });
+});

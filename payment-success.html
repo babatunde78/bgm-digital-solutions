@@ -1,178 +1,32 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Your purchase | BGM Digital Solutions</title>
-<link rel="stylesheet" href="styles.css">
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="referrer" content="no-referrer"><meta name="robots" content="noindex,nofollow">
+  <title>Your purchase | BGM Digital Solutions</title><link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
-
-<main class="section">
-<div class="container">
-<div class="card">
-<div class="card-body">
-
-<span class="eyebrow">SECURE DELIVERY</span>
-
-<h1 id="title">Verifying your payment</h1>
-
-<p id="message">
-Please wait while BGM securely confirms the transaction with Paystack.
-</p>
-
-<div id="downloads" hidden>
-    <div id="download-list"></div>
-
-    <p class="small">
-        These secure download links expire in 10 minutes.
-        If they expire, reload this confirmation page to verify
-        the transaction again and receive fresh links.
-    </p>
-</div>
-
-<p id="reference" class="small"></p>
-
-<p>
-<a class="btn" href="/">Return to store</a>
-</p>
-
-</div>
-</div>
-</div>
-</main>
-
-<script>
-
-const params = new URLSearchParams(location.search);
-
-const reference =
-    params.get('reference') ||
-    params.get('trxref');
-
-const message =
-    document.getElementById('message');
-
-const title =
-    document.getElementById('title');
-
-const downloadsBox =
-    document.getElementById('downloads');
-
-const downloadList =
-    document.getElementById('download-list');
-
-const referenceBox =
-    document.getElementById('reference');
-
-
-if (!reference) {
-
-    title.textContent =
-        'Transaction reference missing';
-
-    message.textContent =
-        'No transaction reference was supplied. Please contact support if you completed payment.';
-
-} else {
-
-    referenceBox.textContent =
-        'Transaction reference: ' + reference;
-
-    fetch(
-        '/api/verify-payment?reference=' +
-        encodeURIComponent(reference)
-    )
-
-    .then(async response => ({
-        ok: response.ok,
-        data: await response.json()
-    }))
-
-    .then(({ ok, data }) => {
-
-        if (ok && data.verified) {
-
-            title.textContent =
-                'Your purchase is ready';
-
-            const downloads =
-                Array.isArray(data.downloads)
-                    ? data.downloads
-                    : [];
-
-            if (!downloads.length && data.downloadUrl) {
-
-                downloads.push({
-                    name: 'Buyer package',
-                    url: data.downloadUrl
-                });
-
-            }
-
-            message.textContent =
-                'Payment confirmed for ' +
-                data.product.name +
-                '. Use the secure download' +
-                (downloads.length > 1 ? ' buttons' : ' button') +
-                ' below to access your purchase.';
-
-            downloadList.innerHTML = '';
-
-            downloads.forEach((item, index) => {
-
-                const wrapper =
-                    document.createElement('p');
-
-                const link =
-                    document.createElement('a');
-
-                link.className =
-                    'btn primary';
-
-                link.href =
-                    item.url;
-
-                link.textContent =
-                    downloads.length > 1
-                        ? `Download ${index + 1}: ${item.name}`
-                        : 'Download your buyer package';
-
-                wrapper.appendChild(link);
-
-                downloadList.appendChild(wrapper);
-
-            });
-
-            downloadsBox.hidden = false;
-
-        } else {
-
-            title.textContent =
-                'Payment not verified';
-
-            message.textContent =
-                data.error ||
-                'Payment has not been verified.';
-
-        }
-
-    })
-
-    .catch(() => {
-
-        title.textContent =
-            'Verification unavailable';
-
-        message.textContent =
-            'We could not verify the payment right now. Please contact support with your transaction reference.';
-
-    });
-
-}
-
-</script>
-
-</body>
-</html>
+  <main class="purchase-page">
+    <div class="card"><div class="card-body">
+      <span class="eyebrow">SECURE DELIVERY</span>
+      <h1 id="title">Your purchase</h1>
+      <p id="message" role="status" aria-live="polite">Checking your purchase details…</p>
+      <div id="downloads" hidden><div id="download-list"></div><p class="small">Download links expire after 10 minutes. Use “Check payment again” to refresh them.</p></div>
+      <p id="reference" class="small"></p>
+      <button class="btn" type="button" id="retry" hidden>Check payment again</button>
+      <hr>
+      <h2 class="recovery-heading">Recover your purchase</h2>
+      <p id="recovery-help">Need access on another device? Contact us on WhatsApp with your payment reference. Never share your card details.</p>
+      <form id="recovery-form" hidden>
+        <label for="recovery-email">Email address</label><input id="recovery-email" type="email" autocomplete="email" maxlength="254" required>
+        <label for="recovery-reference">Payment reference</label><input id="recovery-reference" maxlength="120" required>
+        <button type="submit" class="btn primary" id="recover">Email my access link</button>
+        <p id="recovery-message" role="status" aria-live="polite"></p>
+      </form>
+      <p class="support-actions"><a class="btn whatsapp" href="https://wa.me/2349031921294?text=Hello%20BGM%20Digital%20Solutions%2C%20I%20need%20help%20with%20my%20purchase." target="_blank" rel="noopener noreferrer">Ask on WhatsApp</a> <a class="btn" href="mailto:badmurs0@gmail.com">Email support</a></p>
+      <p class="small">Include your payment reference when asking for help. Never send card details, passwords or download links.</p>
+      <p><a href="/">Return to store</a></p>
+    </div></div>
+  </main>
+  <script src="purchase.js" defer></script>
+</body></html>

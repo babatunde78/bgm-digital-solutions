@@ -1,315 +1,133 @@
-const grid = document.querySelector('#product-grid');
-const search = document.querySelector('#search');
-const category = document.querySelector('#category');
-const modal = document.querySelector('#modal');
-const content = document.querySelector('#modal-content');
-
+'use strict';
+const products = window.PRODUCTS || [];
+const $ = selector => document.querySelector(selector);
+const grid = $('#product-grid'), search = $('#search'), category = $('#category');
+const modal = $('#modal'), checkoutModal = $('#checkout-modal');
+const form = $('#checkout-form'), errorBox = $('#checkout-error'), submit = $('#checkout-submit');
+let selection = null, requestVersion = 0, lastFocus;
 document.querySelector('#year').textContent = new Date().getFullYear();
+$('.menu').addEventListener('click', () => $('nav').classList.toggle('open'));
 
-document.querySelector('.menu').onclick = () => {
-    document.querySelector('nav').classList.toggle('open');
-};
-
-const cats = [...new Set(PRODUCTS.map(p => p.category))].sort();
-
-cats.forEach(c => {
-    category.insertAdjacentHTML(
-        'beforeend',
-        `<option>${c}</option>`
-    );
-});
-
-function esc(s = '') {
-    return String(s).replace(
-        /[&<>'"]/g,
-        c => ({
-            '&': '&amp;',
-            '<': '&lt;',
-            '>': '&gt;',
-            "'": '&#39;',
-            '"': '&quot;'
-        }[c])
-    );
+function node(tag, text, className) {
+  const element = document.createElement(tag);
+  if (text !== undefined) element.textContent = text;
+  if (className) element.className = className;
+  return element;
 }
-
+function button(text, action, className) {
+  const element = node('button', text, className); element.type = 'button';
+  element.addEventListener('click', action); return element;
+}
+function enquiry(product, className) {
+  const link = node('a', 'Send enquiry', className);
+  // Static services may link to email, never arbitrary catalogue-supplied javascript URLs.
+  link.href = 'mailto:badmurs0@gmail.com?subject=' + encodeURIComponent(product.name + ' enquiry');
+  return link;
+}
+for (const name of [...new Set(products.map(p => p.category))].sort()) {
+  const option = node('option', name); option.value = name; category.append(option);
+}
+function purchaseAction(product, className) {
+  if (product.status === 'service') return enquiry(product, className);
+  if (product.paymentEnabled) return button('Buy now', () => startPayment(product.id), className);
+  const disabled = button('Checkout unavailable', () => {}, className); disabled.disabled = true; return disabled;
+}
 function render() {
-    const q = search.value.toLowerCase().trim();
-    const cat = category.value;
-
-    const items = PRODUCTS.filter(p =>
-        (cat === 'all' || p.category === cat) &&
-        `${p.name} ${p.short} ${p.category}`
-            .toLowerCase()
-            .includes(q)
-    );
-
-    grid.innerHTML = items.map(p => `
-        <article class="card">
-            <div class="cover">${esc(p.name)}</div>
-
-            <div class="card-body">
-                <span class="tag">${esc(p.category)}</span>
-
-                <h3>${esc(p.name)}</h3>
-
-                <p>${esc(p.short)}</p>
-
-                <div class="price">${esc(p.price)}</div>
-
-                <div class="card-actions">
-
-                    <button
-                        type="button"
-                        onclick="details('${esc(p.id)}')">
-                        Details
-                    </button>
-
-                    ${
-                        p.status === 'service' && p.checkoutUrl
-
-                        ? `<a class="buy"
-                              href="${esc(p.checkoutUrl)}">
-                              Enquire
-                           </a>`
-
-                        : p.paymentEnabled
-
-                        ? `<button
-                              type="button"
-                              class="buy"
-                              onclick="startPayment('${esc(p.id)}')">
-                              Buy now
-                           </button>`
-
-                        : `<a
-                              class="buy disabled"
-                              href="#"
-                              aria-disabled="true">
-                              Secure delivery setup
-                           </a>`
-                    }
-
-                </div>
-            </div>
-        </article>
-    `).join('');
-
-    document.querySelector('#empty').hidden = items.length > 0;
+  const query = search.value.toLowerCase().trim();
+  const items = products.filter(p => (category.value === 'all' || p.category === category.value) &&
+    `${p.name} ${p.short} ${p.category}`.toLowerCase().includes(query));
+  grid.replaceChildren(...items.map(p => {
+    const card = node('article', undefined, 'card'), body = node('div', undefined, 'card-body');
+    const actions = node('div', undefined, 'card-actions');
+    actions.append(button('Details', () => details(p)), purchaseAction(p, 'buy'));
+    body.append(node('span', p.category, 'tag'), node('h3', p.name), node('p', p.short), node('div', p.price, 'price'), actions);
+    card.append(node('div', p.name, 'cover'), body); return card;
+  }));
+  $('#empty').hidden = items.length > 0;
 }
-
-function details(id) {
-    const p = PRODUCTS.find(x => x.id === id);
-
-    if (!p) {
-        alert('Product not found.');
-        return;
-    }
-
-    content.innerHTML = `
-        <span class="tag">${esc(p.category)}</span>
-
-        <h2>${esc(p.name)}</h2>
-
-        <p>${esc(p.description)}</p>
-
-        <h3>What's included</h3>
-
-        <ul>
-            ${p.features.map(f => `<li>${esc(f)}</li>`).join('')}
-        </ul>
-
-        <div class="price">${esc(p.price)}</div>
-
-        ${
-            p.status === 'service' && p.checkoutUrl
-
-            ? `<a class="btn primary"
-                  href="${esc(p.checkoutUrl)}">
-                  Send enquiry
-               </a>`
-
-            : p.paymentEnabled
-
-            ? `<button
-                  type="button"
-                  class="btn primary"
-                  onclick="startPayment('${esc(p.id)}')">
-                  Proceed to secure checkout
-               </button>`
-
-            : `<p class="notice">
-                  Secure delivery is being configured for this product.
-                  Checkout will activate after its private buyer files
-                  are uploaded and tested.
-               </p>`
-        }
-    `;
-
-    modal.hidden = false;
-    document.body.style.overflow = 'hidden';
+function show(dialog) {
+  lastFocus = document.activeElement;
+  dialog.hidden = false; document.body.style.overflow = 'hidden';
+  dialog.querySelector('button, input, a')?.focus();
 }
-
-window.details = details;
-
-document.querySelector('#close').onclick = closeModal;
-
-modal.onclick = e => {
-    if (e.target === modal) {
-        closeModal();
-    }
-};
-
-function closeModal() {
-    modal.hidden = true;
-    document.body.style.overflow = '';
+function close(dialog) {
+  dialog.hidden = true;
+  if (dialog === checkoutModal) { selection = null; requestVersion++; }
+  if (modal.hidden && checkoutModal.hidden) document.body.style.overflow = '';
+  lastFocus?.focus();
 }
-
-search.oninput = render;
-category.onchange = render;
-
-
-// -------------------------------------------------------
-// Secure checkout modal
-// -------------------------------------------------------
-
-const checkoutModal = document.querySelector('#checkout-modal');
-const checkoutForm = document.querySelector('#checkout-form');
-const checkoutClose = document.querySelector('#checkout-close');
-const checkoutEmail = document.querySelector('#checkout-email');
-const checkoutCurrency = document.querySelector('#checkout-currency');
-const checkoutProductName = document.querySelector('#checkout-product-name');
-const checkoutError = document.querySelector('#checkout-error');
-const checkoutSubmit = document.querySelector('#checkout-submit');
-
-let selectedProductId = null;
-
-function startPayment(productId) {
-    const product = PRODUCTS.find(p => p.id === productId);
-
-    if (!product) {
-        alert('Product information could not be found.');
-        return;
-    }
-
-    selectedProductId = productId;
-
-    checkoutProductName.textContent =
-        `${product.name} — ${product.price}`;
-
-    checkoutEmail.value = '';
-    checkoutCurrency.value = 'NGN';
-
-    checkoutError.hidden = true;
-    checkoutError.textContent = '';
-
-    checkoutSubmit.disabled = false;
-    checkoutSubmit.textContent = 'Continue to secure payment';
-
-    checkoutModal.hidden = false;
-    document.body.style.overflow = 'hidden';
-
-    setTimeout(() => checkoutEmail.focus(), 50);
+function details(product) {
+  const content = $('#modal-content'), list = node('ul');
+  list.append(...product.features.map(feature => node('li', feature)));
+  content.replaceChildren(node('span', product.category, 'tag'), node('h2', product.name), node('p', product.description),
+    node('h3', "What's included"), list, node('div', product.price, 'price'), purchaseAction(product, 'btn primary'));
+  show(modal);
 }
-
-function closeCheckout() {
-    checkoutModal.hidden = true;
-    document.body.style.overflow = '';
-    selectedProductId = null;
+function startPayment(id) {
+  const product = products.find(p => p.id === id && p.paymentEnabled);
+  if (!product) return;
+  close(modal);
+  selection = { product, key: null, fingerprint: null };
+  requestVersion++;
+  $('#checkout-product-name').textContent = `${product.name} — ${product.price}`;
+  $('#checkout-email').value = '';
+  const currency = $('#checkout-currency');
+  currency.replaceChildren(...Object.keys(product.amounts).map(code => {
+    const option = node('option', `${code} — ${new Intl.NumberFormat('en-NG', { style: 'currency', currency: code }).format(product.amounts[code] / 100)}`);
+    option.value = code; return option;
+  }));
+  errorBox.hidden = true; submit.disabled = false; submit.textContent = 'Continue to secure payment';
+  show(checkoutModal); $('#checkout-email').focus();
 }
-
-checkoutClose.addEventListener('click', closeCheckout);
-
-checkoutModal.addEventListener('click', function (event) {
-    if (event.target === checkoutModal) {
-        closeCheckout();
-    }
+$('#close').addEventListener('click', () => close(modal));
+$('#checkout-close').addEventListener('click', () => close(checkoutModal));
+for (const dialog of [modal, checkoutModal]) {
+  dialog.setAttribute('role', 'dialog'); dialog.setAttribute('aria-modal', 'true');
+  dialog.addEventListener('click', event => { if (event.target === dialog) close(dialog); });
+  dialog.addEventListener('keydown', event => {
+    if (event.key === 'Escape') close(dialog);
+    if (event.key !== 'Tab') return;
+    const focusable = [...dialog.querySelectorAll('button:not(:disabled),a[href],input,select')];
+    const first = focusable[0], last = focusable.at(-1);
+    if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
+    if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
+  });
+}
+form.addEventListener('submit', async event => {
+  event.preventDefault();
+  if (!selection || !form.reportValidity() || submit.disabled) return;
+  const current = selection, version = requestVersion;
+  const email = $('#checkout-email').value.trim().toLowerCase(), currency = $('#checkout-currency').value;
+  const fingerprint = JSON.stringify([current.product.id, email, currency]);
+  // Keep retries, page reloads and reopened modals on the same attempt for this basket.
+  if (current.fingerprint !== fingerprint) {
+    let saved;
+    try { saved = JSON.parse(sessionStorage.getItem('bgm-checkout')); } catch { /* Storage can be disabled. */ }
+    current.key = saved?.fingerprint === fingerprint ? saved.key : crypto.randomUUID();
+    current.fingerprint = fingerprint;
+    try { sessionStorage.setItem('bgm-checkout', JSON.stringify({ fingerprint, key: current.key })); } catch { /* In-memory retries still work. */ }
+  }
+  submit.disabled = true; submit.textContent = 'Opening secure payment…'; errorBox.hidden = true;
+  try {
+    const session = await fetch('/api/session', { method: 'POST', signal: AbortSignal.timeout(15000) });
+    if (!session.ok) throw new Error('Could not start a secure session. Please allow cookies and retry.');
+    const response = await fetch('/api/initialize-payment', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, signal: AbortSignal.timeout(45000),
+      body: JSON.stringify({ email, currency, productId: current.product.id, idempotencyKey: current.key })
+    });
+    const data = await response.json();
+    if (version !== requestVersion) return;
+    if (!response.ok || !data.authorization_url) throw new Error((data.error || 'Could not open checkout.') + (data.reference ? ` Reference: ${data.reference}` : ''));
+    const target = new URL(data.authorization_url, location.origin);
+    if (target.origin !== location.origin && (target.protocol !== 'https:' || target.hostname !== 'checkout.paystack.com')) throw new Error('Unexpected checkout address.');
+    location.assign(target.href);
+  } catch (error) {
+    if (version !== requestVersion) return;
+    errorBox.textContent = error.name === 'TimeoutError' ? 'Checkout is taking longer than expected. Retry the same purchase; avoid submitting another payment.' : error.message;
+    errorBox.hidden = false;
+  } finally {
+    if (version === requestVersion) { submit.disabled = false; submit.textContent = 'Continue to secure payment'; }
+  }
 });
-
-checkoutForm.addEventListener('submit', async function (event) {
-    event.preventDefault();
-
-    const email = checkoutEmail.value.trim();
-    const currency = checkoutCurrency.value;
-
-    checkoutError.hidden = true;
-    checkoutError.textContent = '';
-
-    if (!selectedProductId) {
-        checkoutError.textContent =
-            'No product has been selected. Please close this window and try again.';
-        checkoutError.hidden = false;
-        return;
-    }
-
-    if (!email || !checkoutEmail.checkValidity()) {
-        checkoutError.textContent =
-            'Please enter a valid email address.';
-        checkoutError.hidden = false;
-        checkoutEmail.focus();
-        return;
-    }
-
-    if (!['NGN', 'USD'].includes(currency)) {
-        checkoutError.textContent =
-            'Please select a valid payment currency.';
-        checkoutError.hidden = false;
-        return;
-    }
-
-    checkoutSubmit.disabled = true;
-    checkoutSubmit.textContent = 'Opening secure payment…';
-
-    try {
-        const response = await fetch('/api/initialize-payment', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                email: email,
-                productId: selectedProductId,
-                currency: currency
-            })
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-            throw new Error(
-                data.error || 'Unable to initialize payment.'
-            );
-        }
-
-        if (!data.authorization_url) {
-            throw new Error(
-                'Paystack checkout URL was not returned.'
-            );
-        }
-
-        // This exact redirect method has already been verified
-        // successfully with the Paystack initialization endpoint.
-        window.location.href = data.authorization_url;
-
-    } catch (error) {
-        console.error('Payment initialization error:', error);
-
-        checkoutError.textContent =
-            'We could not open the secure payment page. Please try again.';
-
-        checkoutError.hidden = false;
-
-        checkoutSubmit.disabled = false;
-        checkoutSubmit.textContent = 'Continue to secure payment';
-    }
-});
-
-window.startPayment = startPayment;
-
-/* -------------------------------------------------------
-   INITIAL PRODUCT RENDER
-------------------------------------------------------- */
-
+search.addEventListener('input', render); category.addEventListener('change', render);
 render();
-
-
-
