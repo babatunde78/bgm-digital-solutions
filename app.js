@@ -12,7 +12,7 @@ const presentations = {
   'scholarships-abroad': { image: 'scholarships', usdReference: 15, format: 'Education guide', audience: 'For applicants researching funding and preparing scholarship applications.' },
   'first-upwork-client': { image: 'upwork', usdReference: 12, format: 'Career guide', audience: 'For skilled beginners preparing a portfolio and applying for Upwork projects.' },
   'five-guide-bundle': { image: 'five-guide-bundle', usdReference: 39, format: 'Guide collection', audience: 'For readers who want the five BGM guides in one purchase.' },
-  'bgm-collections-bank': { image: 'collections-bank', format: 'Excel toolkit', audience: 'For university bursaries and treasury teams reconciling collection records.' }
+  'bgm-collections-bank': { image: 'collections-bank', usdReference: 40.75, format: 'Excel toolkit', audience: 'For university bursaries and treasury teams reconciling collection records.' }
 };
 
 function node(tag, text, className) {

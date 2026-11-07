@@ -83,6 +83,18 @@ test('USD reference values are visible beside naira without enabling dollar chec
   dom.window.close();
 });
 
+test('the university toolkit shows the owner supplied US$40.75 reference beside ₦54,900', () => {
+  const toolkit = { ...product, id: 'bgm-collections-bank', price: '₦54,900.00', amounts: { NGN: 5490000 } };
+  const dom = store('product.html', '?id=bgm-collections-bank', [toolkit]);
+  const doc = dom.window.document;
+  assert.equal(doc.querySelector('.detail-price').textContent, '₦54,900.00 / US$40.75 reference');
+  doc.querySelector('#product-detail .buy').click();
+  assert.equal(doc.querySelector('#checkout-currency').value, 'NGN');
+  assert.match(doc.querySelector('#checkout-product-name').textContent, /54,900/);
+  assert.equal(doc.querySelector('#checkout-product-name').textContent.includes('40.75'), false);
+  dom.window.close();
+});
+
 test('a single payment currency is displayed without asking the buyer to choose', () => {
   const dom = store();
   dom.window.document.querySelector('.buy').click();
