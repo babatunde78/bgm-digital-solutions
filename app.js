@@ -217,7 +217,10 @@ form.addEventListener('submit', async event => {
   submit.disabled = true; submit.textContent = 'Opening secure payment…'; errorBox.hidden = true;
   try {
     const session = await fetch('/api/session', { method: 'POST', signal: AbortSignal.timeout(15000) });
-    if (!session.ok) throw new Error('Could not start a secure session. Please allow cookies and retry.');
+    if (!session.ok) {
+      const failure = await session.json().catch(() => null);
+      throw new Error(typeof failure?.error === 'string' ? failure.error : 'Checkout could not start. Please refresh the page and try again.');
+    }
     const response = await fetch('/api/initialize-payment', {
       method: 'POST', headers: { 'Content-Type': 'application/json' }, signal: AbortSignal.timeout(45000),
       body: JSON.stringify({ email, currency, productId: current.product.id, idempotencyKey: current.key })

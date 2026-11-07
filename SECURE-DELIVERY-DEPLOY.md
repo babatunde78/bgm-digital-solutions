@@ -19,7 +19,7 @@ The Supabase keys were checked through Vercel metadata and are now assigned to *
 | `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` | Shared project, server-only | Same shared project, server-only |
 | `PAYSTACK_MODE` | `test` for acceptance; then `live` for launch | `test` only |
 | `PAYSTACK_SECRET_KEY` | Key matching the mode | Test key only |
-| `SITE_URL` | Canonical HTTPS store origin, no path | Canonical test deployment origin; localhost allowed only locally |
+| `SITE_URL` | `https://www.bgmsolutions.site` (canonical origin, no path) | Canonical test deployment origin; localhost allowed only locally |
 | `DELIVERY_SECRET` | Random secret of at least 32 characters | A different random secret |
 | `CRON_SECRET` | Strong random worker bearer secret | A different worker secret if scheduling tests |
 | `PAYSTACK_CURRENCIES` | `NGN` initially | `NGN` initially |
@@ -33,6 +33,8 @@ The Supabase keys were checked through Vercel metadata and are now assigned to *
 Email is optional. Do not add Resend credentials now. Later, if requested, configure `RESEND_API_KEY` and a verified `EMAIL_FROM`, then set `EMAIL_ENABLED=true`. Paused receipt tasks remain stored without email-provider calls; their access-token age begins on their first email processing attempt. Already-issued links expire after seven days. Invalid, expired or exhausted tasks require operator review.
 
 Do not expose secrets through frontend environment prefixes or commit `.env.local`. Updating environment variables requires a redeployment. Keep test and live signing keys distinct even though their orders share a database.
+
+Production session requests validate the browser Origin against `SITE_URL`. Keep it on the custom domain above; an old `vercel.app` value rejects checkout with HTTP 403 and sends payment callbacks to the wrong host. To repair production, update that project's Production `SITE_URL` value, then deploy the reviewed `main` commit; changing the setting without redeploying does not update running functions.
 
 ## 3. Deploy the implementation
 

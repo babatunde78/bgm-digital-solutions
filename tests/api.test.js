@@ -19,6 +19,18 @@ test('session requires same-origin POST and uses secure HttpOnly cookie',async()
   assert.equal(res.statusCode,200);assert.match(res.headers['Set-Cookie'],/HttpOnly/);assert.match(res.headers['Set-Cookie'],/; Secure/);
   const rejected=response();await handler({method:'POST',headers:{origin:'https://evil.example'}},rejected);assert.equal(rejected.statusCode,403);
 });
+
+test('production session accepts the canonical custom domain and rejects the former deployment origin', async () => {
+  process.env.SITE_URL = 'https://www.bgmsolutions.site';
+  const handler = require('../api/session');
+  const accepted = response();
+  await handler({ method: 'POST', headers: { origin: 'https://www.bgmsolutions.site' } }, accepted);
+  assert.equal(accepted.statusCode, 200);
+  assert.deepEqual(accepted.data, { ready: true });
+  const rejected = response();
+  await handler({ method: 'POST', headers: { origin: 'https://bgm-digital-solutions.vercel.app' } }, rejected);
+  assert.equal(rejected.statusCode, 403);
+});
 test('verification requires possession of the purchase session, not just a reference',async()=>{
   const handler=require('../api/verify-payment');
   let res=response();await handler({method:'GET',headers:{},query:{reference:'bgm-reference'}},res);assert.equal(res.statusCode,401);

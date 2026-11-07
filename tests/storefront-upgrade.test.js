@@ -104,6 +104,24 @@ test('a single payment currency is displayed without asking the buyer to choose'
   dom.window.close();
 });
 
+test('session rejection shows the server reason and does not initialize a payment', async () => {
+  const dom = store();
+  const requests = [];
+  dom.window.fetch = async url => {
+    requests.push(url);
+    return { ok: false, status: 403, json: async () => ({ error: 'Please submit this form from the store.' }) };
+  };
+  const doc = dom.window.document;
+  doc.querySelector('.buy').click();
+  doc.querySelector('#checkout-email').value = 'buyer@example.com';
+  doc.querySelector('#checkout-form').dispatchEvent(new dom.window.Event('submit', { cancelable: true }));
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(doc.querySelector('#checkout-error').textContent, 'Please submit this form from the store.');
+  assert.deepEqual(requests, ['/api/session']);
+  assert.equal(doc.querySelector('#checkout-submit').disabled, false);
+  dom.window.close();
+});
+
 test('product links open a persistent detail page using the published catalogue', () => {
   const dom = store();
   assert.equal(dom.window.document.querySelector('.product-link').getAttribute('href'), 'product.html?id=guide');
