@@ -1,0 +1,38 @@
+{
+  "generation": "Built-in image generation; selected mockups reviewed and optimized as 1200×800 JPEGs.",
+  "sharedArtDirection": "Editorial studio product mockups for BGM Digital Solutions: matte paper, warm ivory surface, real paper edges, diffused daylight, grounded shadows, Swiss typography, generous margins, forest green/ink/sage/ochre palette. No robots, holograms, glowing gradients, fabricated screenshots, customer results, awards, or reviews. Illustrative digital products, not physical delivery.",
+  "assets": [
+    {
+      "file": "bgm-guides-mockup.jpg",
+      "brief": "Landscape still life of three slim workbooks. Main green cover: BGM / Practical guides / Work · Learning · Business. Navy book: AI for business. Ivory book: Your next opportunity."
+    },
+    {
+      "file": "business-prompts.jpg",
+      "brief": "Single forest-green softcover, ivory bold sans-serif type: BGM / 500 ChatGPT Prompts / for Business Owners. Thin ochre rule."
+    },
+    {
+      "file": "ai-side-hustles.jpg",
+      "brief": "Single ink-navy softcover, warm ivory sans-serif type: BGM / AI Side Hustles / Blueprint. Thin ochre rule."
+    },
+    {
+      "file": "remote-jobs.jpg",
+      "brief": "Single muted-sage softcover, forest-green serif title: BGM / How to Get a Remote Job / 2026 / 2027."
+    },
+    {
+      "file": "scholarships.jpg",
+      "brief": "Single warm-ivory softcover, deep-green editorial serif title: BGM / How to Win Scholarships Abroad. Thin ochre rule."
+    },
+    {
+      "file": "upwork.jpg",
+      "brief": "Single muted-ochre softcover, ink-navy sans-serif title: BGM / How to Get Your First Upwork Client. No Upwork logo."
+    },
+    {
+      "file": "five-guide-bundle.jpg",
+      "brief": "Five lightly fanned slim guides in green, ink, sage, ivory and ochre. Foreground cover: BGM / Five-Guide Collection / Work · Learning · Business. Other covers use BGM and rules only."
+    },
+    {
+      "file": "collections-bank.jpg",
+      "brief": "Forest-green folder: BGM / Collections to Bank / University reconciliation toolkit. Ivory booklet: Operating guide. A mostly blank column-grid sheet without financial data; no fabricated software interface."
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+interface:
+  display_name: "BGM Product Studio"
+  short_description: "Create buyer packages, mockups and product listings"
+  default_prompt: "Use $bgm-product-studio to create my next BGM product. Ask me what it is about, what buyers need, and the NGN price and USD reference value."
+policy:
+  allow_implicit_invocation: true

@@ -20,6 +20,10 @@ npm run dev
 
 Open `http://localhost:3000`. Without credentials, the storefront shows a catalogue outage notice and retains service enquiries and WhatsApp. The local server is a development adapter, not a production server. This application needs server functions; GitHub Pages alone cannot run checkout.
 
+For a read-only design preview without private credentials, run `npm run dev -- --preview-catalogue`. This reads the public production catalogue, disables all purchase buttons and rejects payment initialization. It does not copy private assets or customer data.
+
+The storefront includes shareable `product.html?id=PRODUCT_ID` pages and `support.html` with the seven-day digital-product refund policy. Published database prices remain authoritative for checkout. USD references in `app.js` use the existing guide display values and do not enable USD payments or guarantee the card issuer's exchange rate. No USD reference has been assigned to the university toolkit.
+
 ```sh
 npm run check
 npm test

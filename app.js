@@ -4,9 +4,16 @@ const $ = selector => document.querySelector(selector);
 const grid = $('#product-grid'), search = $('#search'), category = $('#category');
 const modal = $('#modal'), checkoutModal = $('#checkout-modal');
 const form = $('#checkout-form'), errorBox = $('#checkout-error'), submit = $('#checkout-submit');
-let selection = null, requestVersion = 0, lastFocus;
-document.querySelector('#year').textContent = new Date().getFullYear();
-$('.menu').addEventListener('click', () => $('nav').classList.toggle('open'));
+let selection = null, requestVersion = 0, lastFocus, audience = 'all';
+const presentations = {
+  '500-business-prompts': { image: 'business-prompts', usdReference: 9, format: 'Business resource', audience: 'For business owners planning, marketing and running their business.' },
+  'ai-side-hustles': { image: 'ai-side-hustles', usdReference: 15, format: 'Business guide', audience: 'For people exploring and validating an AI-assisted service offer.' },
+  'remote-job-2026-2027': { image: 'remote-jobs', usdReference: 12, format: 'Career guide', audience: 'For job seekers preparing applications and screening remote opportunities.' },
+  'scholarships-abroad': { image: 'scholarships', usdReference: 15, format: 'Education guide', audience: 'For applicants researching funding and preparing scholarship applications.' },
+  'first-upwork-client': { image: 'upwork', usdReference: 12, format: 'Career guide', audience: 'For skilled beginners preparing a portfolio and applying for Upwork projects.' },
+  'five-guide-bundle': { image: 'five-guide-bundle', usdReference: 39, format: 'Guide collection', audience: 'For readers who want the five BGM guides in one purchase.' },
+  'bgm-collections-bank': { image: 'collections-bank', format: 'Excel toolkit', audience: 'For university bursaries and treasury teams reconciling collection records.' }
+};
 
 function node(tag, text, className) {
   const element = document.createElement(tag);
@@ -19,12 +26,13 @@ function button(text, action, className) {
   element.addEventListener('click', action); return element;
 }
 function enquiry(product, className) {
-  const link = node('a', 'Send enquiry', className);
-  // Static services may link to email, never arbitrary catalogue-supplied javascript URLs.
-  link.href = 'mailto:badmurs0@gmail.com?subject=' + encodeURIComponent(product.name + ' enquiry');
+  const link = node('a', 'Ask about this resource ↗', className);
+  link.href = 'https://wa.me/2349031921294?text=' + encodeURIComponent('Hello BGM, I would like to ask about ' + product.name + '.');
+  link.target = '_blank'; link.rel = 'noopener noreferrer';
   return link;
 }
 for (const name of [...new Set(products.map(p => p.category))].sort()) {
+  if (!category) break;
   const option = node('option', name); option.value = name; category.append(option);
 }
 function purchaseAction(product, className) {
@@ -32,28 +40,124 @@ function purchaseAction(product, className) {
   if (product.paymentEnabled) return button('Buy now', () => startPayment(product.id), className);
   const disabled = button('Checkout unavailable', () => {}, className); disabled.disabled = true; return disabled;
 }
+function displayPrice(product) {
+  const usd = presentations[product.id]?.usdReference;
+  return usd && !product.amounts?.USD ? product.price + ' / US$' + usd + ' reference' : product.price;
+}
+function cover(product) {
+  const presentation = presentations[product.id];
+  const wrapper = node('div', undefined, 'cover');
+  if (presentation) {
+    const image = document.createElement('img');
+    image.src = 'assets/' + presentation.image + '.jpg';
+    image.alt = product.name + ' — illustrative product mockup';
+    image.width = 1200; image.height = 800; image.loading = 'lazy'; image.decoding = 'async';
+    wrapper.append(image);
+  } else wrapper.append(node('span', product.name));
+  return wrapper;
+}
 function render() {
+  if (!grid) return;
   const query = search.value.toLowerCase().trim();
   const items = products.filter(p => (category.value === 'all' || p.category === category.value) &&
+    (audience === 'all' || (audience === 'learning' ? ['Career Guides', 'Education Guides', 'Bundles'].includes(p.category) : ['Business Resources', 'Business Software', 'Bundles'].includes(p.category))) &&
     `${p.name} ${p.short} ${p.category}`.toLowerCase().includes(query));
   grid.replaceChildren(...items.map(p => {
     const card = node('article', undefined, 'card'), body = node('div', undefined, 'card-body');
     const actions = node('div', undefined, 'card-actions');
-    actions.append(button('Details', () => details(p)), purchaseAction(p, 'buy'));
-    body.append(node('span', p.category, 'tag'), node('h3', p.name), node('p', p.short), node('div', p.price, 'price'), actions);
-    card.append(node('div', p.name, 'cover'), body); return card;
+    const link = node('a', 'View resource →', 'product-link');
+    link.href = 'product.html?id=' + encodeURIComponent(p.id);
+    const titleLink = node('a', p.name); titleLink.href = link.href;
+    const title = node('h3'); title.append(titleLink);
+    actions.append(link, purchaseAction(p, 'buy'));
+    body.append(node('span', presentations[p.id]?.format || p.category, 'tag'), title, node('p', p.short), node('div', displayPrice(p), 'price'), actions);
+    const artwork = node('a', undefined, 'cover-link'); artwork.href = link.href; artwork.setAttribute('aria-label', 'View ' + p.name); artwork.append(cover(p));
+    card.append(artwork, body); return card;
   }));
   $('#empty').hidden = items.length > 0;
+  $('#product-count').textContent = items.length + (items.length === 1 ? ' resource' : ' resources');
+  grid.setAttribute('aria-busy', 'false');
+}
+if (grid) grid.before(node('p', 'USD values are for reference. Checkout charges Nigerian naira (NGN); your bank’s conversion may differ. Product images are illustrative mockups.', 'small collection-note'));
+function renderDetail() {
+  const target = $('#product-detail');
+  if (!target) return;
+  target.setAttribute('aria-busy', 'false');
+  const id = new URLSearchParams(location.search).get('id');
+  const product = products.find(item => item.id === id);
+  if (!product) {
+    const robots = document.createElement('meta'); robots.name = 'robots'; robots.content = 'noindex'; document.head.append(robots);
+    target.replaceChildren(node('h1', 'This resource is not available.'), node('p', 'Return to the collection to see current resources, or contact BGM for help.'));
+    return;
+  }
+  document.title = product.name + ' | BGM Digital Solutions';
+  document.querySelector('meta[name="description"]').content = product.short;
+  const canonical = document.createElement('link'); canonical.rel = 'canonical'; canonical.href = 'https://www.bgmsolutions.site/product.html?id=' + encodeURIComponent(product.id); document.head.append(canonical);
+  const presentation = presentations[product.id];
+  const intro = node('div', undefined, 'detail-intro'), summary = node('div', undefined, 'detail-summary');
+  const visual = node('figure', undefined, 'detail-visual'); visual.append(cover(product));
+  if (product.status !== 'service') visual.append(node('figcaption', 'Illustrative mockup. Digital download; no physical product.'));
+  const detailImage = visual.querySelector('img');
+  if (detailImage) { detailImage.loading = 'eager'; detailImage.fetchPriority = 'high'; }
+  summary.append(node('p', product.category, 'eyebrow'), node('h1', product.name), node('p', product.short, 'page-intro'));
+  if (presentation) summary.append(node('p', presentation.audience, 'audience-description'));
+  summary.append(node('div', displayPrice(product), 'detail-price'), purchaseAction(product, 'btn primary buy'));
+  if (presentation?.usdReference && !product.amounts?.USD) summary.append(node('p', 'USD is a reference value. Checkout charges NGN; your bank’s conversion may differ.', 'small'));
+  if (product.status !== 'service') {
+    const policy = node('a', '7-day refunds · Read the policy →', 'policy-link'); policy.href = 'support.html#refunds'; summary.append(policy);
+  }
+  summary.append(node('p', product.status === 'service' ? 'Custom deployment is discussed before work begins.' : 'Secure payment through Paystack. Download after payment confirmation.', 'small'));
+  intro.append(visual, summary);
+  const content = node('div', undefined, 'detail-content'), included = node('section'), list = node('ul', undefined, 'included-list');
+  list.append(...product.features.map(feature => node('li', feature)));
+  included.append(node('p', 'Inside this resource', 'eyebrow'), node('h2', 'What you get'), node('p', product.description), list);
+  const requirements = node('section');
+  requirements.append(node('h2', 'Before you buy'));
+  if (product.id === 'bgm-collections-bank') {
+    requirements.append(node('p', 'This is an offline Excel toolkit. It compares receipts, Paystack records, settlements, bank deposits and cashbook entries. It does not connect to your bank account.'),
+      node('p', 'Ask BGM to confirm compatibility with your Excel version, input files and intended use before buying.'));
+  } else if (product.status !== 'service') {
+    requirements.append(node('p', 'These resources support preparation and practical work. They do not guarantee jobs, scholarships, clients or earnings. Ask BGM if you need a specific file format or have a question about suitability.'));
+  } else requirements.append(node('p', 'Describe your workflow and required output. Scope, delivery and project terms are discussed in a proposal.'));
+  requirements.append(enquiry(product, 'text-link'));
+  const access = node('section');
+  access.append(node('h2', 'Your files & support'), node('p', 'After payment, return to the confirmation page to download your files. Keep the page in the same browser. For access on another device, contact support with your payment reference and checkout email.'));
+  const support = node('a', 'Downloads, support & 7-day refunds →', 'text-link'); support.href = 'support.html'; access.append(support);
+  content.append(included, requirements);
+  if (product.status !== 'service') content.append(access);
+  if (product.id === 'five-guide-bundle') {
+    const ids = ['500-business-prompts', 'ai-side-hustles', 'remote-job-2026-2027', 'scholarships-abroad', 'first-upwork-client'];
+    const guides = ids.map(id => products.find(item => item.id === id && item.status === 'live'));
+    if (guides.every(Boolean)) {
+      const bundle = node('section'), links = node('ul', undefined, 'included-list');
+      for (const guide of guides) {
+        const li = node('li'), link = node('a', guide.name);
+        link.href = 'product.html?id=' + encodeURIComponent(guide.id); li.append(link); links.append(li);
+      }
+      bundle.append(node('h2', 'The five guides'), links);
+      const total = guides.reduce((sum, guide) => sum + (guide.amounts?.NGN || 0), 0);
+      if (guides.every(guide => Number.isSafeInteger(guide.amounts?.NGN)) && product.amounts?.NGN && total > product.amounts.NGN) {
+        const money = amount => new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', maximumFractionDigits: 0 }).format(amount / 100);
+        bundle.append(node('p', 'Bought separately: ' + money(total) + '. Bundle: ' + money(product.amounts.NGN) + '. Save ' + money(total - product.amounts.NGN) + '.', 'bundle-saving'));
+      }
+      included.after(bundle);
+    }
+  }
+  target.replaceChildren(intro, content);
 }
 function show(dialog) {
   lastFocus = document.activeElement;
   dialog.hidden = false; document.body.style.overflow = 'hidden';
+  for (const background of document.querySelectorAll('main,header,footer')) background.inert = true;
   dialog.querySelector('button, input, a')?.focus();
 }
-function close(dialog) {
+function closeDialog(dialog) {
   dialog.hidden = true;
   if (dialog === checkoutModal) { selection = null; requestVersion++; }
-  if (modal.hidden && checkoutModal.hidden) document.body.style.overflow = '';
+  if (modal.hidden && checkoutModal.hidden) {
+    document.body.style.overflow = '';
+    for (const background of document.querySelectorAll('main,header,footer')) background.inert = false;
+  }
   lastFocus?.focus();
 }
 function details(product) {
@@ -66,28 +170,31 @@ function details(product) {
 function startPayment(id) {
   const product = products.find(p => p.id === id && p.paymentEnabled);
   if (!product) return;
-  close(modal);
+  if (!modal.hidden) closeDialog(modal);
   selection = { product, key: null, fingerprint: null };
   requestVersion++;
-  $('#checkout-product-name').textContent = `${product.name} — ${product.price}`;
   $('#checkout-email').value = '';
   const currency = $('#checkout-currency');
   currency.replaceChildren(...Object.keys(product.amounts).map(code => {
     const option = node('option', `${code} — ${new Intl.NumberFormat('en-NG', { style: 'currency', currency: code }).format(product.amounts[code] / 100)}`);
     option.value = code; return option;
   }));
+  $('#currency-field').hidden = currency.options.length === 1;
+  $('#checkout-product-name').textContent = product.name + ' — ' + currency.selectedOptions[0].textContent;
+  currency.onchange = () => { $('#checkout-product-name').textContent = product.name + ' — ' + currency.selectedOptions[0].textContent; };
   errorBox.hidden = true; submit.disabled = false; submit.textContent = 'Continue to secure payment';
   show(checkoutModal); $('#checkout-email').focus();
 }
-$('#close').addEventListener('click', () => close(modal));
-$('#checkout-close').addEventListener('click', () => close(checkoutModal));
+$('#close').addEventListener('click', () => closeDialog(modal));
+$('#checkout-close').addEventListener('click', () => closeDialog(checkoutModal));
+modal.setAttribute('aria-label', 'Product details');
 for (const dialog of [modal, checkoutModal]) {
   dialog.setAttribute('role', 'dialog'); dialog.setAttribute('aria-modal', 'true');
-  dialog.addEventListener('click', event => { if (event.target === dialog) close(dialog); });
+  dialog.addEventListener('click', event => { if (event.target === dialog) closeDialog(dialog); });
   dialog.addEventListener('keydown', event => {
-    if (event.key === 'Escape') close(dialog);
+    if (event.key === 'Escape') closeDialog(dialog);
     if (event.key !== 'Tab') return;
-    const focusable = [...dialog.querySelectorAll('button:not(:disabled),a[href],input,select')];
+    const focusable = [...dialog.querySelectorAll('button:not(:disabled),a[href],input,select')].filter(element => !element.closest('[hidden]'));
     const first = focusable[0], last = focusable.at(-1);
     if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
     if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
@@ -129,5 +236,19 @@ form.addEventListener('submit', async event => {
     if (version === requestVersion) { submit.disabled = false; submit.textContent = 'Continue to secure payment'; }
   }
 });
-search.addEventListener('input', render); category.addEventListener('change', render);
+search?.addEventListener('input', render); category?.addEventListener('change', render);
+for (const element of document.querySelectorAll('[data-filter], [data-audience]')) {
+  element.addEventListener('click', () => {
+    audience = element.dataset.filter || element.dataset.audience;
+    category.value = 'all'; search.value = '';
+    for (const tab of document.querySelectorAll('[data-filter]')) tab.setAttribute('aria-pressed', String(tab.dataset.filter === audience));
+    render();
+  });
+}
+$('#clear-filters')?.addEventListener('click', () => {
+  audience = 'all'; search.value = ''; category.value = 'all';
+  for (const tab of document.querySelectorAll('[data-filter]')) tab.setAttribute('aria-pressed', String(tab.dataset.filter === 'all'));
+  render();
+});
 render();
+renderDetail();

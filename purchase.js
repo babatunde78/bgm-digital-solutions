@@ -1,7 +1,7 @@
 'use strict';
 const $ = selector => document.querySelector(selector);
 let reference = new URLSearchParams(location.search).get('reference') || new URLSearchParams(location.search).get('trxref');
-let busy = false, retries = 0, timer;
+let busy = false, retries = 0, timer, emailEnabled = false;
 async function check() {
   if (!reference || busy) return;
   busy = true; $('#retry').disabled = true; $('#retry').hidden = false;
@@ -33,7 +33,7 @@ async function check() {
   } catch (error) {
     $('#downloads').hidden = true;
     $('#title').textContent = 'Purchase access needs attention';
-    $('#message').textContent = error.name === 'TimeoutError' ? 'Confirmation is taking longer than expected. Check again shortly or recover access by email.' : error.message;
+    $('#message').textContent = error.name === 'TimeoutError' ? 'Confirmation is taking longer than expected. Check again shortly or contact BGM on WhatsApp. You do not need to pay again.' : error.message;
   } finally { busy = false; $('#retry').disabled = false; }
 }
 $('#retry').addEventListener('click', () => { clearTimeout(timer); check(); });
@@ -57,6 +57,7 @@ async function start() {
     const status = await fetch('/api/store-status', { cache: 'no-store', signal: AbortSignal.timeout(5000) });
     const settings = await status.json();
     if (status.ok && settings.emailEnabled) {
+      emailEnabled = true;
       $('#recovery-form').hidden = false;
       $('#recovery-help').textContent = 'Enter your checkout email and payment reference to receive an access link.';
     }
@@ -76,6 +77,6 @@ async function start() {
     } catch (error) { $('#message').textContent = error.message; return; }
   }
   if (reference) await check();
-  else $('#message').textContent = 'Recover an existing purchase using the form below, or contact us for help.';
+  else $('#message').textContent = emailEnabled ? 'Recover an existing purchase using the form below, or contact us for help.' : 'Need your files? Contact BGM on WhatsApp with your payment reference and checkout email. We will verify your purchase before restoring access.';
 }
 start();

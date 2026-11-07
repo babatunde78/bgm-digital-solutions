@@ -1,0 +1,138 @@
+'use strict';
+const { test } = require('node:test');
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const { JSDOM } = require('jsdom');
+
+const product = { id: 'guide', name: 'A useful guide', category: 'Career Guides', short: 'Prepare your application.', description: 'A guide to preparing applications.', features: ['Application planning'], price: '₦10,000.00', amounts: { NGN: 1000000 }, paymentEnabled: true, status: 'live' };
+test('loading the storefront as browser scripts preserves the native window close method', () => {
+  const dom = new JSDOM(fs.readFileSync('index.html', 'utf8'), { url: 'https://store.example', runScripts: 'dangerously' });
+  const nativeClose = dom.window.close;
+  dom.window.PRODUCTS = [product];
+  const script = dom.window.document.createElement('script');
+  script.textContent = fs.readFileSync('app.js', 'utf8');
+  dom.window.document.body.append(script);
+  const actualClose = dom.window.close;
+  nativeClose.call(dom.window);
+  assert.equal(actualClose, nativeClose);
+});
+function store(file = 'index.html', query = '', catalogue = [product]) {
+  const dom = new JSDOM(fs.readFileSync(file, 'utf8'), { url: `https://store.example/${file}${query}`, runScripts: 'outside-only' });
+  dom.window.PRODUCTS = catalogue;
+  dom.window.eval(fs.readFileSync('app.js', 'utf8'));
+  return dom;
+}
+
+test('navigation works before the catalogue is available and closes after choosing a destination', () => {
+  const dom = new JSDOM(fs.readFileSync('index.html', 'utf8'), { url: 'https://store.example', runScripts: 'outside-only' });
+  const { window } = dom;
+  window.eval(fs.readFileSync('site.js', 'utf8'));
+  const menu = window.document.querySelector('.menu');
+  menu.click();
+  assert.equal(menu.getAttribute('aria-expanded'), 'true');
+  window.document.querySelector('nav a').click();
+  assert.equal(menu.getAttribute('aria-expanded'), 'false');
+  assert.equal(window.document.querySelector('nav').classList.contains('open'), false);
+  dom.window.close();
+});
+
+test('service details do not promise digital delivery or a product refund', () => {
+  const service = { ...product, id: 'service', status: 'service', paymentEnabled: false };
+  const dom = store('product.html', '?id=service', [service]);
+  const detail = dom.window.document.querySelector('#product-detail');
+  assert.equal(detail.querySelector('.policy-link'), null);
+  assert.equal(detail.textContent.includes('Your files & support'), false);
+  assert.match(detail.textContent, /proposal/);
+  dom.window.close();
+});
+
+test('a selected payment currency updates the payable checkout summary', () => {
+  const dom = store('index.html', '', [{ ...product, amounts: { NGN: 1000000, USD: 1200 }, price: '₦10,000 / $12' }]);
+  const doc = dom.window.document;
+  doc.querySelector('.buy').click();
+  assert.equal(doc.querySelector('#currency-field').hidden, false);
+  doc.querySelector('#checkout-currency').value = 'USD';
+  doc.querySelector('#checkout-currency').dispatchEvent(new dom.window.Event('change'));
+  assert.match(doc.querySelector('#checkout-product-name').textContent, /USD|\$/);
+  assert.equal(doc.querySelector('#checkout-product-name').textContent.includes('₦'), false);
+  dom.window.close();
+});
+
+test('bundle savings use current published amounts and exclude the business toolkit', () => {
+  const ids = ['500-business-prompts', 'ai-side-hustles', 'remote-job-2026-2027', 'scholarships-abroad', 'first-upwork-client'];
+  const guides = ids.map(id => ({ ...product, id, name: id, amounts: { NGN: 1000000 } }));
+  const bundle = { ...product, id: 'five-guide-bundle', amounts: { NGN: 3500000 }, price: '₦35,000' };
+  const dom = store('product.html', '?id=five-guide-bundle', [...guides, bundle, { ...product, id: 'bgm-collections-bank', amounts: { NGN: 5490000 } }]);
+  assert.equal(dom.window.document.querySelector('.bundle-saving').textContent, 'Bought separately: ₦50,000. Bundle: ₦35,000. Save ₦15,000.');
+  assert.equal(dom.window.document.querySelectorAll('#product-detail a[href^="product.html?id="]').length, 5);
+  dom.window.close();
+  const missingGuide = store('product.html', '?id=five-guide-bundle', [bundle, ...guides.slice(1)]);
+  assert.equal(missingGuide.window.document.querySelector('.bundle-saving'), null);
+  missingGuide.window.close();
+});
+
+test('USD reference values are visible beside naira without enabling dollar checkout', () => {
+  const guide = { ...product, id: 'remote-job-2026-2027', price: '₦10,000.00' };
+  const dom = store('index.html', '', [guide]);
+  const doc = dom.window.document;
+  assert.equal(doc.querySelector('.price').textContent, '₦10,000.00 / US$12 reference');
+  doc.querySelector('.buy').click();
+  assert.equal(doc.querySelectorAll('#checkout-currency option').length, 1);
+  assert.equal(doc.querySelector('#checkout-currency').value, 'NGN');
+  assert.equal(doc.querySelector('#checkout-product-name').textContent.includes('US$12'), false);
+  dom.window.close();
+});
+
+test('a single payment currency is displayed without asking the buyer to choose', () => {
+  const dom = store();
+  dom.window.document.querySelector('.buy').click();
+  assert.equal(dom.window.document.querySelector('#checkout-currency').value, 'NGN');
+  assert.equal(dom.window.document.querySelector('#currency-field').hidden, true);
+  assert.equal(dom.window.document.querySelector('#checkout-modal').getAttribute('aria-labelledby'), 'checkout-heading');
+  dom.window.close();
+});
+
+test('product links open a persistent detail page using the published catalogue', () => {
+  const dom = store();
+  assert.equal(dom.window.document.querySelector('.product-link').getAttribute('href'), 'product.html?id=guide');
+  dom.window.close();
+  const detail = store('product.html', '?id=guide');
+  assert.equal(detail.window.document.querySelector('#product-detail h1').textContent, product.name);
+  assert.equal(detail.window.document.querySelector('#product-detail').textContent.includes('Application planning'), true);
+  detail.window.document.querySelector('#product-detail .buy').click();
+  assert.equal(detail.window.document.querySelector('#checkout-modal').hidden, false);
+  detail.window.close();
+});
+
+test('an unpublished product has no purchase action on its detail page', () => {
+  const dom = store('product.html', '?id=unpublished');
+  assert.equal(dom.window.document.querySelector('#product-detail .buy'), null);
+  assert.match(dom.window.document.querySelector('#product-detail').textContent, /not available/);
+  dom.window.close();
+});
+
+for (const emailEnabled of [false, true]) {
+  test(`purchase support matches emailEnabled=${emailEnabled} without a payment reference`, async () => {
+    const dom = new JSDOM(fs.readFileSync('payment-success.html', 'utf8'), { url: 'https://store.example/payment-success.html', runScripts: 'outside-only' });
+    dom.window.fetch = async () => ({ ok: true, json: async () => ({ emailEnabled }) });
+    dom.window.eval(fs.readFileSync('purchase.js', 'utf8'));
+    await new Promise(resolve => setImmediate(resolve));
+    assert.equal(dom.window.document.querySelector('#recovery-form').hidden, !emailEnabled);
+    const message = dom.window.document.querySelector('#message').textContent;
+    assert.equal(message.includes('form below'), emailEnabled);
+    if (!emailEnabled) assert.match(message, /WhatsApp/);
+    dom.window.close();
+  });
+}
+
+test('catalogue failure retains enquiry services and exposes a retry action', async () => {
+  const dom = new JSDOM(fs.readFileSync('index.html', 'utf8'), { url: 'https://store.example', runScripts: 'outside-only' });
+  dom.window.PRODUCTS = [{ ...product, id: 'service', status: 'service', paymentEnabled: false }];
+  dom.window.fetch = async () => { throw new TypeError('Network unavailable'); };
+  dom.window.eval(fs.readFileSync('catalog-loader.js', 'utf8'));
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(dom.window.PRODUCTS.length, 1);
+  assert.equal(dom.window.document.querySelector('#catalog-retry').hidden, false);
+  assert.match(dom.window.document.querySelector('#catalog-status').textContent, /unavailable/);
+  dom.window.close();
+});
