@@ -5,6 +5,7 @@ let busy = false, retries = 0, timer, emailEnabled = false;
 async function check() {
   if (!reference || busy) return;
   busy = true; $('#retry').disabled = true; $('#retry').hidden = false;
+  $('#downloads').hidden = true;
   $('#reference').textContent = `Payment reference: ${reference}`;
   $('#recovery-reference').value = reference;
   $('#title').textContent = 'Checking your payment';

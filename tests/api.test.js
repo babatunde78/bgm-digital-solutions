@@ -38,6 +38,7 @@ test('verification requires possession of the purchase session, not just a refer
   // No matching recovered session.
   const prior=global.fetch;global.fetch=async(url,...rest)=>String(url).includes('store_order_sessions')?reply([]):prior(url,...rest);
   res=response();await handler({method:'GET',headers:{cookie:`bgm_session=${token}`},query:{reference:'bgm-reference'}},res);assert.equal(res.statusCode,401);
+  assert.equal(res.data.error, 'Reopen your purchase in the original browser or contact BGM support to recover access.');
 });
 test('webhook rejects short signatures without crashing and acknowledges only after persistence',async()=>{
   const handler=require('../api/paystack-webhook');

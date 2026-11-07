@@ -122,6 +122,47 @@ test('session rejection shows the server reason and does not initialize a paymen
   dom.window.close();
 });
 
+test('closing checkout while the session starts prevents payment initialization', async () => {
+  const dom = store();
+  const requests = [];
+  let finishSession;
+  dom.window.fetch = url => {
+    requests.push(url);
+    if (url === '/api/session') return new Promise(resolve => { finishSession = resolve; });
+    return Promise.resolve({ ok: false, json: async () => ({ error: 'Unexpected initialization' }) });
+  };
+  const doc = dom.window.document;
+  doc.querySelector('.buy').click();
+  doc.querySelector('#checkout-email').value = 'buyer@example.com';
+  doc.querySelector('#checkout-form').dispatchEvent(new dom.window.Event('submit', { cancelable: true }));
+  doc.querySelector('#checkout-close').click();
+  finishSession({ ok: true });
+  await new Promise(resolve => setImmediate(resolve));
+  dom.window.close();
+  assert.deepEqual(requests, ['/api/session']);
+});
+
+test('download buttons are hidden while payment access is being rechecked', async () => {
+  const dom = new JSDOM(fs.readFileSync('payment-success.html', 'utf8'), { url: 'https://store.example/payment-success.html?reference=bgm-check', runScripts: 'outside-only' });
+  let finishRecheck;
+  let checks = 0;
+  dom.window.fetch = async url => {
+    if (url === '/api/store-status') return { ok: true, json: async () => ({ emailEnabled: false }) };
+    if (++checks === 1) return { ok: true, json: async () => ({ verified: true, product: { name: 'Guide' }, downloads: [{ name: 'Guide.zip', url: '/api/download?token=synthetic' }], emailEnabled: false }) };
+    return new Promise(resolve => { finishRecheck = resolve; });
+  };
+  dom.window.eval(fs.readFileSync('purchase.js', 'utf8'));
+  await new Promise(resolve => setImmediate(resolve));
+  const doc = dom.window.document;
+  assert.equal(doc.querySelector('#downloads').hidden, false);
+  doc.querySelector('#retry').click();
+  const hiddenWhileChecking = doc.querySelector('#downloads').hidden;
+  finishRecheck({ ok: false, json: async () => ({ error: 'Access is suspended.' }) });
+  await new Promise(resolve => setImmediate(resolve));
+  dom.window.close();
+  assert.equal(hiddenWhileChecking, true);
+});
+
 test('product links open a persistent detail page using the published catalogue', () => {
   const dom = store();
   assert.equal(dom.window.document.querySelector('.product-link').getAttribute('href'), 'product.html?id=guide');

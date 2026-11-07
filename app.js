@@ -217,6 +217,7 @@ form.addEventListener('submit', async event => {
   submit.disabled = true; submit.textContent = 'Opening secure payment…'; errorBox.hidden = true;
   try {
     const session = await fetch('/api/session', { method: 'POST', signal: AbortSignal.timeout(15000) });
+    if (version !== requestVersion) return;
     if (!session.ok) {
       const failure = await session.json().catch(() => null);
       throw new Error(typeof failure?.error === 'string' ? failure.error : 'Checkout could not start. Please refresh the page and try again.');
