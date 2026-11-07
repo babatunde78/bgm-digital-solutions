@@ -3,10 +3,10 @@
 const http = require('node:http');
 const fs = require('node:fs');
 const path = require('node:path');
-const assets = new Set(['index.html','404.html','payment-success.html','styles.css','app.js','products.js','catalog-loader.js','purchase.js','robots.txt']);
+const assets = new Set(['index.html','404.html','payment-success.html','styles.css','app.js','products.js','catalog-loader.js','purchase.js','robots.txt','sitemap.xml']);
 const port = Number(process.env.PORT || 3000);
 process.env.SITE_URL ||= `http://localhost:${port}`;
-const types = { '.html':'text/html; charset=utf-8', '.css':'text/css; charset=utf-8', '.js':'text/javascript; charset=utf-8', '.txt':'text/plain' };
+const types = { '.html':'text/html; charset=utf-8', '.css':'text/css; charset=utf-8', '.js':'text/javascript; charset=utf-8', '.txt':'text/plain', '.xml':'application/xml; charset=utf-8' };
 http.createServer(async (req,res) => {
   const url = new URL(req.url, 'http://localhost');
   res.status = code => { res.statusCode = code; return res; };
