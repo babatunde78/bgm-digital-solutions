@@ -1,5 +1,7 @@
 # Campus deployment plan — not deployed
 
+Status note, 8 November 2026: the existing BGM storefront received the separate commit recorded in `docs/IMPLEMENTATION_STATUS.md`. This did not deploy the Campus connected application or modify the dedicated Campus project described below.
+
 Vercel target prepared: a separate, empty `campus-bursary` project was created in the connected BGM team (project ID `prj_8rlz3uG4OmXvYPJl4ij5H74XCdBE`). It has no deployment, no attached custom domain and no environment values. The existing `bgm-digital-solutions` production project and `bgmsolutions.site` assignments were left unchanged. Do not add the Campus subdomain or deploy application code until the dedicated database, completed release gates and secure production configuration are ready. No Supabase management connection is currently available in this session, so no database was created.
 
 Budget continuation: migration `campus/migrations/012_budget_controls.sql` follows 001–011 in the dedicated Campus database only. Apply through the reviewed migration process after a verified backup, then run the budget database, gateway and client checks described in CONNECTED_BUDGETS.md. No new environment variables, packages, root storefront migrations or public build assets were added. This migration has run only in disposable local PostgreSQL-engine fixtures; hosted deployment/restoration and independent review remain pending. Preserve financial history through forward fixes or isolated verified restore; do not drop budget tables to roll back a production issue.
