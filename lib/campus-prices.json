@@ -1,8 +1,8 @@
 {
-  "version": "2026-11-07.1",
+  "version": "2026-11-08.1",
   "productName": "Campus Bursary",
-  "publication": "draft",
-  "effectiveFrom": null,
+  "publication": "published",
+  "effectiveFrom": "2026-11-08",
   "currency": "NGN",
   "billing": "annual",
   "reference": { "ngnPerUsdHundredths": 134811, "date": "2026-11-07", "label": "approximate equivalent" },

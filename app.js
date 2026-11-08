@@ -13,9 +13,9 @@ const presentations = {
   'first-upwork-client': { image: 'upwork', usdReference: 12, format: 'Career guide', audience: 'For skilled beginners preparing a portfolio and applying for Upwork projects.' },
   'five-guide-bundle': { image: 'five-guide-bundle', usdReference: 39, format: 'Guide collection', audience: 'For readers who want the five BGM guides in one purchase.' },
   'bgm-collections-bank': { image: 'collections-bank', usdReference: 40.75, format: 'Excel toolkit', audience: 'For university bursaries and treasury teams reconciling collection records.' },
-  'campus-bursary-package-a': { format: 'Student revenue & treasury · Excel', audience: 'For student-accounts and treasury teams that need traceable schedules from fee billing through receipt allocation and settlement review.' },
-  'campus-bursary-package-b': { format: 'Budget & expenditure control · Excel', audience: 'For bursary teams reviewing budgets, commitments, supplier bills, payments, advances and actual expenditure.' },
-  'campus-bursary-full-excel': { format: 'Full bursary suite · Excel', audience: 'For institutions that want both operational packages plus manual ledger and control-account review schedules.' }
+  'campus-bursary-package-a': { image: 'campus-bursary-a', format: 'Student revenue & treasury · Excel', audience: 'For student-accounts and treasury teams that need traceable schedules from fee billing through receipt allocation and settlement review.' },
+  'campus-bursary-package-b': { image: 'campus-bursary-b', format: 'Budget & expenditure control · Excel', audience: 'For bursary teams reviewing budgets, commitments, supplier bills, payments, advances and actual expenditure.' },
+  'campus-bursary-full-excel': { image: 'campus-bursary-full-excel', format: 'Full bursary suite · Excel', audience: 'For institutions that want both operational packages plus manual ledger and control-account review schedules.' }
 };
 
 function node(tag, text, className) {

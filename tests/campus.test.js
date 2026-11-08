@@ -9,7 +9,8 @@ test('quotes preserve authoritative NGN totals and a historical price snapshot',
   const saved = quote('a'); saved.annualKobo = 1;
   assert.equal(quote('a').annualKobo, 60000000);
   assert.equal(quote('connected').startingFrom, true);
-  assert.equal(priceBook.publication, 'draft');
+  assert.equal(priceBook.publication, 'published');
+  assert.equal(priceBook.effectiveFrom, '2026-11-08');
 });
 test('suite annual discount is twenty percent and total USD rounds only after addition', () => {
   assert.equal(quote('excel').annualKobo * 100 / (quote('a').annualKobo + quote('b').annualKobo), 80);

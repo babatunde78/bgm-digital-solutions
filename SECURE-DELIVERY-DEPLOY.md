@@ -30,6 +30,8 @@ The Supabase keys were checked through Vercel metadata and are now assigned to *
 | `CHECKOUT_ENABLED` | `false` until acceptance checks pass | `true` only in a configured test environment |
 | `EMAIL_ENABLED` | **`false` while Resend is paused** | `false` unless explicitly testing email |
 
+Environment metadata inspected on 8 November 2026 showed Production `PAYSTACK_MODE=live` and `CHECKOUT_ENABLED=true`. Preview showed `PAYSTACK_MODE=test`, `CHECKOUT_ENABLED=false`, and no Preview `PAYSTACK_SECRET_KEY`. No secret values were decrypted. Configure a test key through Vercel's secure environment settings and enable Preview checkout before attempting a provider sandbox transaction; do not change Production mode for a test.
+
 Email is optional. Do not add Resend credentials now. Later, if requested, configure `RESEND_API_KEY` and a verified `EMAIL_FROM`, then set `EMAIL_ENABLED=true`. Paused receipt tasks remain stored without email-provider calls; their access-token age begins on their first email processing attempt. Already-issued links expire after seven days. Invalid, expired or exhausted tasks require operator review.
 
 Do not expose secrets through frontend environment prefixes or commit `.env.local`. Updating environment variables requires a redeployment. Keep test and live signing keys distinct even though their orders share a database.
@@ -108,6 +110,6 @@ For rollback set `CHECKOUT_ENABLED=false` and redeploy. Keep webhook intake, sch
 
 Local syntax, build, database and flow tests pass. Provider calls in the integration test are synthetic; no charge or outbound email was performed. The browser automation host was unavailable, so visual screenshots could not be collected. DOM behavior, API handling and the complete SQL-backed lifecycle were tested programmatically.
 
-The remaining live boundary is applying the migration/configuration and deploying this source, then exercising a real Paystack test transaction and actual private Blob download. Production database data, account currencies, signer settings and actual files have not been independently validated.
+The Campus Excel production release is deployed; the owner confirmed one real production purchase and file download on 8 November 2026. This confirmation was not independently matched to the provider or database records in this session. Preview provider acceptance remains pending because its test checkout is disabled and no Preview Paystack secret is configured. Other historical storefront deployment/database checks in this guide may also be superseded by later release records; consult `docs/IMPLEMENTATION_STATUS.md` for the current Campus Excel release evidence.
 
 References: [Paystack verification](https://paystack.com/docs/payments/verify-payments/), [webhook signatures](https://paystack.com/docs/payments/webhooks/), [Vercel Node request bodies](https://vercel.com/docs/functions/runtimes/node-js), [Blob SDK](https://vercel.com/docs/vercel-blob/using-blob-sdk), [Supabase database functions](https://supabase.com/docs/guides/database/functions).

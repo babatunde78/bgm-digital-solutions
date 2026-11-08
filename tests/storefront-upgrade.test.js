@@ -110,6 +110,27 @@ test('Campus prices show a dated approximate USD equivalent without adding USD c
   dom.window.close();
 });
 
+test('Campus product covers appear in the storefront catalogue and product details', () => {
+  const images = ['campus-bursary-a', 'campus-bursary-b', 'campus-bursary-full-excel'];
+  const campusProducts = images.map((image, index) => ({ ...product,
+    id: ['campus-bursary-package-a', 'campus-bursary-package-b', 'campus-bursary-full-excel'][index],
+    name: ['Student Fees & Treasury Control', 'Budget-to-Payment Control', 'Complete Bursary Control Suite'][index]
+  }));
+  const catalogue = store('index.html', '', campusProducts);
+  const cards = catalogue.window.document.querySelectorAll('#product-grid .cover img');
+  assert.equal(cards.length, 3);
+  cards.forEach((image, index) => {
+    assert.equal(image.getAttribute('src'), `assets/${images[index]}.jpg`);
+    assert.match(image.alt, /illustrative product mockup/);
+    assert(fs.existsSync(`assets/${images[index]}.jpg`));
+  });
+  catalogue.window.close();
+
+  const detail = store('product.html', '?id=campus-bursary-full-excel', campusProducts);
+  assert.equal(detail.window.document.querySelector('.detail-visual img').getAttribute('src'), 'assets/campus-bursary-full-excel.jpg');
+  detail.window.close();
+});
+
 test('Campus Full Excel shows first-year savings against current published package prices', () => {
   const packageA = { ...product, id: 'campus-bursary-package-a', amounts: { NGN: 80000000 } };
   const packageB = { ...product, id: 'campus-bursary-package-b', amounts: { NGN: 120000000 } };
@@ -123,29 +144,68 @@ test('Campus Full Excel shows first-year savings against current published packa
   missingPackage.window.close();
 });
 
-test('Campus pilot preview shows real package copy without pricing or checkout actions', async () => {
+test('Campus page shows live catalogue prices and secure product links', async () => {
   const definitions = JSON.parse(fs.readFileSync('lib/product-import.json', 'utf8'))
     .filter(item => item.id.startsWith('campus-bursary-'))
-    .map(({ id, name, short, description, features }) => ({ id, name, short, description, features }));
+    .map(({ id, name, short, description, features }, index) => ({ id, name, short, description, features,
+      paymentEnabled: true, price: `NGN ${800000 + index * 400000}`, usdReference: '593.42', usdRateDate: '2026-11-07' }));
   const dom = new JSDOM(fs.readFileSync('campus-bursary.html', 'utf8'), {
     url: 'https://store.example/campus-bursary.html', runScripts: 'outside-only'
   });
   dom.window.fetch = async path => {
-    assert.equal(path, '/campus-preview.json');
-    return { ok: true, json: async () => ({ productName: 'Campus Bursary', products: definitions }) };
+    assert.equal(path, '/api/catalog');
+    return { ok: true, json: async () => ({ products: definitions }) };
   };
   dom.window.eval(fs.readFileSync('campus-preview.js', 'utf8'));
   await new Promise(resolve => setImmediate(resolve));
-  const text = dom.window.document.querySelector('#campus-product-list').textContent;
+  const list = dom.window.document.querySelector('#campus-product-list');
+  const text = list.textContent;
   for (const item of definitions) {
     assert(text.includes(item.name));
     assert(text.includes(item.short));
     assert(text.includes(item.description));
   }
-  assert.equal(dom.window.document.querySelectorAll('#campus-product-list .pilot-status').length, 3);
-  assert.equal(dom.window.document.querySelectorAll('#campus-product-list a[href^="https://wa.me/"]').length, 3);
-  assert.equal(dom.window.document.querySelectorAll('#campus-product-list .buy, #campus-product-list button').length, 0);
-  assert.doesNotMatch(text, /₦|NGN|US\$/);
+  const images = ['campus-bursary-a', 'campus-bursary-b', 'campus-bursary-full-excel'];
+  const artwork = list.querySelectorAll('.campus-product-art');
+  assert.equal(artwork.length, 3);
+  artwork.forEach((image, index) => {
+    assert.equal(image.getAttribute('src'), `assets/${images[index]}.jpg`);
+    assert.match(image.alt, /illustrative product mockup/);
+    assert(fs.existsSync(`assets/${images[index]}.jpg`));
+  });
+  assert.equal(list.querySelectorAll('a[href^="product.html?id="]').length, 3);
+  assert.equal(list.querySelectorAll('.price').length, 3);
+  assert.match(text, /approximate equivalent/);
+  assert.match(text, /7 Nov 2026/);
+  dom.window.close();
+});
+
+test('Campus page requests a quote and hides purchase links when checkout is disabled', async () => {
+  const dom = new JSDOM(fs.readFileSync('campus-bursary.html', 'utf8'), {
+    url: 'https://store.example/campus-bursary.html', runScripts: 'outside-only'
+  });
+  dom.window.fetch = async () => ({ ok: true, json: async () => ({ products: [{
+    id: 'campus-bursary-package-a', name: 'Campus A', short: 'Scope', description: 'Details', features: [],
+    paymentEnabled: false, price: 'NGN 800,000'
+  }] }) });
+  dom.window.eval(fs.readFileSync('campus-preview.js', 'utf8'));
+  await new Promise(resolve => setImmediate(resolve));
+  const list = dom.window.document.querySelector('#campus-product-list');
+  assert.equal(list.querySelector('a[href^="product.html?id="]'), null);
+  assert.equal(list.querySelector('a[href^="https://wa.me/"]').textContent, 'Request a pilot quote ↗');
+  dom.window.close();
+});
+
+test('Campus page does not claim a sale when packages are absent from the public catalogue', async () => {
+  const dom = new JSDOM(fs.readFileSync('campus-bursary.html', 'utf8'), {
+    url: 'https://store.example/campus-bursary.html', runScripts: 'outside-only'
+  });
+  dom.window.fetch = async () => ({ ok: true, json: async () => ({ products: [] }) });
+  dom.window.eval(fs.readFileSync('campus-preview.js', 'utf8'));
+  await new Promise(resolve => setImmediate(resolve));
+  const list = dom.window.document.querySelector('#campus-product-list');
+  assert.match(list.textContent, /not currently available for purchase/);
+  assert.equal(list.querySelector('a[href^="product.html?id="]'), null);
   dom.window.close();
 });
 
