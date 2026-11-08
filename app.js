@@ -12,7 +12,10 @@ const presentations = {
   'scholarships-abroad': { image: 'scholarships', usdReference: 15, format: 'Education guide', audience: 'For applicants researching funding and preparing scholarship applications.' },
   'first-upwork-client': { image: 'upwork', usdReference: 12, format: 'Career guide', audience: 'For skilled beginners preparing a portfolio and applying for Upwork projects.' },
   'five-guide-bundle': { image: 'five-guide-bundle', usdReference: 39, format: 'Guide collection', audience: 'For readers who want the five BGM guides in one purchase.' },
-  'bgm-collections-bank': { image: 'collections-bank', usdReference: 40.75, format: 'Excel toolkit', audience: 'For university bursaries and treasury teams reconciling collection records.' }
+  'bgm-collections-bank': { image: 'collections-bank', usdReference: 40.75, format: 'Excel toolkit', audience: 'For university bursaries and treasury teams reconciling collection records.' },
+  'campus-bursary-package-a': { format: 'Student revenue & treasury · Excel', audience: 'For student-accounts and treasury teams that need traceable schedules from fee billing through receipt allocation and settlement review.' },
+  'campus-bursary-package-b': { format: 'Budget & expenditure control · Excel', audience: 'For bursary teams reviewing budgets, commitments, supplier bills, payments, advances and actual expenditure.' },
+  'campus-bursary-full-excel': { format: 'Full bursary suite · Excel', audience: 'For institutions that want both operational packages plus manual ledger and control-account review schedules.' }
 };
 
 function node(tag, text, className) {
@@ -146,6 +149,17 @@ function renderDetail() {
         bundle.append(node('p', 'Bought separately: ' + money(total) + '. Bundle: ' + money(product.amounts.NGN) + '. Save ' + money(total - product.amounts.NGN) + '.', 'bundle-saving'));
       }
       included.after(bundle);
+    }
+  } else if (product.id === 'campus-bursary-full-excel') {
+    const packageA = products.find(item => item.id === 'campus-bursary-package-a' && item.status === 'live');
+    const packageB = products.find(item => item.id === 'campus-bursary-package-b' && item.status === 'live');
+    const separate = (packageA?.amounts?.NGN || 0) + (packageB?.amounts?.NGN || 0);
+    const saving = separate - (product.amounts?.NGN || 0);
+    if (packageA && packageB && Number.isSafeInteger(separate) && Number.isSafeInteger(product.amounts?.NGN) && saving > 0) {
+      const money = amount => new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', maximumFractionDigits: 0 }).format(amount / 100);
+      const comparison = node('section');
+      comparison.append(node('h2', 'Compare the first-year totals'), node('p', 'Package A and Package B separately: ' + money(separate) + '. Full Excel first-year total: ' + money(product.amounts.NGN) + '. Save ' + money(saving) + '.', 'bundle-saving'));
+      included.after(comparison);
     }
   }
   target.replaceChildren(intro, content);

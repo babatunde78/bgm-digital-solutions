@@ -2,6 +2,12 @@
 const menu = document.querySelector('.menu');
 const navigation = document.querySelector('#site-nav');
 if (menu && navigation) {
+  if (!navigation.querySelector('a[href="/campus-bursary.html"]')) {
+    const campusLink = document.createElement('a');
+    campusLink.href = '/campus-bursary.html';
+    campusLink.textContent = 'Campus Bursary pilot';
+    navigation.append(campusLink);
+  }
   menu.addEventListener('click', () => {
     const open = menu.getAttribute('aria-expanded') !== 'true';
     menu.setAttribute('aria-expanded', String(open));

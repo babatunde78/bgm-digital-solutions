@@ -148,10 +148,10 @@
   {
     "id": "campus-bursary-package-a",
     "campusPackage": "a",
-    "name": "Campus Bursary — Student Revenue & Treasury (Excel)",
+    "name": "Campus Bursary: Student Fees & Treasury Control (Excel)",
     "category": "Business Software",
-    "short": "A macro-free Excel pilot for student billing, receipts, allocations, settlement review and revenue schedules.",
-    "description": "A set of clean templates and fictional demonstration workbooks for student revenue and treasury workflows. Targets Microsoft 365 Excel for Windows 64-bit and uses one authorised writer at a time. It is a pilot and requires institution-specific review before financial use.",
+    "short": "Trace student fees from invoice through receipt allocation to bank-settlement exceptions with linked schedules and visible review checks.",
+    "description": "Designed for university bursary and treasury teams that need to follow student fee activity without blending separate financial events. Campus Bursary keeps invoice lines, payments, receipt allocations, credits and refunds, and bank settlement matches in separate linked schedules. That makes billed fees, allocated collections, unapplied receipts and settlement exceptions easier to trace without counting a bank settlement as new income.\n\nUse the visible control totals and supporting schedules to find what needs review before a cashier handover or finance report. This macro-free pilot includes clean Excel templates, a fictional demonstration workbook and an operating guide. It does not connect to a bank or automatically approve suggested matches.",
     "features": [
       "First-year amount includes annual licence and standard setup",
       "Student records, fee schedules, invoices and instalment dates",
@@ -169,10 +169,10 @@
   {
     "id": "campus-bursary-package-b",
     "campusPackage": "b",
-    "name": "Campus Bursary — Bursary Operations & Control (Excel)",
+    "name": "Campus Bursary: Budget-to-Payment Control (Excel)",
     "category": "Business Software",
-    "short": "A macro-free Excel pilot for budgets, commitments, payables, advances, grants, assets and payroll checking.",
-    "description": "A set of clean templates and fictional demonstration workbooks for bursary operations and expenditure control. Targets Microsoft 365 Excel for Windows 64-bit and uses one authorised writer at a time. It is a pilot and requires institution-specific review before financial use.",
+    "short": "Follow budgets, commitments, supplier bills, advances and actuals through reviewable schedules that keep obligations and payments distinct.",
+    "description": "Designed for bursary teams that need to see how budgets turn into obligations and actual expenditure. Follow budget revisions and virements, commitments, supplier bills and payments as separate reviewable steps; a supplier bill is expenditure and its payment settles the payable rather than recording another expense. The schedules also cover advances and retirements, restricted-project cash, asset depreciation and payroll period comparison. Payroll comparison checks imported data; it is not a statutory payroll engine.\n\nThis macro-free pilot includes clean Excel templates, a fictional demonstration workbook and an operating guide. It targets Microsoft 365 Excel for Windows 64-bit and is designed for one authorised writer at a time. Review institution mappings and controls before financial use.",
     "features": [
       "First-year amount includes annual licence and standard setup",
       "Budgets, signed revisions, virements and commitment liquidation",
@@ -190,10 +190,10 @@
   {
     "id": "campus-bursary-full-excel",
     "campusPackage": "excel",
-    "name": "Campus Bursary — Full Excel Suite",
+    "name": "Campus Bursary: Complete Bursary Control Suite (Excel)",
     "category": "Business Software",
-    "short": "Packages A and B plus shared institution setup, manual journals, trial balance and control-account comparisons.",
-    "description": "A combined pilot with the student revenue and bursary operations workbooks, plus a shared full-suite workbook. The full workbook includes manual journal inputs and mapped trial-balance and control-account comparisons; it does not automatically post every operational schedule to the ledger or produce statutory financial statements. Targets Microsoft 365 Excel for Windows 64-bit and one authorised writer at a time. Requires institution-specific accounting review before financial use.",
+    "short": "Both operational packages plus a Full Suite workbook for manual journals, trial balance and mapped control-account checks.",
+    "description": "Bring student revenue and expenditure-control workflows together in one package: both operational workbook sets plus a Full Suite workbook with manual journals, a trial balance and mapped control-account checks. The workbooks use the same source schemas and ID conventions, helping reviewers follow records consistently across schedules. The ledger checks make mapped differences visible, while staff still review the supporting transactions and institution-approved account mappings.\n\nAt the current proposed prices, the annual Full Excel licence is 20% below the combined annual Package A and Package B licences; the first-year total is also 20% lower. When all three offers are published, this page compares the first-year totals using their current catalogue prices. The Full Suite does not automatically post all operational schedules or generate statutory financial statements without approved accounting policies and mappings. This macro-free pilot includes clean templates, fictional demonstrations and an operating guide. It targets Microsoft 365 Excel for Windows 64-bit and one authorised writer at a time.",
     "features": [
       "First-year amount includes annual licence and standard setup",
       "All delivered schedules from Student Revenue & Treasury and Bursary Operations & Control",

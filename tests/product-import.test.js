@@ -55,6 +55,25 @@ test('repeated import leaves existing drafts and prices unchanged', async () => 
   const result = await importProducts(['ai-side-hustles']);
   assert.equal(writes, 0); assert.equal(result.preserved[0].status, 'draft');
 });
+test('Campus product copy explains practical differences without unsupported superiority claims', () => {
+  const products = require('../lib/product-import.json');
+  const a = products.find(product => product.id === 'campus-bursary-package-a');
+  const b = products.find(product => product.id === 'campus-bursary-package-b');
+  const full = products.find(product => product.id === 'campus-bursary-full-excel');
+  assert.match(a.name, /Student Fees & Treasury Control/);
+  assert.match(a.description, /separate linked schedules/i);
+  assert.match(a.description, /does not connect to a bank/i);
+  assert.match(b.name, /Budget-to-Payment Control/);
+  assert.match(b.description, /commitment/i);
+  assert.match(b.description, /not a statutory payroll engine/i);
+  assert.match(full.name, /Complete Bursary Control Suite/);
+  assert.match(full.description, /manual journal/i);
+  assert.match(full.description, /does not automatically post all operational schedules/i);
+  for (const product of [a, b, full]) {
+    assert.equal(product.status, 'draft');
+    assert.doesNotMatch(`${product.name} ${product.short} ${product.description}`, /market-leading|better than competitors|number one/i);
+  }
+});
 test('product synchronization requires the operator credential', async () => {
   process.env.CRON_SECRET = 'synthetic';
   const response = { headers: {}, setHeader(key, value) { this.headers[key] = value; }, status(code) { this.code = code; return this; }, json(value) { this.data = value; } };

@@ -96,16 +96,56 @@ test('the university toolkit shows the owner supplied US$40.75 reference beside 
 });
 
 test('Campus prices show a dated approximate USD equivalent without adding USD checkout', () => {
-  const campus = { ...product, id: 'campus-bursary-package-a', name: 'Campus Bursary — Student Revenue & Treasury (Excel)',
+  const campus = { ...product, id: 'campus-bursary-package-a', name: 'Campus Bursary — Student Revenue & Treasury Toolkit (Excel)',
     price: 'NGN 800,000.00', amounts: { NGN: 80000000 }, usdReference: '593.42', usdRateDate: '2026-11-07' };
   const dom = store('product.html', '?id=campus-bursary-package-a', [campus]);
   const doc = dom.window.document;
   assert.equal(doc.querySelector('.detail-price').textContent, 'NGN 800,000.00 / US$593.42 approximate equivalent (rate date 7 Nov 2026)');
+  assert.match(doc.querySelector('.audience-description').textContent, /traceable schedules from fee billing through receipt allocation/);
   assert.match(doc.querySelector('#product-detail').textContent, /single-writer pilot workbooks/);
   doc.querySelector('#product-detail .buy').click();
   assert.equal(doc.querySelectorAll('#checkout-currency option').length, 1);
   assert.equal(doc.querySelector('#checkout-currency').value, 'NGN');
   assert.equal(doc.querySelector('#checkout-product-name').textContent.includes('593.42'), false);
+  dom.window.close();
+});
+
+test('Campus Full Excel shows first-year savings against current published package prices', () => {
+  const packageA = { ...product, id: 'campus-bursary-package-a', amounts: { NGN: 80000000 } };
+  const packageB = { ...product, id: 'campus-bursary-package-b', amounts: { NGN: 120000000 } };
+  const full = { ...product, id: 'campus-bursary-full-excel', amounts: { NGN: 160000000 }, price: '₦1,600,000' };
+  const dom = store('product.html', '?id=campus-bursary-full-excel', [packageA, packageB, full]);
+  assert.equal(dom.window.document.querySelector('.bundle-saving').textContent,
+    'Package A and Package B separately: ₦2,000,000. Full Excel first-year total: ₦1,600,000. Save ₦400,000.');
+  dom.window.close();
+  const missingPackage = store('product.html', '?id=campus-bursary-full-excel', [packageA, full]);
+  assert.equal(missingPackage.window.document.querySelector('.bundle-saving'), null);
+  missingPackage.window.close();
+});
+
+test('Campus pilot preview shows real package copy without pricing or checkout actions', async () => {
+  const definitions = JSON.parse(fs.readFileSync('lib/product-import.json', 'utf8'))
+    .filter(item => item.id.startsWith('campus-bursary-'))
+    .map(({ id, name, short, description, features }) => ({ id, name, short, description, features }));
+  const dom = new JSDOM(fs.readFileSync('campus-bursary.html', 'utf8'), {
+    url: 'https://store.example/campus-bursary.html', runScripts: 'outside-only'
+  });
+  dom.window.fetch = async path => {
+    assert.equal(path, '/campus-preview.json');
+    return { ok: true, json: async () => ({ productName: 'Campus Bursary', products: definitions }) };
+  };
+  dom.window.eval(fs.readFileSync('campus-preview.js', 'utf8'));
+  await new Promise(resolve => setImmediate(resolve));
+  const text = dom.window.document.querySelector('#campus-product-list').textContent;
+  for (const item of definitions) {
+    assert(text.includes(item.name));
+    assert(text.includes(item.short));
+    assert(text.includes(item.description));
+  }
+  assert.equal(dom.window.document.querySelectorAll('#campus-product-list .pilot-status').length, 3);
+  assert.equal(dom.window.document.querySelectorAll('#campus-product-list a[href^="https://wa.me/"]').length, 3);
+  assert.equal(dom.window.document.querySelectorAll('#campus-product-list .buy, #campus-product-list button').length, 0);
+  assert.doesNotMatch(text, /₦|NGN|US\$/);
   dom.window.close();
 });
 
