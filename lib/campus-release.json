@@ -1,0 +1,7 @@
+{
+  "version": "0.2.1",
+  "status": "pilot",
+  "directory": "v0.2.1",
+  "preparedRows": 100,
+  "monetaryInputLimitMinor": 999999999999
+}

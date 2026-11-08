@@ -22,12 +22,20 @@ test('import preserves existing product edits and uses the current guide asset i
   };
   const ids = require('../lib/product-import.json').map(product => product.id);
   const result = await importProducts(ids);
-  assert.equal(result.imported.length, 6);
+  assert.equal(result.imported.length, 9);
   assert.equal(written.some(product => product.id === first.id), false);
   const bundle = written.find(product => product.id === 'five-guide-bundle');
   assert.equal(bundle.blob_pathnames.length, 5); assert.equal(bundle.blob_pathnames[0], 'current/prompts-v2.zip');
-  assert.equal(result.checkedFiles, 6);
+  assert.equal(result.checkedFiles, 9);
   assert.equal(written.find(product => product.id === 'ai-side-hustles').amounts.NGN, 1200000);
+  const campusA = written.find(product => product.id === 'campus-bursary-package-a');
+  const campusB = written.find(product => product.id === 'campus-bursary-package-b');
+  const fullExcel = written.find(product => product.id === 'campus-bursary-full-excel');
+  assert.equal(campusA.status, 'draft');
+  assert.equal(campusA.amounts.NGN, 80000000);
+  assert.equal(campusB.amounts.NGN, 120000000);
+  assert.equal(fullExcel.amounts.NGN, 160000000);
+  assert.equal(campusA.campusPackage, undefined);
 });
 test('missing private file prevents all catalogue writes', async t => {
   let writes = 0;

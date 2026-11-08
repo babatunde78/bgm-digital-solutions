@@ -41,13 +41,15 @@ function purchaseAction(product, className) {
   const disabled = button('Checkout unavailable', () => {}, className); disabled.disabled = true; return disabled;
 }
 function displayPrice(product) {
-  const usd = presentations[product.id]?.usdReference;
-  return usd && !product.amounts?.USD ? product.price + ' / US$' + usd + ' reference' : product.price;
+  const usd = product.usdReference || presentations[product.id]?.usdReference;
+  if (!usd || product.amounts?.USD) return product.price;
+  const date = product.usdRateDate ? ' approximate equivalent (rate date ' + new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' }).format(new Date(product.usdRateDate + 'T00:00:00Z')) + ')' : ' reference';
+  return product.price + ' / US$' + usd + date;
 }
 function cover(product) {
   const presentation = presentations[product.id];
   const wrapper = node('div', undefined, 'cover');
-  if (presentation) {
+  if (presentation?.image) {
     const image = document.createElement('img');
     image.src = 'assets/' + presentation.image + '.jpg';
     image.alt = product.name + ' — illustrative product mockup';
@@ -102,7 +104,7 @@ function renderDetail() {
   summary.append(node('p', product.category, 'eyebrow'), node('h1', product.name), node('p', product.short, 'page-intro'));
   if (presentation) summary.append(node('p', presentation.audience, 'audience-description'));
   summary.append(node('div', displayPrice(product), 'detail-price'), purchaseAction(product, 'btn primary buy'));
-  if (presentation?.usdReference && !product.amounts?.USD) summary.append(node('p', 'USD is a reference value. Checkout charges NGN; your bank’s conversion may differ.', 'small'));
+  if ((product.usdReference || presentation?.usdReference) && !product.amounts?.USD) summary.append(node('p', product.usdRateDate ? 'Approximate equivalent uses the historical reference rate in effect on ' + product.usdRateDate + '. Checkout charges NGN; your bank’s conversion may differ.' : 'USD is a reference value. Checkout charges NGN; your bank’s conversion may differ.', 'small'));
   if (product.status !== 'service') {
     const policy = node('a', '7-day refunds · Read the policy →', 'policy-link'); policy.href = 'support.html#refunds'; summary.append(policy);
   }
@@ -113,7 +115,10 @@ function renderDetail() {
   included.append(node('p', 'Inside this resource', 'eyebrow'), node('h2', 'What you get'), node('p', product.description), list);
   const requirements = node('section');
   requirements.append(node('h2', 'Before you buy'));
-  if (product.id === 'bgm-collections-bank') {
+  if (product.id.startsWith('campus-bursary-')) {
+    requirements.append(node('p', 'Microsoft 365 Excel for Windows 64-bit is the tested target. These are single-writer pilot workbooks, not secure multi-user accounting software. Review the operating guide, institution mappings and controls before use. Mac, Excel for the web and other versions are unverified.'),
+      node('p', 'The displayed first-year amount includes the annual licence and standard setup. Storefront checkout is a one-time NGN payment; automatic renewal billing is not implemented. Renewal terms must be agreed before the licence term ends. The USD figure is a dated approximate equivalent.'));
+  } else if (product.id === 'bgm-collections-bank') {
     requirements.append(node('p', 'This is an offline Excel toolkit. It compares receipts, Paystack records, settlements, bank deposits and cashbook entries. It does not connect to your bank account.'),
       node('p', 'Ask BGM to confirm compatibility with your Excel version, input files and intended use before buying.'));
   } else if (product.status !== 'service') {

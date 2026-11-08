@@ -1,0 +1,76 @@
+'use strict';
+const {test}=require('node:test');
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const {PGlite}=require('@electric-sql/pglite');
+const {validBillingPreview,validBillingSchedule}=require('../campus/billing');
+const ids=Array.from({length:30},(_,n)=>`50000000-0000-4000-8000-${String(n+1).padStart(12,'0')}`);
+test('approved fee batches generate exact draft invoices atomically and prevent rebilling across batches',async()=>{
+  const db=new PGlite();
+  const[tenant,other,admin,preparer,reviewer,bursar,outsider,session,programme,level,studentA,studentB,studentC,account,period,fee,batch,duplicate,invalid]=ids;
+  try{
+    await db.exec(`create role authenticated;create schema auth;create table auth.users(id uuid primary key);
+      create function auth.uid() returns uuid language sql stable as $$ select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid $$;`);
+    for(const user of[admin,preparer,reviewer,bursar,outsider])await db.query('insert into auth.users values($1)',[user]);
+    for(const file of fs.readdirSync('campus/migrations').filter(file=>file.endsWith('.sql')).sort())await db.exec(fs.readFileSync(`campus/migrations/${file}`,'utf8'));
+    await db.query('insert into campus.institutions(id,name) values($1,$2),($3,$4)',[tenant,'Synthetic Campus',other,'Other Campus']);
+    for(const[institution,user,role]of[[tenant,admin,'institution_administrator'],[tenant,preparer,'student_accounts'],[tenant,reviewer,'reviewer'],[tenant,bursar,'bursar'],[other,outsider,'bursar']])await db.query('insert into campus.memberships values($1,$2,$3,true)',[institution,user,role]);
+    async function call(user,sql,args=[]){await db.query("select set_config('request.jwt.claim.sub',$1,false)",[user]);await db.exec('set role authenticated');try{return await db.query(sql,args);}finally{await db.exec('reset role');}}
+    await call(admin,'select campus.create_academic_item($1,$2,$3,$4)',[tenant,session,'session','2026/2027']);
+    await call(admin,'select campus.create_academic_item($1,$2,$3,$4)',[tenant,programme,'programme','Synthetic Programme']);
+    await call(admin,'select campus.create_academic_item($1,$2,$3,$4)',[tenant,level,'level','100']);
+    await call(admin,'select campus.create_account($1,$2,$3,$4,$5)',[tenant,account,'0400','Synthetic fees','income']);
+    await call(admin,'select campus.create_period($1,$2,$3,$4)',[tenant,period,'2026-01-01','2026-12-31']);
+    for(const[id,reference]of[[studentA,'000001'],[studentB,'000002'],[studentC,'000003']])await call(preparer,'select campus.create_student($1,$2,$3,$4)',[tenant,id,reference,'Synthetic Student']);
+    for(const student of[studentA,studentB])await call(preparer,'select campus.enrol_student($1,$2,$3,$4,$5)',[tenant,student,session,programme,level]);
+    const entries=[{fee_key:'tuition_1',account_id:account,description:'Synthetic first instalment',amount_minor:'60000',due_date:'2026-11-15'},
+      {fee_key:'tuition_2',account_id:account,description:'Synthetic second instalment',amount_minor:'40000',due_date:'2026-12-15'}];
+    await call(admin,'select campus.propose_fees($1,$2,$3,$4,$5,$6,$7,$8)',[tenant,fee,session,programme,level,'tuition','2026-01-01',JSON.stringify(entries)]);
+    await db.query("update campus.memberships set role='bursar' where user_id=$1",[admin]);
+    await assert.rejects(call(admin,'select campus.approve_fees($1,$2)',[tenant,fee]),/independent approver required/);
+    await db.query("update campus.memberships set role='institution_administrator' where user_id=$1",[admin]);
+    const previewSql='select campus.preview_billing($1,$2,$3,$4,$5) as data';
+    await assert.rejects(call(preparer,previewSql,[tenant,fee,period,'2026-11-08',[studentA,studentB]]),/approved effective fee schedule required/);
+    await call(bursar,'select campus.approve_fees($1,$2)',[tenant,fee]);
+    const bad=(await call(preparer,previewSql,[tenant,fee,period,'2026-11-08',[studentA,studentC]])).rows[0].data;
+    assert.deepEqual(bad.rows.map(row=>row.errors),[[],['matching_enrolment_required']]);
+    const prepareSql='select campus.prepare_billing_batch($1,$2,$3,$4,$5,$6)';
+    await assert.rejects(call(preparer,prepareSql,[tenant,invalid,fee,period,'2026-11-08',[studentA,studentC]]),/billing preview contains errors/);
+    await assert.rejects(call(outsider,prepareSql,[tenant,batch,fee,period,'2026-11-08',[studentA,studentB]]),/permission denied/);
+    const preview=(await call(preparer,previewSql,[tenant,fee,period,'2026-11-08',[studentB,studentA]])).rows[0].data;
+    assert.equal(validBillingPreview(preview),true);
+    assert.deepEqual(preview.totals,{student_count:2,line_count:4,total_minor:'200000'});
+    await call(preparer,prepareSql,[tenant,batch,fee,period,'2026-11-08',[studentB,studentA]]);
+    await call(preparer,prepareSql,[tenant,batch,fee,period,'2026-11-08',[studentA,studentB]]);
+    await assert.rejects(call(bursar,'select campus.lock_period($1,$2,$3)',[tenant,period,1]),/unresolved billing batches remain/);
+    await assert.rejects(call(preparer,prepareSql,[tenant,batch,fee,period,'2026-11-09',[studentA,studentB]]),/batch ID already used/);
+    const move=(user,version,target)=>call(user,'select campus.transition_billing_batch($1,$2,$3,$4)',[tenant,batch,version,target]);
+    await move(preparer,1,'submitted');
+    await assert.rejects(move(reviewer,1,'reviewed'),/version conflict/);
+    await assert.rejects(move(preparer,2,'reviewed'),/independent reviewer required/);
+    await move(reviewer,2,'reviewed');await move(bursar,3,'approved');
+    await call(admin,'select campus.set_member($1,$2,$3,$4)',[tenant,preparer,'student_accounts',false]);
+    await assert.rejects(move(bursar,4,'generated'),/batch preparer no longer authorised/);
+    await call(admin,'select campus.set_member($1,$2,$3,$4)',[tenant,preparer,'student_accounts',true]);
+    await db.exec(`create function campus.synthetic_batch_failure() returns trigger language plpgsql as $$ begin if new.student_id='${studentB}' then raise exception 'synthetic batch interruption';end if;return new;end $$;
+      create trigger synthetic_batch_failure before insert on campus.student_invoices for each row execute function campus.synthetic_batch_failure();`);
+    await assert.rejects(move(bursar,4,'generated'),/synthetic batch interruption/);
+    assert.equal((await db.query('select count(*)::int as n from campus.student_invoices')).rows[0].n,0);
+    await db.exec('drop trigger synthetic_batch_failure on campus.student_invoices;drop function campus.synthetic_batch_failure();');
+    await move(bursar,4,'generated');await move(bursar,4,'generated');
+    assert.equal((await db.query('select count(*)::int as n from campus.student_invoices')).rows[0].n,2);
+    assert.deepEqual((await db.query('select status,prepared_by,amount_minor::text from campus.revenue_events order by id')).rows,
+      [{status:'draft',prepared_by:preparer,amount_minor:'100000'},{status:'draft',prepared_by:preparer,amount_minor:'100000'}]);
+    assert.equal((await db.query('select count(*)::int as n from campus.journals')).rows[0].n,0);
+    await assert.rejects(call(preparer,prepareSql,[tenant,duplicate,fee,period,'2026-11-08',[studentA]]),/billing preview contains errors/);
+    assert.equal((await db.query('select count(*)::int as n from campus.billing_charges')).rows[0].n,4);
+    assert.deepEqual((await call(outsider,'select id from campus.billing_batches')).rows,[]);
+    await assert.rejects(call(preparer,'delete from campus.billing_charges'),/permission denied/);
+    const revisedFee=ids[20];
+    await call(admin,'select campus.propose_fees($1,$2,$3,$4,$5,$6,$7,$8)',[tenant,revisedFee,session,programme,level,'tuition','2026-11-09',JSON.stringify([{...entries[0],amount_minor:'65000'},entries[1]])]);
+    await call(bursar,'select campus.approve_fees($1,$2)',[tenant,revisedFee]);
+    await assert.rejects(call(preparer,prepareSql,[tenant,duplicate,revisedFee,period,'2026-11-10',[studentA]]),/billing preview contains errors/);
+    assert.equal((await db.query("select preview->'totals'->>'total_minor' as total from campus.billing_batches where id=$1",[batch])).rows[0].total,'200000');
+    assert.equal(validBillingSchedule((await call(preparer,'select campus.billing_schedule($1) as data',[tenant])).rows[0].data),true);
+  }finally{await db.close();}
+});

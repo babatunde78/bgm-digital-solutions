@@ -144,5 +144,68 @@
     "blob_pathnames": [
       "BGM_University_Collections_to_Bank_Evidence_Assistant.zip"
     ]
+  },
+  {
+    "id": "campus-bursary-package-a",
+    "campusPackage": "a",
+    "name": "Campus Bursary — Student Revenue & Treasury (Excel)",
+    "category": "Business Software",
+    "short": "A macro-free Excel pilot for student billing, receipts, allocations, settlement review and revenue schedules.",
+    "description": "A set of clean templates and fictional demonstration workbooks for student revenue and treasury workflows. Targets Microsoft 365 Excel for Windows 64-bit and uses one authorised writer at a time. It is a pilot and requires institution-specific review before financial use.",
+    "features": [
+      "First-year amount includes annual licence and standard setup",
+      "Student records, fee schedules, invoices and instalment dates",
+      "Receipts, allocations, unapplied balances, credits and refund schedules",
+      "Settlement matching with manual review and visible exceptions",
+      "Ageing, statements, clearance and cashier handover schedules",
+      "Revenue dashboard and printable receipt templates",
+      "Clean customer templates, synthetic demo workbook and user guide"
+    ],
+    "status": "draft",
+    "blob_pathnames": [
+      "campus-bursary/v0.2.1/campus-bursary-a-pilot-v0.2.1.zip"
+    ]
+  },
+  {
+    "id": "campus-bursary-package-b",
+    "campusPackage": "b",
+    "name": "Campus Bursary — Bursary Operations & Control (Excel)",
+    "category": "Business Software",
+    "short": "A macro-free Excel pilot for budgets, commitments, payables, advances, grants, assets and payroll checking.",
+    "description": "A set of clean templates and fictional demonstration workbooks for bursary operations and expenditure control. Targets Microsoft 365 Excel for Windows 64-bit and uses one authorised writer at a time. It is a pilot and requires institution-specific review before financial use.",
+    "features": [
+      "First-year amount includes annual licence and standard setup",
+      "Budgets, signed revisions, virements and commitment liquidation",
+      "Supplier bills, payment schedules and advance retirements",
+      "Restricted-project cash schedules and asset depreciation schedules",
+      "Payroll import checking and period comparison, not statutory payroll",
+      "Expenditure dashboard and printable voucher templates",
+      "Clean customer templates, synthetic demo workbook and user guide"
+    ],
+    "status": "draft",
+    "blob_pathnames": [
+      "campus-bursary/v0.2.1/campus-bursary-b-pilot-v0.2.1.zip"
+    ]
+  },
+  {
+    "id": "campus-bursary-full-excel",
+    "campusPackage": "excel",
+    "name": "Campus Bursary — Full Excel Suite",
+    "category": "Business Software",
+    "short": "Packages A and B plus shared institution setup, manual journals, trial balance and control-account comparisons.",
+    "description": "A combined pilot with the student revenue and bursary operations workbooks, plus a shared full-suite workbook. The full workbook includes manual journal inputs and mapped trial-balance and control-account comparisons; it does not automatically post every operational schedule to the ledger or produce statutory financial statements. Targets Microsoft 365 Excel for Windows 64-bit and one authorised writer at a time. Requires institution-specific accounting review before financial use.",
+    "features": [
+      "First-year amount includes annual licence and standard setup",
+      "All delivered schedules from Student Revenue & Treasury and Bursary Operations & Control",
+      "Shared institution configuration and master-record structure",
+      "Manual journal headers and lines with balanced-entry checks",
+      "Trial balance and mapped control-account comparisons",
+      "Financial statement generation only where approved mappings support it",
+      "Clean customer templates, synthetic demo workbooks and user guide"
+    ],
+    "status": "draft",
+    "blob_pathnames": [
+      "campus-bursary/v0.2.1/campus-bursary-all-pilot-v0.2.1.zip"
+    ]
   }
 ]

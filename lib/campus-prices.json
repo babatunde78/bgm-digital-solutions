@@ -1,0 +1,15 @@
+{
+  "version": "2026-11-07.1",
+  "productName": "Campus Bursary",
+  "publication": "draft",
+  "effectiveFrom": null,
+  "currency": "NGN",
+  "billing": "annual",
+  "reference": { "ngnPerUsdHundredths": 134811, "date": "2026-11-07", "label": "approximate equivalent" },
+  "packages": {
+    "a": { "annualKobo": 60000000, "setupKobo": 20000000, "startingFrom": false },
+    "b": { "annualKobo": 90000000, "setupKobo": 30000000, "startingFrom": false },
+    "excel": { "annualKobo": 120000000, "setupKobo": 40000000, "startingFrom": false },
+    "connected": { "annualKobo": 360000000, "setupKobo": 150000000, "startingFrom": true }
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "table": "Students",
+  "batchId": "synthetic-students-001",
+  "mapping": { "id": "id", "reference": "reference", "name": "name" }
+}

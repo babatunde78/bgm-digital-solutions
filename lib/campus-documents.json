@@ -1,0 +1,10 @@
+{
+  "AdvanceRetirement": {
+    "A11": { "value": "Total settled NGN" },
+    "B11": { "formula": "=IF(COUNTIF(T_Retirements[id],Config!B22)=1,(SUMIFS(T_Retirements[amount_minor],T_Retirements[id],Config!B22)+SUMIFS(T_Retirements[cash_return_minor],T_Retirements[id],Config!B22))/100,\"Select valid record ID\")", "format": "#,##0.00;(#,##0.00);\"-\"" },
+    "A18": { "value": "Expense component NGN" },
+    "B18": { "formula": "=IF(COUNTIF(T_Retirements[id],Config!B22)=1,SUMIFS(T_Retirements[amount_minor],T_Retirements[id],Config!B22)/100,\"Select valid record ID\")", "format": "#,##0.00;(#,##0.00);\"-\"" },
+    "A19": { "value": "Cash returned NGN" },
+    "B19": { "formula": "=IF(COUNTIF(T_Retirements[id],Config!B22)=1,SUMIFS(T_Retirements[cash_return_minor],T_Retirements[id],Config!B22)/100,\"Select valid record ID\")", "format": "#,##0.00;(#,##0.00);\"-\"" }
+  }
+}

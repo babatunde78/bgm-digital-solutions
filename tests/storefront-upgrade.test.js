@@ -95,6 +95,20 @@ test('the university toolkit shows the owner supplied US$40.75 reference beside 
   dom.window.close();
 });
 
+test('Campus prices show a dated approximate USD equivalent without adding USD checkout', () => {
+  const campus = { ...product, id: 'campus-bursary-package-a', name: 'Campus Bursary — Student Revenue & Treasury (Excel)',
+    price: 'NGN 800,000.00', amounts: { NGN: 80000000 }, usdReference: '593.42', usdRateDate: '2026-11-07' };
+  const dom = store('product.html', '?id=campus-bursary-package-a', [campus]);
+  const doc = dom.window.document;
+  assert.equal(doc.querySelector('.detail-price').textContent, 'NGN 800,000.00 / US$593.42 approximate equivalent (rate date 7 Nov 2026)');
+  assert.match(doc.querySelector('#product-detail').textContent, /single-writer pilot workbooks/);
+  doc.querySelector('#product-detail .buy').click();
+  assert.equal(doc.querySelectorAll('#checkout-currency option').length, 1);
+  assert.equal(doc.querySelector('#checkout-currency').value, 'NGN');
+  assert.equal(doc.querySelector('#checkout-product-name').textContent.includes('593.42'), false);
+  dom.window.close();
+});
+
 test('a single payment currency is displayed without asking the buyer to choose', () => {
   const dom = store();
   dom.window.document.querySelector('.buy').click();

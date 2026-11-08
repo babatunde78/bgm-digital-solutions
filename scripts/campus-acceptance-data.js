@@ -1,0 +1,14 @@
+'use strict';
+const fs = require('node:fs');
+const path = require('node:path');
+const { capacityData } = require('../lib/campus-capacity-fixture');
+const { tables } = require('../lib/campus-model');
+const { validateData, analyse } = require('../lib/campus-finance');
+const output = path.resolve('.product-work/campus-bursary/acceptance');
+const data = capacityData(100);
+const issues = validateData(data);
+if (issues.length) throw new RangeError(JSON.stringify(issues));
+fs.mkdirSync(output, { recursive: true });
+fs.writeFileSync(path.join(output, 'capacity-data.json'), JSON.stringify({ data, tables, expected: analyse(data, '2026-11-07') }, null, 2));
+fs.writeFileSync(path.join(output, 'query-source.csv'), 'id,reference,name,date,amount_minor\nvalid-1,00000999,Synthetic Import,2026-11-07,123450\ninvalid-2,00001000,=1+1,07/11/2026,1.25\n');
+process.stdout.write('Prepared validated synthetic capacity data and query acceptance CSV\n');
