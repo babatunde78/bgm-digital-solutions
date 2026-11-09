@@ -35,6 +35,7 @@ async function pdf(html) {
   } finally { win.destroy(); }
 }
 function licence() {
+  if (release.licensing?.activation === 'none') return { label: 'No activation required — offline document generation enabled', canFinalise: true, canExport: true };
   if (!app.isPackaged) return { label: 'Development pilot — commercial activation not configured', canFinalise: true, canExport: true };
   const key = release.licencePublicKey;
   const filename = path.join(app.getPath('userData'), 'institution.licence.json');
@@ -125,7 +126,7 @@ app.whenReady().then(async () => {
   store = new Store(path.join(data, 'bursary.sqlite'));
   window = lockedWindow({ title: release.productName, preload: path.join(__dirname, 'preload.js'), ...(smoke ? { offscreen: true, show: false } : {}) });
   ipcMain.handle('bursary', async (event, action, input) => {
-    if (event.sender !== window.webContents || event.senderFrame !== window.webContents.mainFrame || event.senderFrame.url !== entry) throw new core.DocumentError('Untrusted window');
+    if (event.sender !== window.webContents || event.senderFrame !== window.webContents.mainFrame || !security.trustedPage(event.senderFrame.url, entry)) throw new core.DocumentError('Untrusted window');
     try { return { ok: true, value: await handle(action, input) }; }
     catch (error) { return { ok: false, error: error instanceof core.DocumentError ? error.message : 'Operation failed. Original data retained; check input or contact support.' }; }
   });

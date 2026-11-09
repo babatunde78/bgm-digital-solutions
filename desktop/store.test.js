@@ -17,6 +17,12 @@ function accept(store) {
   store.accept(batch.id, 'Reviewer', 'Reviewed against synthetic bank ledger, not a screenshot');
   return batch;
 }
+
+test('empty document selection explains which source checkbox to tick', t => {
+  const store = setup(t); accept(store);
+  assert.throws(() => store.create('receipt', [], 'Preparer'), { name: 'DocumentError', message: 'Tick a source-record checkbox in Documents before creating a draft. For a receipt, select exactly one payment.' });
+  assert.deepEqual(store.documents(), []);
+});
 test('accepted imports are atomic and repeated imports return the same batch', t => {
   const store = setup(t), batch = accept(store);
   assert.equal(store.stage(rows, 'Synthetic ledger').id, batch.id);

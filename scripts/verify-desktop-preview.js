@@ -34,7 +34,7 @@ async function run() {
     if (['/campus-documents.html', '/campus-documents.css', '/assets/campus-documents-pilot.png'].includes(pathname)) assert.equal(digest(bytes), digest(fs.readFileSync(path.resolve(__dirname, '..', pathname.slice(1)))), `Deployed asset differs: ${pathname}`);
     return { pathname, status: response.status, sha256: expected === 200 ? digest(bytes) : null };
   }));
-  const report = { checkedAt: new Date().toISOString(), origin, version: '0.1.0', status: 'request-pilot', cataloguePreserved: true, publicCatalogueProducts: products.length, checks, paidInstallerDelivery: 'Not tested or enabled: no signed installer, approved price or controlled desktop entitlement', signedLinkExpiry: 'Synthetic integration tests only; no production purchaser token issued' };
+  const report = { checkedAt: new Date().toISOString(), origin, version: JSON.parse(fs.readFileSync(path.resolve(__dirname, '../campus-documents-release.json'), 'utf8')).version, status: 'request-pilot', cataloguePreserved: true, publicCatalogueProducts: products.length, checks, paidInstallerDelivery: 'Not tested or enabled: installer acceptance and controlled desktop entitlement checks pending', signedLinkExpiry: 'Synthetic integration tests only; no production purchaser token issued' };
   fs.writeFileSync(path.join(directory, 'production-verification.json'), JSON.stringify(report, null, 2));
   process.stdout.write(`${JSON.stringify(report, null, 2)}\n`);
 }

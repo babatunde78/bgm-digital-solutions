@@ -1,10 +1,10 @@
-# Campus Bursary Documents — development pilot 0.1.0
+# Campus Bursary Documents — development pilot 0.1.1
 
 BGM means **BGM Digital Solutions**, the existing storefront in this repository. This is an offline Windows desktop application, separate from the Campus Excel products and the Connected application. Product display name is configurable in institution setup; release/installer names are configured in `release.json` and `package.json`.
 
 ## Run and verify
 
-Use the repository's Node 24 runtime and npm. In `desktop/`, run `npm ci`, then `npm start`. Core and storage tests: `node --test desktop/*.test.js` from the repository root. No production credentials are needed. Development mode allows local document finalisation; packaged applications require an institution licence. Do not distribute development mode as a paid customer release.
+Use the repository's Node 24 runtime and npm. In `desktop/`, run `npm ci`, then `npm start`. Core and storage tests: `node --test desktop/*.test.js` from the repository root. No production credentials are needed. Version 0.1.1 enables offline finalisation without licence activation in source and packaged mode. Development mode is not a paid customer release.
 
 Windows native synthetic acceptance: run `desktop/node_modules/electron/dist/electron.exe desktop --smoke-test` from the repository root. It creates a fresh disposable profile and sample PDFs under ignored `.product-work/campus-bursary-documents/v0.1.0/`. Then run `node desktop/verify-pdfs.mjs` to extract searchable text, check expected values and references, check page numbers/repeated table headings and render first/last pages to PNG. Inspect the PNGs; semantic checks alone do not prove layout quality. Smoke records are fictional.
 
@@ -36,7 +36,7 @@ Target: Windows 11 x64. Native development PDF generation has been exercised on 
 
 `npm run dist` in `desktop/` prepares a Windows NSIS installer and enforces code signing. The current build stops at the signing gate because no signing certificate/provider is configured. There is no published installer or installer checksum. Never disable antivirus or OS security to run a release.
 
-Packaged finalisation is blocked without a configured public verification key and valid signed institution licence. Export of historical data and retained PDFs remains available when missing/expired. Ed25519 licence verification is implemented; private signing keys, issuance service and agreed commercial rights are not supplied. Local clock rollback and administrator bypass remain offline protection limitations. There is no online activation or grace mechanism in this pilot. Do not invent expiry or support rights before commercial terms are agreed.
+Version 0.1.1 uses `licensing.activation: "none"`: packaged document finalisation, retrieval and export require no activation, licence file or internet check. Missing or expired licence files do not block this mode. BGM server-side purchase entitlements control access to paid downloads; they do not prevent copying an already downloaded application. This is a distribution policy, not device enforcement. Existing Ed25519 verification primitives remain available for a future explicitly configured mode; no private keys ship. Commercial usage/support terms and prior customer rights still need confirmation.
 
 Update files can be verified against a separately configured public key; authenticity binds product, version, schema, size, SHA-256 and the existing BGM private delivery origin. The downloader, installer verification/application, pre-migration backup orchestration and rollback UI are pending. No automatic update is installed and ordinary offline work does not require an update check. The current schema refuses a database newer than the application. Do not replace an application with an older version against a newer profile: restore a matching application plus a verified pre-upgrade backup into a fresh profile.
 

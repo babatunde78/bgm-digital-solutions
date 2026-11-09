@@ -8,6 +8,7 @@ test('desktop preview cannot advertise paid delivery without an approved install
   const desktop = require('../desktop/release.json');
   assert.equal(release.productId, desktop.productId);
   assert.equal(release.version, desktop.version);
+  assert.deepEqual(release.licensing, { activation: 'none' });
   assert.equal(release.status, 'request-pilot');
   assert.deepEqual(release.pricing, { status: 'request-quote', NGN: null, USD: null });
   assert.equal(release.paymentEnabled, false);
@@ -18,5 +19,6 @@ test('desktop preview cannot advertise paid delivery without an approved install
   assert.equal(document.querySelector('a[href="campus-documents-release.json"]')?.textContent, 'Release metadata');
   assert.equal(document.querySelector('a.buy, button.buy, form'), null);
   assert.ok(document.querySelector('#installation'));
+  assert.ok(document.body.textContent.includes('No activation or institution licence file is required'));
   dom.window.close();
 });

@@ -47,4 +47,5 @@ function verifyUpdate(envelope, publicKey, current, schema) {
   if (url.origin !== 'https://www.bgmsolutions.site' || url.pathname !== '/api/download' || url.username || url.password || url.hash) throw new DocumentError('Update must use the existing private delivery endpoint');
   return manifest;
 }
-module.exports = { seal, unseal, verifyLicence, verifyUpdate };
+function trustedPage(url, entry) { return typeof url === 'string' && url.split('#', 1)[0] === entry; }
+module.exports = { seal, unseal, verifyLicence, verifyUpdate, trustedPage };

@@ -24,6 +24,13 @@ test('recorded officer field is available before the institution setup form', as
   assert.ok(actor.compareDocumentPosition(ui.document.querySelector('#setup-form')) & ui.dom.window.Node.DOCUMENT_POSITION_FOLLOWING);
   assert.equal(ui.document.querySelectorAll('#actor').length, 1);
 });
+
+test('empty accepted records show the import acceptance instruction', async t => {
+  const ui = await interfaceFixture(t);
+  ui.state.records = [];
+  await ui.dom.window.testRefresh();
+  assert.equal(ui.document.querySelector('#records p')?.textContent, 'No accepted records yet. Choose a CSV in Imports, inspect its validation, then click Accept staged batch.');
+});
 test('record selection survives a job-progress refresh', async t => {
   const ui = await interfaceFixture(t);
   ui.document.querySelector('#records input').checked = true;

@@ -25,6 +25,9 @@ function draw() {
   const query = $('#search').value.toLowerCase();
   const selected = new Set([...$('#records').querySelectorAll('input:checked')].map(input => input.value));
   const rows = table('#records', ['Select', 'Reference', 'Account / payee', 'Date', 'Kind', 'Currency', 'Minor units']);
+  if (!state.records.length) {
+    const instruction = document.createElement('p'); instruction.textContent = 'No accepted records yet. Choose a CSV in Imports, inspect its validation, then click Accept staged batch.'; $('#records').prepend(instruction);
+  }
   for (const record of state.records.filter(row => JSON.stringify(row).toLowerCase().includes(query))) {
     const tr = document.createElement('tr'), select = document.createElement('input'); select.type = 'checkbox'; select.value = record.reference; select.checked = selected.has(record.reference); select.setAttribute('aria-label', `Select ${record.reference}`); cell(tr, '').append(select);
     for (const value of [record.reference, `${record.student} · ${record.name}`, record.date, record.kind, record.currency, record.minor]) cell(tr, value);

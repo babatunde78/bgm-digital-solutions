@@ -64,6 +64,7 @@ class Store {
   records() { return this.db.prepare('SELECT json FROM records ORDER BY reference').all().map(row => JSON.parse(row.json)); }
   create(kind, references, actor, options = {}) {
     actor = core.text(actor, 'preparer');
+    if (Array.isArray(references) && !references.length) throw new core.DocumentError('Tick a source-record checkbox in Documents before creating a draft. For a receipt, select exactly one payment.');
     if (!['receipt', 'statement', 'voucher'].includes(kind) || !Array.isArray(references) || !references.length || references.length > 10000 || new Set(references).size !== references.length) throw new core.DocumentError('Select unique source records and a supported template');
     return this.transaction(() => {
       const config = this.config();

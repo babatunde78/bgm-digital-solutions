@@ -86,17 +86,24 @@ async function run() {
       await new Promise(resolve => setTimeout(resolve, 100));
     }
     assert.equal(state.ok, true); assert.equal(state.value.records.length, 3);
-    assert.equal(state.value.licence.canFinalise, false); assert.equal(state.value.licence.canExport, true);
-    assert.match(state.value.licence.label, /Licence unavailable/);
+    assert.equal(state.value.licence.canFinalise, true); assert.equal(state.value.licence.canExport, true);
+    assert.match(state.value.licence.label, /No activation required/);
     assert.equal(await evaluate("typeof require"), 'undefined');
     assert.equal(await evaluate("Boolean(document.querySelector('#actor').compareDocumentPosition(document.querySelector('#setup-form')) & Node.DOCUMENT_POSITION_FOLLOWING)"), true);
     assert.equal(await evaluate("(async () => { const selected = document.querySelector('#records input'); selected.checked = true; const reference = selected.value; await refresh(); return [...document.querySelectorAll('#records input:checked')].some(input => input.value === reference); })()"), true);
     const draft = await evaluate(`window.bursary.call('create', ${JSON.stringify({ kind: 'statement', references: ['00000000000000000001', '00000000000000000002'], actor: 'Synthetic Preparer', options: { opening: '0', openingEvidence: 'Synthetic zero opening' } })})`);
     assert.equal(draft.ok, true);
     assert.equal((await evaluate(`window.bursary.call('review', ${JSON.stringify({ id: draft.value.id, actor: 'Synthetic Reviewer' })})`)).ok, true);
-    const denied = await evaluate(`window.bursary.call('enqueue', ${JSON.stringify({ id: draft.value.id })})`);
-    assert.equal(denied.ok, false); assert.match(denied.error, /valid institution licence/);
-    assert.equal((await evaluate("window.bursary.call('state')")).value.jobs.length, data.jobs.length);
+    const queued = await evaluate(`window.bursary.call('enqueue', ${JSON.stringify({ id: draft.value.id })})`);
+    assert.equal(queued.ok, true);
+    let finalDocument;
+    for (let attempt = 0; attempt < 100; attempt++) {
+      const latest = await evaluate("window.bursary.call('state')");
+      finalDocument = latest.value.documents.find(doc => doc.id === draft.value.id);
+      if (finalDocument.state === 'final') break;
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+    assert.equal(finalDocument.state, 'final');
     const history = Object.keys(expectedPdfs)[0];
     assert.equal((await evaluate(`window.bursary.call('preview', ${JSON.stringify({ id: history })})`)).ok, true);
     await command(browser, 'Browser.close');
@@ -108,7 +115,7 @@ async function run() {
     const retained = new Store(path.join(profile, 'bursary.sqlite'));
     try { for (const [id, hash] of Object.entries(expectedPdfs)) assert.equal(createHash('sha256').update(retained.pdf(id)).digest('hex'), hash); }
     finally { retained.close(); }
-    const report = { platform: process.platform, artifact: path.relative(root, executable), asarSha256: createHash('sha256').update(asar).digest('hex'), syntheticRecordsVisible: 3, archivedPdfHashesPreserved: true, historicalPreviewOpened: true, missingLicenceFinalisationDenied: true, nodeIntegrationDisabled: true, gracefulExit: true, scope: 'Unsigned unpacked application; no installer, officer acceptance or file-dialog export acceptance' };
+    const report = { platform: process.platform, artifact: path.relative(root, executable), asarSha256: createHash('sha256').update(asar).digest('hex'), syntheticRecordsVisible: 3, archivedPdfHashesPreserved: true, historicalPreviewOpened: true, finalisedWithoutLicenceFile: true, nodeIntegrationDisabled: true, gracefulExit: true, scope: 'Unsigned unpacked application; no installer, officer acceptance or file-dialog export acceptance' };
     report.officerFieldBeforeSetup = true;
     report.recordSelectionSurvivedRefresh = true;
     fs.writeFileSync(path.join(output, 'packaged-results.json'), JSON.stringify(report, null, 2));

@@ -1,10 +1,12 @@
 # Bursary officer pilot review — pending
 
-Planned reviewer: product owner or a designated bursary officer; actual participation and approval remain unconfirmed.
+Planned reviewer: Babatunde GBADAMOSI, product owner, as designated by the owner. Review execution and approval remain pending.
+
+Product publisher: BGM Digital Solutions. Certificate issuer verification of the legal publisher identity remains pending.
 
 Planned pilot machine: the current Windows test computer; reviewer to confirm the version/build and computer label below.
 
-Reviewer: ____________________  Role: ____________________
+Reviewer: Babatunde GBADAMOSI  Role: Product owner / acceptance reviewer
 
 Facilitator: ____________________  Date/time: ____________________
 

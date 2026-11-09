@@ -3,6 +3,13 @@ const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const { generateKeyPairSync, sign } = require('node:crypto');
 const { seal, unseal, verifyLicence, verifyUpdate } = require('./security');
+
+test('application page sections retain trust while other documents are denied', () => {
+  const { trustedPage } = require('./security');
+  const entry = 'file:///C:/synthetic/index.html';
+  for (const fragment of ['', '#imports', '#documents', '#recovery']) assert.equal(trustedPage(entry + fragment, entry), true);
+  for (const url of ['file:///C:/synthetic/other.html#imports', entry + '?other=1#imports', 'https://example.com/#imports', 'invalid']) assert.equal(trustedPage(url, entry), false);
+});
 test('encrypted backups round trip and reject wrong password or modified bytes', () => {
   const payload = { format: 'bgm-bursary-documents-1', records: [{ reference: '00001' }] };
   const encrypted = seal(payload, 'synthetic passphrase only');
