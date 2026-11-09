@@ -1,0 +1,18 @@
+{
+  "productId": "campus-bursary-documents",
+  "productName": "Campus Bursary Documents",
+  "version": "0.1.0",
+  "status": "request-pilot",
+  "pricing": { "status": "request-quote", "NGN": null, "USD": null },
+  "paymentEnabled": false,
+  "deliveryReady": false,
+  "installer": { "published": false, "sha256": null, "downloadUrl": null },
+  "target": "Windows 11 x64",
+  "windowsVerification": "Development-runtime PDF and backup checks only; clean installation pending",
+  "installationInstructions": "/campus-documents.html#installation",
+  "limitations": [
+    "Code signing and commercial licence issuance are not configured",
+    "Desktop prices and existing-customer rights await approval",
+    "No paid installer or automatic updates are available"
+  ]
+}

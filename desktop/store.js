@@ -5,6 +5,7 @@ const core = require('./core');
 const release = require('./release.json');
 class Store {
   constructor(filename) {
+    if (process.platform === 'win32' && filename !== ':memory:' && require('node:path').resolve(filename).length > 240) throw new core.DocumentError('Windows profile path is too long. Use a shorter private local profile path (database path at most 240 characters).');
     this.db = new DatabaseSync(filename);
     this.db.exec('PRAGMA foreign_keys=ON; PRAGMA journal_mode=WAL; PRAGMA synchronous=FULL; PRAGMA busy_timeout=5000;');
     const version = this.db.prepare('PRAGMA user_version').get().user_version;

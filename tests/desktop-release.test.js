@@ -1,0 +1,22 @@
+'use strict';
+const { test } = require('node:test');
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const { JSDOM } = require('jsdom');
+test('desktop preview cannot advertise paid delivery without an approved installer', () => {
+  const release = JSON.parse(fs.readFileSync('campus-documents-release.json', 'utf8'));
+  const desktop = require('../desktop/release.json');
+  assert.equal(release.productId, desktop.productId);
+  assert.equal(release.version, desktop.version);
+  assert.equal(release.status, 'request-pilot');
+  assert.deepEqual(release.pricing, { status: 'request-quote', NGN: null, USD: null });
+  assert.equal(release.paymentEnabled, false);
+  assert.equal(release.deliveryReady, false);
+  assert.deepEqual(release.installer, { published: false, sha256: null, downloadUrl: null });
+  const dom = new JSDOM(fs.readFileSync('campus-documents.html', 'utf8'));
+  const document = dom.window.document;
+  assert.equal(document.querySelector('a[href="campus-documents-release.json"]')?.textContent, 'Release metadata');
+  assert.equal(document.querySelector('a.buy, button.buy, form'), null);
+  assert.ok(document.querySelector('#installation'));
+  dom.window.close();
+});

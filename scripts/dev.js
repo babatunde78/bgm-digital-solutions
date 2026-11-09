@@ -3,13 +3,13 @@
 const http = require('node:http');
 const fs = require('node:fs');
 const path = require('node:path');
-const assets = new Set(['index.html','404.html','product.html','support.html','payment-success.html','campus-documents.html','campus-documents.css','styles.css','app.js','site.js','products.js','catalog-loader.js','purchase.js','robots.txt','sitemap.xml']);
+const assets = new Set(['index.html','404.html','product.html','support.html','payment-success.html','campus-documents.html','campus-documents.css','campus-documents-release.json','styles.css','app.js','site.js','products.js','catalog-loader.js','purchase.js','robots.txt','sitemap.xml']);
 const port = Number(process.env.PORT || 3000);
 const cataloguePreview = process.argv.includes('--preview-catalogue');
 const images = new Set(['bgm-guides-mockup','business-prompts','ai-side-hustles','remote-jobs','scholarships','upwork','five-guide-bundle','collections-bank'].map(name => 'assets/' + name + '.jpg'));
 images.add('assets/campus-documents-pilot.png');
 process.env.SITE_URL ||= `http://localhost:${port}`;
-const types = { '.html':'text/html; charset=utf-8', '.css':'text/css; charset=utf-8', '.js':'text/javascript; charset=utf-8', '.txt':'text/plain', '.xml':'application/xml; charset=utf-8', '.jpg':'image/jpeg' };
+const types = { '.html':'text/html; charset=utf-8', '.css':'text/css; charset=utf-8', '.js':'text/javascript; charset=utf-8', '.json':'application/json; charset=utf-8', '.txt':'text/plain', '.xml':'application/xml; charset=utf-8', '.jpg':'image/jpeg' };
 http.createServer(async (req,res) => {
   const url = new URL(req.url, 'http://localhost');
   res.status = code => { res.statusCode = code; return res; };

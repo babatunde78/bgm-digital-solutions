@@ -2,6 +2,10 @@
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const { Store } = require('./store');
+test('Windows rejects overlong database paths before creating a profile', { skip: process.platform !== 'win32' }, () => {
+  const filename = require('node:path').join(require('node:os').tmpdir(), 'x'.repeat(240), 'bursary.sqlite');
+  assert.throws(() => new Store(filename), { name: 'DocumentError', message: 'Windows profile path is too long. Use a shorter private local profile path (database path at most 240 characters).' });
+});
 const rows = [{ reference: '00001', student: '00012', name: 'Synthetic Student', date: '2026-11-09', currency: 'NGN', amount: '10.25', kind: 'payment', evidence: 'synthetic-bank-ledger' }];
 function setup(t) {
   const store = new Store(':memory:'); t.after(() => store.close());

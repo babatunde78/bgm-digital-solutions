@@ -136,7 +136,12 @@ app.whenReady().then(async () => {
     const timer = setInterval(() => { processJobs().catch(() => {}); }, 1000); timer.unref();
     await processJobs();
   }
-}).catch(error => { process.stderr.write(`${error.name}: desktop startup failed\n`); app.exit(1); });
+}).catch(error => {
+  const message = error instanceof core.DocumentError ? error.message : 'The local profile could not be opened. Check its permissions and contact BGM support; retained records have not been removed.';
+  if (smoke) process.stderr.write(`${error.name}: ${message}\n`);
+  else dialog.showErrorBox(release.productName, message);
+  app.exit(1);
+});
 app.on('before-quit', event => {
   if (processing) { event.preventDefault(); closing = true; const timer = setInterval(() => { if (!processing) { clearInterval(timer); app.quit(); } }, 100); }
 });

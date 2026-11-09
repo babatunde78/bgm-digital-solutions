@@ -1,5 +1,11 @@
 # Implementation status
 
+## Campus Bursary Documents — release review and preview publication
+
+The release review remains request-pilot only: no signing provider/certificate, approved desktop prices or commercial licence issuer is configured. A fresh Windows build stops at enforced signing; the unpacked executable is `NotSigned`. The fresh ASAR's 11-file allowlist/source/secret checks passed; its checksum and the retained sample ZIP checksum are recorded in `docs/DESKTOP_RELEASE.md`, explicitly not as installer checksums. No installer was uploaded, paid entitlement added or production financial data changed.
+
+A deeply nested disposable audit exposed a Windows SQLite path-length startup failure. A test-first fix rejects database paths over 240 characters before opening SQLite and presents a safe startup message. A shorter disposable copy passed actual Windows PDF generation, encrypted backup restoration and screenshot capture. All 25 desktop tests and 112 repository tests passed. PDF checks confirmed one-page priority samples and an eight-page 250-row statement; rendered pages were inspected. New public preview metadata declares request-quote prices, disabled fulfilment and no installer URL/checksum. Production deployment and read-only comparison evidence are retained under the ignored release-audit directory; use `docs/DESKTOP_RELEASE.md` for installation, monitoring limits, blockers and rollback.
+
 ## Campus Bursary Documents — offline desktop foundation, 9 November 2026
 
 Enquiry-only preview deployed at `https://www.bgmsolutions.site/campus-documents.html` through production deployment `dpl_GdTUWJZn1b6fk7SnQaPPv9AMZXjE`, commit `198e16bf45b1f9d631bdfec3f0cffa3637f838d2`. Read-only checks returned 200 for page/CSS/image/catalogue, matched the screenshot SHA-256, confirmed all three existing Campus products retain enabled checkout and confirmed the desktop product is absent from paid catalogue rows. Invalid download and unauthenticated verification returned 401; `/desktop/main.js` returned 404. No paid order or actual private download was fabricated. Prior deployment `dpl_3HC8H1FZNnxD5DbyyeZwpEePTCp8` is the website rollback reference. A subsequent desktop-only validation fix rejects blank statement opening balances rather than treating them as zero.

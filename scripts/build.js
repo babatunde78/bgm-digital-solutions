@@ -1,7 +1,7 @@
 'use strict';
 const fs = require('node:fs');
 const path = require('node:path');
-const assets = ['index.html','404.html','product.html','support.html','payment-success.html','campus-bursary.html','campus-documents.html','campus-documents.css','styles.css','app.js','site.js','products.js','catalog-loader.js','purchase.js','campus-preview.js','robots.txt','sitemap.xml'];
+const assets = ['index.html','404.html','product.html','support.html','payment-success.html','campus-bursary.html','campus-documents.html','campus-documents.css','campus-documents-release.json','styles.css','app.js','site.js','products.js','catalog-loader.js','purchase.js','campus-preview.js','robots.txt','sitemap.xml'];
 const output = path.resolve(__dirname, '../public');
 fs.rmSync(output, { recursive: true, force: true });
 fs.mkdirSync(output, { recursive: true });

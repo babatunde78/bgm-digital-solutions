@@ -28,6 +28,8 @@ Test restoration on a separate Windows test account/profile. Start with an empty
 
 Production profile target: `%LOCALAPPDATA%/BGM Digital Solutions/CampusBursaryDocuments/`. Data is separate from installation files. Do not move the database to a network/shared drive, cloud-sync directory or removable shared working folder. Use one Windows user/computer; local administrators can bypass application controls. SQLite and ordinary exports are not encrypted at rest by this pilot. Use institution-managed Windows account permissions and disk encryption; managed ACL acceptance is pending.
 
+Windows database paths longer than 240 characters are refused before SQLite opens them, leaving room for its sidecar filenames. If startup reports this condition, use an institution-approved Windows account with a shorter private local profile path; do not relocate the live database to a shared folder. No supported in-app profile relocation is available yet.
+
 ## Installation, licensing and updates
 
 Target: Windows 11 x64. Native development PDF generation has been exercised on Windows; clean installer/uninstaller acceptance and full compatibility are pending. The intended installer includes Electron/Node and does not require Excel, Adobe, a browser service or an internet connection for calculations/PDF generation. Application uninstall configuration preserves app data; that behaviour still needs installer acceptance.

@@ -4,7 +4,7 @@ const path = require('node:path');
 const assert = require('node:assert/strict');
 const asar = require('@electron/asar');
 const config = require('./package.json');
-const file = path.resolve(__dirname, config.build.directories.output, 'win-unpacked/resources/app.asar');
+const file = process.argv[2] ? path.resolve(process.argv[2]) : path.resolve(__dirname, config.build.directories.output, 'win-unpacked/resources/app.asar');
 const allowed = new Set(config.build.files.map(name => `/${name}`));
 const files = asar.listPackage(file).map(name => name.replaceAll('\\', '/'));
 for (const name of files) {
