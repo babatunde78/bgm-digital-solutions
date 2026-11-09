@@ -1,7 +1,7 @@
 'use strict';
 const fs = require('node:fs');
 const path = require('node:path');
-const assets = ['index.html','404.html','product.html','support.html','payment-success.html','campus-bursary.html','styles.css','app.js','site.js','products.js','catalog-loader.js','purchase.js','campus-preview.js','robots.txt','sitemap.xml'];
+const assets = ['index.html','404.html','product.html','support.html','payment-success.html','campus-bursary.html','campus-documents.html','campus-documents.css','styles.css','app.js','site.js','products.js','catalog-loader.js','purchase.js','campus-preview.js','robots.txt','sitemap.xml'];
 const output = path.resolve(__dirname, '../public');
 fs.rmSync(output, { recursive: true, force: true });
 fs.mkdirSync(output, { recursive: true });
@@ -10,4 +10,5 @@ fs.copyFileSync(path.resolve(__dirname, '../site.js'), path.join(output, 'site.j
 const images = ['bgm-guides-mockup','business-prompts','ai-side-hustles','remote-jobs','scholarships','upwork','five-guide-bundle','collections-bank','campus-bursary-a','campus-bursary-b','campus-bursary-full-excel'];
 fs.mkdirSync(path.join(output, 'assets'), { recursive: true });
 for (const name of images) fs.copyFileSync(path.resolve(__dirname, '../assets', name + '.jpg'), path.join(output, 'assets', name + '.jpg'));
+fs.copyFileSync(path.resolve(__dirname, '../assets/campus-documents-pilot.png'), path.join(output, 'assets/campus-documents-pilot.png'));
 console.log(`Built ${assets.length} public assets. Server code, SQL, tests and documentation are excluded.`);

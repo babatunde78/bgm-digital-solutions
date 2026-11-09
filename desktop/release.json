@@ -1,0 +1,12 @@
+{
+  "productId": "campus-bursary-documents",
+  "productName": "Campus Bursary Documents",
+  "version": "0.1.0",
+  "templateVersion": "1",
+  "schemaVersion": 1,
+  "status": "development-pilot",
+  "supportedTarget": "Windows 11 x64 (acceptance pending)",
+  "pricing": { "status": "request-quote", "NGN": null, "USD": null },
+  "paymentEnabled": false,
+  "deliveryReady": false
+}

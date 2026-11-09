@@ -1,0 +1,43 @@
+@page{size:A4;margin:16mm 14mm 20mm}
+*{box-sizing:border-box}
+body{font:10pt Arial,sans-serif;color:#1b322a;line-height:1.4;overflow-wrap:anywhere;margin:0}
+.institution{border-bottom:3px solid BRAND_COLOUR;padding-bottom:14px;margin-bottom:20px}
+h1{font-size:21pt;line-height:1.15;color:BRAND_COLOUR;margin:0 0 8px}
+h2{font-size:18pt;margin:0 0 8px}h3{font-size:10pt;margin:0 0 10px}
+.institution-detail{margin:3px 0;color:#41594d;font-size:9pt}
+.document-header{margin-bottom:18px}
+.status{font-size:9pt;font-weight:bold;border:1px solid #688376;padding:4px 9px;display:inline-block;letter-spacing:.12em}
+.meta{font-size:9pt;color:#435b50;margin:8px 0}
+.account{padding:12px 14px;background:#f0f4ef;border-left:3px solid BRAND_COLOUR;margin:12px 0 18px;break-inside:avoid}
+.account strong{font-size:11pt}.account p{margin:2px 0}
+.amount-panel{border:1px solid #b8cbbc;background:#f1f5ed;padding:16px 18px;margin:18px 0;break-inside:avoid}
+.amount-panel span{display:block;text-transform:uppercase;letter-spacing:.1em;font-size:8pt}
+.amount-panel strong{font-size:24pt;color:BRAND_COLOUR}
+table{border-collapse:collapse;width:100%;table-layout:fixed;font-size:9pt}
+thead{display:table-header-group}th{background:#e5ede4;font-size:8pt}
+th,td{border-bottom:1px solid #d2ded3;padding:8px 5px;text-align:left;vertical-align:top}
+tr{break-inside:avoid}.date{width:16%}.ref{width:28%}.amount{width:25%}
+.reference{font-variant-numeric:tabular-nums}.money{text-align:right;font-variant-numeric:tabular-nums}
+.summary{width:65%;margin:14px 0 14px auto;break-inside:avoid}
+.summary-row{display:flex;justify-content:space-between;gap:15px;border-bottom:1px solid #dde4d9;padding:4px 0}
+.closing{border-top:2px solid BRAND_COLOUR;font-size:12pt;margin-top:4px;padding-top:8px}
+.note{font-size:8pt;color:#425c4e;line-height:1.45}
+.signatures{display:flex;gap:30px;margin-top:24px;break-inside:avoid}
+.signature{flex:1;border-top:1px solid #708978;padding-top:8px;font-size:9pt}
+.endmatter{break-inside:avoid}
+.footer{font-size:9pt;color:#334d40;border-top:1px solid #c9d6c9;margin-top:16px;padding-top:8px}
+small{font-size:7pt;line-height:1.4;display:block;color:#526b5c}
+body.statement{font-size:9pt;line-height:1.3}
+.statement .institution{padding-bottom:10px;margin-bottom:14px}
+.statement h1{font-size:19pt}.statement h2{font-size:16pt}
+.statement .meta{font-size:8pt;margin:6px 0}
+.statement .document-header{margin-bottom:10px}
+.statement .account{padding:9px 12px;margin:10px 0 12px}
+.statement table{font-size:8pt}.statement th,.statement td{padding:6px 4px}
+.statement .date{width:15%}.statement .ref{width:25%}
+.statement .summary{margin:12px 0 12px auto}
+.statement .summary h3{margin-bottom:6px}.statement .summary-row{padding:3px 0}
+.statement .closing{font-size:11pt;padding-top:6px}
+.statement .note{font-size:7.5pt;margin:6px 0}
+.statement .signatures{margin-top:18px}.statement .signature{font-size:8pt;padding-top:6px}
+.statement .footer{font-size:8pt;margin-top:10px;padding-top:6px}

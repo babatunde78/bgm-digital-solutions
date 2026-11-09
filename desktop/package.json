@@ -1,0 +1,53 @@
+{
+  "name": "campus-bursary-documents",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Offline bursary document pilot for Windows",
+  "author": "BGM Digital Solutions",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "node --test *.test.js",
+    "dist": "electron-builder --win nsis --x64 --publish never"
+  },
+  "build": {
+    "appId": "site.bgmsolutions.bursarydocuments",
+    "productName": "Campus Bursary Documents",
+    "directories": {
+      "output": "../.product-work/campus-bursary-documents/v0.1.0/release"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "renderer.js",
+      "index.html",
+      "style.css",
+      "pdf.css",
+      "core.js",
+      "store.js",
+      "security.js",
+      "release.json",
+      "package.json"
+    ],
+    "asar": true,
+    "win": {
+      "target": "nsis",
+      "forceCodeSigning": true
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "deleteAppDataOnUninstall": false
+    }
+  },
+  "overrides": {
+    "minimatch": "11.0.1"
+  },
+  "devDependencies": {
+    "@napi-rs/canvas": "1.1.0",
+    "electron": "45.2.3",
+    "electron-builder": "26.18.0",
+    "pdfjs-dist": "6.5.438"
+  }
+}

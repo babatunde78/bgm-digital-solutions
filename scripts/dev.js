@@ -3,10 +3,11 @@
 const http = require('node:http');
 const fs = require('node:fs');
 const path = require('node:path');
-const assets = new Set(['index.html','404.html','product.html','support.html','payment-success.html','styles.css','app.js','site.js','products.js','catalog-loader.js','purchase.js','robots.txt','sitemap.xml']);
+const assets = new Set(['index.html','404.html','product.html','support.html','payment-success.html','campus-documents.html','campus-documents.css','styles.css','app.js','site.js','products.js','catalog-loader.js','purchase.js','robots.txt','sitemap.xml']);
 const port = Number(process.env.PORT || 3000);
 const cataloguePreview = process.argv.includes('--preview-catalogue');
 const images = new Set(['bgm-guides-mockup','business-prompts','ai-side-hustles','remote-jobs','scholarships','upwork','five-guide-bundle','collections-bank'].map(name => 'assets/' + name + '.jpg'));
+images.add('assets/campus-documents-pilot.png');
 process.env.SITE_URL ||= `http://localhost:${port}`;
 const types = { '.html':'text/html; charset=utf-8', '.css':'text/css; charset=utf-8', '.js':'text/javascript; charset=utf-8', '.txt':'text/plain', '.xml':'application/xml; charset=utf-8', '.jpg':'image/jpeg' };
 http.createServer(async (req,res) => {
@@ -41,6 +42,6 @@ http.createServer(async (req,res) => {
   const file = url.pathname === '/' ? 'index.html' : url.pathname.slice(1);
   const found=assets.has(file)||images.has(file);
   res.statusCode=found?200:404;
-  res.setHeader('Content-Type',types[path.extname(found?file:'404.html')]);
+  res.setHeader('Content-Type', path.extname(file) === '.png' && found ? 'image/png' : types[path.extname(found?file:'404.html')]);
   fs.createReadStream(path.resolve(__dirname,'..',found?file:'404.html')).pipe(res);
 }).listen(port,'127.0.0.1',()=>console.log(`Store running at http://localhost:${port}. Checkout stays disabled until configuration is complete.`));

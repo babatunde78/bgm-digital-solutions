@@ -1,0 +1,4 @@
+reference,student,name,date,currency,amount,kind,evidence
+00000000000000000001,00001,Ada Example - synthetic student,2026-11-01,NGN,50000.00,charge,Synthetic fee schedule
+00000000000000000002,00001,Ada Example - synthetic student,2026-11-02,NGN,25000.50,payment,Synthetic bank ledger 002
+00000000000000000003,SUP-0001,Example Supplies - fictional supplier,2026-11-03,NGN,10000.25,voucher,Synthetic approved supplier bill
