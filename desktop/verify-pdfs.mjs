@@ -7,9 +7,12 @@ globalThis.ImageData = ImageData;
 globalThis.Path2D = Path2D;
 const { getDocument } = await import('pdfjs-dist/legacy/build/pdf.mjs');
 const directory = process.argv[2] ? path.resolve(process.argv[2]) : path.resolve(import.meta.dirname, '../.product-work/campus-bursary-documents/v0.1.0/demo');
-const expected = { receipt: ['Confirmed-payment receipt', '25,000.50', '00000000000000000002'], statement: ['Student account statement', '24,999.50', '50,000.00'], voucher: ['Payment voucher', '10,000.25', 'SUP-0001'], 'multipage-statement': ['DRAFT', '25,002.50', 'LONG-000249'] };
+const expected = process.argv[3] ? JSON.parse(fs.readFileSync(path.resolve(process.argv[3]), 'utf8')) : { receipt: ['Confirmed-payment receipt', '25,000.50', '00000000000000000002'], statement: ['Student account statement', '24,999.50', '50,000.00'], voucher: ['Payment voucher', '10,000.25', 'SUP-0001'], 'multipage-statement': ['DRAFT', '25,002.50', 'LONG-000249'] };
+assert.ok(Object.keys(expected).length > 0 && Object.keys(expected).length <= 20);
 const results = [];
 for (const [name, phrases] of Object.entries(expected)) {
+  assert.match(name, /^[a-z0-9-]+$/);
+  assert.ok(Array.isArray(phrases) && phrases.length > 0 && phrases.every(phrase => typeof phrase === 'string' && phrase.length <= 200));
   const loading = getDocument({ data: new Uint8Array(fs.readFileSync(path.join(directory, `${name}.pdf`))), useSystemFonts: true });
   const document = await loading.promise;
   const texts = [];

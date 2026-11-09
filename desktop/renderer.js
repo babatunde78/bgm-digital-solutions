@@ -23,9 +23,10 @@ async function refresh() {
 }
 function draw() {
   const query = $('#search').value.toLowerCase();
+  const selected = new Set([...$('#records').querySelectorAll('input:checked')].map(input => input.value));
   const rows = table('#records', ['Select', 'Reference', 'Account / payee', 'Date', 'Kind', 'Currency', 'Minor units']);
   for (const record of state.records.filter(row => JSON.stringify(row).toLowerCase().includes(query))) {
-    const tr = document.createElement('tr'), select = document.createElement('input'); select.type = 'checkbox'; select.value = record.reference; select.setAttribute('aria-label', `Select ${record.reference}`); cell(tr, '').append(select);
+    const tr = document.createElement('tr'), select = document.createElement('input'); select.type = 'checkbox'; select.value = record.reference; select.checked = selected.has(record.reference); select.setAttribute('aria-label', `Select ${record.reference}`); cell(tr, '').append(select);
     for (const value of [record.reference, `${record.student} · ${record.name}`, record.date, record.kind, record.currency, record.minor]) cell(tr, value);
     rows.append(tr);
   }
@@ -53,12 +54,13 @@ function draw() {
   }
 }
 async function perform(action) {
-  try { const result = await action(); await refresh(); message(result === false ? 'Cancelled. No file saved.' : 'Operation completed.'); }
+  try { const result = await action(); await refresh(); message(result === false ? 'Cancelled. No changes made.' : 'Operation completed.'); }
   catch (error) { message(error.message, true); }
 }
 $('#setup-form').onsubmit = event => { event.preventDefault(); perform(() => call('configure', { config: Object.fromEntries(new FormData(event.target)), actor: actor() })); };
 $('#import').onclick = () => perform(async () => {
-  staged = await call('import', { source: $('#source').value }); if (!staged) return false;
+  const previewBatch = await call('import', { source: $('#source').value }); if (!previewBatch) return false;
+  staged = previewBatch;
   const area = $('#import-preview'); area.replaceChildren();
   const summary = document.createElement('p'); summary.textContent = `${staged.count} rows · control total ${staged.totalMinor ?? 'UNAVAILABLE'} minor units · ${staged.errors.length} errors · ${staged.state}`; area.append(summary);
   for (const error of staged.errors) { const p = document.createElement('p'); p.className = 'error'; p.textContent = `Row ${error.row}: ${error.message}`; area.append(p); }

@@ -18,6 +18,7 @@
     },
     "files": [
       "main.js",
+      "window.js",
       "preload.js",
       "renderer.js",
       "index.html",

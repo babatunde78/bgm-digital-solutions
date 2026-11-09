@@ -1,5 +1,29 @@
 # Implementation status
 
+## Campus Bursary Documents — renderer walkthrough fixes
+
+The Windows UI walkthrough saved the fictional institution/session and exposed an awkward setup prerequisite: the recorded officer field was below setup in Imports. It is now a single global field above Institution setup, and this ordering was verified in the running Windows accessibility tree after reload. Native pointer/file-chooser automation was unavailable in the test surface; successful native file-dialog import/export acceptance is not claimed.
+
+Three test-first renderer fixes now pass: officer input is available before setup; selected visible references survive job-progress/table refresh; cancelling a new file choice retains the previous visible staged batch and does not leave an enabled Accept button pointing at null. Cancellation feedback now describes unchanged state rather than implying a saved file. All 34 desktop tests pass, including the new jsdom/IPC-boundary renderer regressions; they do not replace actual officer/file-dialog acceptance. No financial formulas, local schema, production catalogue or delivery permissions changed.
+
+The new unsigned `ui-review` Windows package passed the 12-file allowlist/source/secret inspection and a real packaged renderer test for officer placement and selection retention; historical record/PDF access, missing-licence finalisation denial, disabled renderer Node integration and graceful exit also passed. The ASAR checksum is recorded in `docs/DESKTOP_RELEASE.md`. The installer build still stops at enforced signing, and no private release upload or paid product publication was attempted.
+
+## Campus Bursary Documents — pilot window and cache-path fixes
+
+Fixed the confirmed minimized-window issue: startup and second-instance handling now restore a minimized window before showing/focusing it, and ignore destroyed/unavailable windows safely. The reusable window helper is covered by three focused tests. Disposable smoke profiles use a shorter directory name, removing the prior GPU-cache path-length warning in the new native run; earlier profiles and evidence remain preserved.
+
+All 31 desktop tests passed. A fresh Windows source-copy regression actually minimized and restored its window, then completed the expanded financial/PDF/correction/retry/cancellation/backup scenarios without the former cache warning. Pilot materials and human sign-off remain separate: no human officer acceptance, approved prices, commercial signing or paid entitlement is inferred from these engineering checks. No production database, credentials, checkout or unrelated Excel-guide work changed.
+
+## Campus Bursary Documents — controlled pilot prepared
+
+Prepared an isolated source-pilot launcher, synthetic valid/invalid CSV scenarios with independent expected totals, a walkthrough and a human review form under `desktop/PILOT.md` and `desktop/PILOT-REVIEW.md`. The planned reviewer is the product owner or a designated bursary officer on the current Windows test computer; actual human participation, observations and sign-off remain pending. Engineering results must not be copied into human approval fields.
+
+All 28 desktop tests passed, including new fixture-oracle and environment-isolation checks; syntax checks passed for 78 root JavaScript files and the new desktop workflow module. A fresh Windows source-mode engineering run verified blocked invalid/duplicate imports, NGN 90,000.75 gross controls, NGN 19,999.50 statement closing, receipt/voucher values, self-review denial, safe render retry, cancellation, linked revision 2, preserved original branding/PDFs and encrypted backup restoration. Six example PDFs passed searchable-content/page-number checks and rendered samples were visually inspected. The engineering host emitted a nonfatal GPU-cache path-length warning in its deeply nested disposable source profile; the financial/PDF/restore checks completed successfully.
+
+The existing unsigned Windows audit executable was also exercised with a fresh synthetic profile and loopback-only test debugger: three historical records were visible, historical preview requests succeeded, archived PDF hashes survived, missing-licence finalisation was denied, renderer Node integration was unavailable and normal shutdown completed. The test debugger was closed with the application; it is not enabled by the officer launcher. These are unpacked-application checks, not clean installer, file-dialog export or human-officer acceptance. PowerShell file execution was blocked on the host, so the delivered launcher uses the installed Node runtime without changing execution policy. Child environments allow only Windows runtime basics and an isolated local-data path, excluding unapproved inherited variables.
+
+Pilot evidence and materials stay under ignored `.product-work/`; no real records, signing/licence keys, production bindings, paid entitlements or storefront settings were changed. Human review, signing, prices/licence rights, clean installer/upgrade acceptance and protected paid delivery remain launch work.
+
 ## Campus Bursary Documents — release review and preview publication
 
 The release review remains request-pilot only: no signing provider/certificate, approved desktop prices or commercial licence issuer is configured. A fresh Windows build stops at enforced signing; the unpacked executable is `NotSigned`. The fresh ASAR's 11-file allowlist/source/secret checks passed; its checksum and the retained sample ZIP checksum are recorded in `docs/DESKTOP_RELEASE.md`, explicitly not as installer checksums. No installer was uploaded, paid entitlement added or production financial data changed.

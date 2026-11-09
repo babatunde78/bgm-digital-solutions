@@ -7,18 +7,19 @@ const { Store } = require('./store');
 const core = require('./core');
 const security = require('./security');
 const release = require('./release.json');
+const showWindow = require('./window');
 let store, window, processing = false, closing = false;
 const entry = pathToFileURL(path.join(__dirname, 'index.html')).href;
 const smoke = !app.isPackaged && process.argv.includes('--smoke-test');
 if (smoke) app.disableHardwareAcceleration();
-if (smoke) app.setPath('userData', path.resolve(__dirname, `../.product-work/campus-bursary-documents/v0.1.0/native-smoke-${Date.now()}`));
+if (smoke) app.setPath('userData', path.resolve(__dirname, `../.product-work/cbd-smoke-${Date.now()}`));
 else if (process.platform === 'win32') {
   const local = process.env.LOCALAPPDATA;
   if (!local || !path.isAbsolute(local) || local.startsWith('\\\\')) throw new core.DocumentError('A private local Windows application-data directory is required');
   app.setPath('userData', path.join(local, 'BGM Digital Solutions', 'CampusBursaryDocuments'));
 }
 if (!app.requestSingleInstanceLock()) app.quit();
-app.on('second-instance', () => { if (window) { window.show(); window.focus(); } });
+app.on('second-instance', () => showWindow(window));
 function lockedWindow(options = {}) {
   const win = new BrowserWindow({ width: 1240, height: 880, ...options, webPreferences: { preload: options.preload, offscreen: Boolean(options.offscreen), contextIsolation: true, nodeIntegration: false, sandbox: true, webSecurity: true, spellcheck: false } });
   win.webContents.setWindowOpenHandler(() => ({ action: 'deny' }));
@@ -129,6 +130,7 @@ app.whenReady().then(async () => {
     catch (error) { return { ok: false, error: error instanceof core.DocumentError ? error.message : 'Operation failed. Original data retained; check input or contact support.' }; }
   });
   await window.loadFile(path.join(__dirname, 'index.html'));
+  if (!smoke) showWindow(window);
   if (smoke) {
     try { await require('./smoke')(store, window, pdf); app.exit(0); }
     catch (error) { fs.writeFileSync(path.join(data, 'smoke-error.txt'), error.stack); app.exit(1); }

@@ -1,0 +1,36 @@
+# Controlled Windows bursary pilot — 0.1.0
+
+Purpose: a bursary officer checks whether the three document workflows and their source/recovery controls are usable. Use fictional data only. This is an internal source-mode pilot, not a signed installer, approved commercial licence or completed institutional acceptance. Recorded officer names are workflow labels, not authenticated identities.
+
+## Start an isolated pilot
+
+Use this repository on a private local Windows drive with Node 24 and the installed desktop dependencies. If needed, run `npm ci` inside `desktop/`. From the repository root:
+
+```text
+node scripts/start-desktop-pilot.js review-fixed --check-only
+node scripts/start-desktop-pilot.js review-fixed
+```
+
+The launcher opens the source application in a separate `.product-work/cbd-pilot/review-fixed/` profile and removes production/signing credentials from the child environment. It does not alter the normal Windows profile or PowerShell execution policy. Reuse `review-fixed` to resume after normal shutdown; use `restore-fixed` for an empty restoration profile. Never use live student records, bank credentials, signatures or production licence keys. Do not share the SQLite file over a network.
+
+Expected duration: 30–45 minutes. Reviewer and facilitator complete `PILOT-REVIEW.md`; every human result starts Pending. Automated results are supporting evidence, not a reviewer's approval.
+
+## Acceptance scenarios
+
+1. **Institution setup:** Enter `Demo Preparer` in the Recorded officer section above Institution setup. Set institution to `Synthetic River College — PILOT`, currency NGN, session 2026/2027 and manual officer/title blocks. Save; close normally and reopen the same profile. Confirm settings persist. Record whether the navigation and labels are understandable.
+2. **Invalid import:** Choose `pilot-invalid.csv`, source `Synthetic invalid pilot`. Expect four input rows, three row errors (duplicate reference, impossible date, nonnumeric amount), an unavailable control total and disabled acceptance. Confirm no financial record was accepted. Do not fix errors by replacing amounts with zero.
+3. **Valid import:** Choose `pilot-valid.csv`, source `Synthetic pilot ledger`. Expect four rows and a gross control total of **9,000,075 minor units = NGN 90,000.75**. This adds all imported amounts for a gross control, not an account balance. Inspect all four rows and long text references. Record confirmation notes: `Reviewed synthetic ledger; no actual bank confirmation`. Accept, then repeat the identical import/source: no extra records may appear. A payment screenshot is insufficient evidence.
+4. **Three documents:** Select only payment reference ending `02` for a receipt: **NGN 25,000.50**. Select account `00001` charge/payment/credit references ending `01`, `02`, `04` for a statement, opening `0`, provenance `Confirmed synthetic zero opening`: charges **50,000.00**, credits **5,000.00**, payments **25,000.50**, closing **19,999.50**. Select voucher reference ending `03`: **NGN 10,000.25**. Create drafts, inspect previews and verify that long references, names, currencies and signature lines are legible. Entering a blank statement opening must fail. A second receipt for the same payment must fail.
+5. **Review and PDF jobs:** Attempt self-review as `Demo Preparer`: denied. Change the recorded name to `Demo Reviewer`, review each draft, queue PDFs and inspect per-document job outcomes. Export final PDFs. Record whether the reviewer can readily distinguish draft, reviewed and final. Check statement arithmetic independently; PDF generation does not audit the source or grant clearance.
+6. **Branding and correction:** Retain the original receipt and its document ID. Rename the institution to `Synthetic River College — REVISED PILOT`; its retained original must not change. Enter a cancellation reason in the Correction reason field and cancel the old receipt. Export a marked copy and verify CANCELLED. Create a replacement receipt for the same payment, entering the cancelled original ID and correction reason; independently review it. Expect revision 2 linked to the original, same amount and revised institution branding. Generate a marked copy of the final statement and verify REPRINTED. Keep originals and correction evidence together.
+7. **Cancellation and interruption:** Create/review a spare statement; queue then cancel its job before completion if practical. A cancelled job must not become a final PDF. If it finishes before the click, record Not observed and repeat with another spare draft; do not claim cancellation succeeded. Close normally and reopen the same profile to verify retrieval/persistence. Crash recovery has engineering test coverage but is not established by a normal restart; do not force-kill a process or disable OS protection for this session.
+8. **Backup and restore:** Save an encrypted backup with a pilot-only passphrase of at least 12 characters. Close the first profile normally, launch `node scripts/start-desktop-pilot.js restore-fixed`. Restore with a wrong passphrase: refused, empty profile unchanged. Restore with the correct passphrase: compare source counts, documents, job history and exported PDF SHA-256 values. Reusing a configured profile for restoration must be refused. Keep the backup/passphrase separate; no lost-password recovery exists. Public synthetic engineering backup uses `synthetic-pilot-passphrase`; never reuse it for real data.
+9. **Offline and print review:** With an institution-approved offline test environment, repeat preview, generation, retrieval and backup. The app blocks online requests, but this does not prove the Windows computer was physically offline. Mark a real disconnected-network test Pending unless observed. Print representative PDFs through an approved printer if available; record paper size, clipping and signature space. No PDF/A/accessibility-standard or certificate-signature acceptance is claimed.
+
+## Evidence and decision
+
+Retain CSV inputs, expected totals, exported originals/marked copies, encrypted backup, SHA-256 values and completed review form under the isolated pilot folder. Do not upload sensitive data by default. `expected-results.json` contains the independent numeric oracle; generated engineering reports always retain `humanOfficerAcceptance: pending`.
+
+Pass requires the reviewer to explain the source confirmation, statement arithmetic, correction history and recovery without assistance, and no unexplained financial discrepancy or missing record. Record usability issues separately from data defects. Any unresolved financial, restoration, confidentiality or document-state defect blocks progression. A human pass still does not approve prices/licence rights or replace signed installer/security acceptance.
+
+After review: resolve recorded defects, obtain owner's commercial decisions, configure signing/licence issuance, then conduct signed installer and controlled entitlement/download acceptance. Paid fulfilment remains disabled meanwhile.

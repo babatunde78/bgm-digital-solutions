@@ -1,5 +1,9 @@
 # Campus Bursary Documents 0.1.0 release review
 
+Latest internal renderer review: `ui-review/release/win-unpacked/resources/app.asar` under the ignored version directory has SHA-256 `a31cf9c45e218008cdff0f3e8b50a65990dad96066dac3bb64114448ee50f6d7`. It passes the 12-file package/source/secret inspection and Windows packaged-app regression, including officer-before-setup ordering and record-selection preservation across refresh. The three renderer regressions first failed and now pass; total desktop tests: 34. This remains an unsigned audit artifact, not an installer; the source UI and cancellation fix do not approve human acceptance or paid fulfilment. Earlier artifacts/checksums below remain historical evidence.
+
+Subsequent internal pilot fix: `window-fix-review/release/win-unpacked/resources/app.asar` under the same ignored version directory has SHA-256 `a446e713301ded7d0768f13b9183b759d60b7411e6d4a3e52184145087f9754d`. It includes the minimized-window restore helper, passes a 12-file source/secret allowlist inspection and the packaged historical-access/licence-denial regression, and remains unsigned/unpublished. Windows source regression verified minimize/restore and the shortened smoke profile removed the former cache warning. All 31 desktop tests pass; human acceptance and signing remain pending. The earlier artifact/checksum below is preserved as historical evidence.
+
 ## Publication decision
 
 Publish **request-pilot preview only** at https://www.bgmsolutions.site/campus-documents.html. Public metadata: https://www.bgmsolutions.site/campus-documents-release.json. This metadata is informational, not a replacement for the Supabase catalogue. Product ID remains `campus-bursary-documents`. NGN and USD prices remain unapproved/request-quote; no desktop paid product row, installer entitlement or permanent public installer link is created.
