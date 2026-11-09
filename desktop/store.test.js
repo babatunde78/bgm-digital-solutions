@@ -57,6 +57,10 @@ test('statement distinguishes movements and records explicit opening provenance'
   assert.equal(doc.snapshot.totals.closing, '8975');
   assert.throws(() => store.create('statement', ['00001'], 'Preparer', { opening: '10000' }));
 });
+test('blank statement opening is rejected instead of becoming zero', t => {
+  const store = setup(t); accept(store);
+  assert.throws(() => store.create('statement', ['00001'], 'Preparer', { opening: '', openingEvidence: 'Synthetic opening schedule' }));
+});
 test('review by preparer is refused', t => {
   const store = setup(t); accept(store);
   const doc = store.create('receipt', ['00001'], 'Preparer');

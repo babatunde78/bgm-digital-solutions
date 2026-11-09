@@ -81,8 +81,8 @@ function render(doc) {
   const config = configuration(doc.config), titles = { receipt: 'Confirmed-payment receipt', statement: 'Student account statement', voucher: 'Payment voucher' };
   if (!titles[doc.kind] || !doc.records?.length || !doc.id || !doc.actor) throw new DocumentError('Required document placeholders missing');
   if (!['draft', 'reviewed', 'final', 'cancelled', 'reprinted', 'reversed'].includes(doc.status)) throw new DocumentError('Invalid document state');
-  const isStatement = doc.kind === 'statement', totals = isStatement ? statement(doc.opening || '0', doc.records) : null;
-  let running = minor(doc.opening || '0');
+  const isStatement = doc.kind === 'statement', totals = isStatement ? statement(doc.opening, doc.records) : null;
+  let running = minor(isStatement ? doc.opening : '0');
   const rows = doc.records.map(row => {
     if (isStatement) {
       running += row.kind === 'charge' ? minor(row.minor) : -minor(row.minor);

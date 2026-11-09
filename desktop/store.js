@@ -76,7 +76,7 @@ class Store {
       if (kind === 'receipt' && (records.length !== 1 || records[0].kind !== 'payment')) throw new core.DocumentError('Receipt requires exactly one confirmed source payment');
       if (kind === 'voucher' && records.some(row => row.kind !== 'voucher')) throw new core.DocumentError('Voucher requires voucher source rows');
       if (kind === 'statement' && (new Set(records.map(row => row.student)).size !== 1 || records.some(row => row.kind === 'voucher'))) throw new core.DocumentError('Statement requires one student account and charge/credit/payment movements');
-      const opening = options.opening || '0';
+      const opening = kind === 'statement' ? options.opening : '0';
       const totals = kind === 'statement' ? core.statement(opening, records) : null;
       if (kind === 'statement' && !options.openingEvidence) throw new core.DocumentError('Record opening balance provenance, including a confirmed zero');
       let original = null;
