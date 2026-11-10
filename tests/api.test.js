@@ -4,6 +4,7 @@ const assert=require('node:assert/strict');
 const crypto=require('node:crypto');
 const {hash}=require('../lib/http');
 const {confirm,publicOrder}=require('../lib/orders');
+const {verify}=require('../lib/tokens');
 const originalFetch=global.fetch;
 const token=crypto.randomBytes(32).toString('base64url');
 function response(){return {statusCode:200,headers:{},setHeader(k,v){this.headers[k]=v},status(n){this.statusCode=n;return this},json(data){this.data=data;return this},end(){},destroy(){this.destroyed=true}}}
@@ -53,7 +54,23 @@ test('webhook rejects short signatures without crashing and acknowledges only af
 test('paid downloads are issued from the snapshot without another Paystack request or buyer email',async()=>{
   const order={id:crypto.randomUUID(),status:'paid',reference:'bgm-reference',environment:'test',product_id:'guide',product_name:'Guide v1',assets:['private/v1.zip','private/bonus.zip']};
   assert.equal(await confirm(order),order);
-  const output=publicOrder(order);assert.equal(output.downloads.length,2);assert.equal(output.product.name,'Guide v1');assert.equal(output.customerEmail,undefined);
+  const output=await publicOrder(order);assert.equal(output.downloads.length,2);assert.equal(output.product.name,'Guide v1');assert.equal(output.customerEmail,undefined);
+});
+test('paid Campus Excel buyers receive a short-lived desktop link only while its release is published',async()=>{
+  process.env.PAYSTACK_CURRENCIES='NGN';
+  const desktop={id:'campus-bursary-documents',name:'Campus Bursary Documents',status:'draft',amounts:{NGN:20000000},delivery_ready:false,blob_pathnames:['campus-bursary-documents/v0.1.1/campus-bursary-documents-setup-0.1.1.exe']};
+  global.fetch=async()=>reply([desktop]);
+  const orders=['campus-bursary-package-a','campus-bursary-package-b','campus-bursary-full-excel'].map(product_id=>({id:crypto.randomUUID(),status:'paid',reference:'campus-reference',environment:'test',product_id,product_name:product_id,assets:['campus-bursary/v0.2.1/buyer.zip']}));
+  for (const order of orders) assert.equal((await publicOrder(order)).downloads.length,1);
+  desktop.status='published';desktop.delivery_ready=true;
+  const output=await publicOrder(orders[0]);
+  assert.equal(output.downloads.length,2);
+  assert.equal(output.downloads[1].name,'campus-bursary-documents-setup-0.1.1.exe');
+  const url=new URL(output.downloads[1].url,'https://store.example');
+  const token=verify(url.searchParams.get('token'),'campus-desktop-upgrade');
+  assert.equal(token.order,orders[0].id);
+  assert.equal(token.exp-token.iat,600);
+  for (const order of orders) assert.equal((await publicOrder(order)).downloads.length,2);
 });
 test('worker endpoint requires a constant-time checked bearer secret',async()=>{
   process.env.CRON_SECRET='synthetic-worker-secret';

@@ -6,6 +6,10 @@ const crypto=require('node:crypto');
 const {Writable}=require('node:stream');
 const {PGlite}=require('@electric-sql/pglite');
 const storage=require('../lib/storage');
+const {hash}=require('../lib/http');
+const {rpc}=require('../lib/db');
+const {publicOrder}=require('../lib/orders');
+const {sign}=require('../lib/tokens');
 
 test('checkout -> webhook -> durable fulfillment -> download -> email recovery -> refund revocation',async t=>{
   const db=new PGlite();
@@ -102,4 +106,22 @@ test('checkout -> webhook -> durable fulfillment -> download -> email recovery -
   await webhook({event:'refund.processed',data:{id:555,domain:'test',transaction_reference:reference}});await run();
   const revoked=await invoke('download','GET',undefined,{token:url.searchParams.get('token')});assert.equal(revoked.statusCode,403);
   order=(await db.query('select * from public.store_orders where reference=$1',[reference])).rows[0];assert(order.revoked_at);
+
+  const desktopPath='campus-bursary-documents/v0.1.1/campus-bursary-documents-setup-0.1.1.exe';
+  await db.query("insert into public.products(id,name,category,amounts,status,delivery_ready,blob_pathnames) values('campus-bursary-package-a','Campus Package A','Business Software','{\"NGN\":80000000}','published',true,array['campus-bursary/v0.2.1/package-a.zip']),('campus-bursary-documents','Campus Bursary Documents','Business Software','{\"NGN\":20000000}','draft',false,array[$1])",[desktopPath]);
+  const campusOrder=await rpc('store_create_order',{p_key:crypto.randomUUID(),p_session:hash(cookie),p_email:'synthetic-campus-buyer@example.test',p_environment:'test',p_product:'campus-bursary-package-a',p_name:'Campus Package A',p_amount:80000000,p_currency:'NGN',p_assets:['campus-bursary/v0.2.1/package-a.zip']});
+  const paidCampusOrder=await rpc('store_confirm_order',{p_order:campusOrder.id,p_transaction:'synthetic-campus-transaction'});
+  assert.equal((await publicOrder(paidCampusOrder)).downloads.length,1,'draft desktop release grants no upgrade link');
+  await db.query("update public.products set status='published',delivery_ready=true where id='campus-bursary-documents'");
+  const campusDownloads=(await publicOrder(paidCampusOrder)).downloads;
+  assert.equal(campusDownloads.length,2,'published desktop release is included for an existing paid Campus buyer');
+  const upgradeToken=new URL(campusDownloads[1].url,'https://store.example').searchParams.get('token');
+  const upgraded=await invoke('download','GET',undefined,{token:upgradeToken});
+  assert.equal(upgraded.bytes(),'private ZIP bytes');
+  assert.equal(storage.get.mock.calls.at(-1).arguments[0],desktopPath);
+  assert.deepEqual((await db.query('select assets from public.store_orders where id=$1',[campusOrder.id])).rows[0].assets,['campus-bursary/v0.2.1/package-a.zip']);
+  const forged=sign({v:1,purpose:'campus-desktop-upgrade',order:order.id,iat:Math.floor(Date.now()/1000),exp:Math.floor(Date.now()/1000)+600});
+  assert.equal((await invoke('download','GET',undefined,{token:forged})).statusCode,403,'unrelated paid order cannot redeem the Campus upgrade');
+  await db.query('update public.store_orders set revoked_at=now(),revocation_reason=$1 where id=$2',['synthetic refund',campusOrder.id]);
+  assert.equal((await invoke('download','GET',undefined,{token:upgradeToken})).statusCode,403,'revoked Campus order loses upgrade download access');
 });

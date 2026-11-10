@@ -36,6 +36,9 @@ test('import preserves existing product edits and uses the current guide asset i
   assert.equal(campusB.amounts.NGN, 120000000);
   assert.equal(fullExcel.amounts.NGN, 160000000);
   assert.equal(campusA.campusPackage, undefined);
+  const desktop = written.find(product => product.id === 'campus-bursary-documents');
+  assert.match(desktop.description, /one-time NGN 200,000 licence.*version 0\.1\.1/i);
+  assert.match(desktop.description, /Verified paid buyers of Campus Package A, Package B or Full Excel receive version 0\.1\.1 at no extra charge/i);
 });
 test('missing private file prevents all catalogue writes', async t => {
   let writes = 0;

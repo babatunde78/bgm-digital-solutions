@@ -6,5 +6,5 @@ module.exports = endpoint('GET', async (req, res) => {
   const sessionHash = requireSession(req), ref = reference(req.query.reference);
   await rateLimit(req, 'verify', 30);
   const order = await authorizedOrder(ref, sessionHash);
-  return res.status(200).json(publicOrder(await confirm(order)));
+  return res.status(200).json(await publicOrder(await confirm(order)));
 });

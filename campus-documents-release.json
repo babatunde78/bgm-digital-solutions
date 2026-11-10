@@ -20,10 +20,16 @@
   "installationInstructions": "/campus-documents.html#installation",
   "limitations": [
     "Unsigned installer; installation and uninstallation passed only for the tested per-user custom-directory path and machine",
-    "Support terms and existing-customer rights require confirmation",
+    "One-institution/one-computer limit is contractual; the offline application has no device lock and downloaded installers can be copied",
+    "No ongoing product-use support or later-version updates; existing BGM purchase/access support and its published seven-day refund policy continue",
     "No paid download or automatic updates are available"
   ],
   "licensing": {
-    "activation": "none"
+    "activation": "none",
+    "grant": "one-time use of version 0.1.1 by one institution on one computer",
+    "renewal": "none",
+    "ongoingSupport": "not included",
+    "laterVersionUpdates": "not included",
+    "existingCampusExcelBuyers": "verified paid buyers of Package A, Package B or Full Excel receive version 0.1.1 at no extra charge"
   }
 }

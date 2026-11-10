@@ -8,7 +8,14 @@ test('desktop preview cannot advertise paid delivery without an approved install
   const desktop = require('../desktop/release.json');
   assert.equal(release.productId, desktop.productId);
   assert.equal(release.version, desktop.version);
-  assert.deepEqual(release.licensing, { activation: 'none' });
+  assert.deepEqual(release.licensing, {
+    activation: 'none',
+    grant: 'one-time use of version 0.1.1 by one institution on one computer',
+    renewal: 'none',
+    ongoingSupport: 'not included',
+    laterVersionUpdates: 'not included',
+    existingCampusExcelBuyers: 'verified paid buyers of Package A, Package B or Full Excel receive version 0.1.1 at no extra charge'
+  });
   assert.equal(release.status, 'request-pilot');
   assert.deepEqual(release.pricing, { status: 'approved-not-for-sale', currency: 'NGN', amount: 200000 });
   assert.equal(release.paymentEnabled, false);
@@ -17,6 +24,8 @@ test('desktop preview cannot advertise paid delivery without an approved install
   assert.match(release.windowsVerification, /per-user install.*passed on one Windows 11 x64 machine/i);
   assert.match(release.windowsVerification, /reviewer reported all 14 pilot scenarios passed/i);
   assert.ok(release.limitations.some(item => /unsigned installer.*installation and uninstallation passed only/i.test(item)));
+  assert.ok(release.limitations.some(item => /contractual.*no device lock.*can be copied/i.test(item)));
+  assert.ok(release.limitations.some(item => /No ongoing product-use support.*seven-day refund policy continue/i.test(item)));
   const dom = new JSDOM(fs.readFileSync('campus-documents.html', 'utf8'));
   const document = dom.window.document;
   const pageText = document.body.textContent;
@@ -45,9 +54,11 @@ test('desktop preview cannot advertise paid delivery without an approved install
   assert.match(pageText, /detailed scenario artefacts were not attached/i);
   assert.doesNotMatch(pageText, /has not completed officer acceptance/i);
   assert.match(pageText, /default-path permissions, upgrade checks and compatibility across Windows versions/i);
-  assert.match(pageText, /legitimate purchaser entitlement and signed-link expiry\/cross-customer denial/i);
-  assert.match(pageText, /planned price.*NGN 200,000.*sales are not open/i);
-  assert.match(pageText, /no customer installer or paid download is available/i);
+  assert.match(pageText, /live entitlement\/download and link-expiry\/cross-customer verification/i);
+  assert.match(pageText, /approved one-time price.*NGN 200,000.*sales and downloads are not open/i);
+  assert.match(pageText, /verified paid buyers of Campus Package A, Package B or Full Excel receive version 0\.1\.1 at no extra charge/i);
+  assert.match(pageText, /device limit is contractual.*does not enforce it and downloaded installers can be copied/i);
+  assert.match(pageText, /Sales and downloads are not open/i);
   const homepage = new JSDOM(fs.readFileSync('index.html', 'utf8')).window.document;
   const previewLink = homepage.querySelector('a[href="campus-documents.html"]');
   assert.equal(previewLink?.textContent.trim(), 'View desktop preview');
