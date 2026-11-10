@@ -102,6 +102,19 @@ test('private desktop release verification is preview-only and hashes the comple
 test('invalid download tokens never fetch storage or payment data',async()=>{
   const res=response();await require('../api/download')({method:'GET',headers:{},query:{token:'invalid'}},res);assert.equal(res.statusCode,401);
 });
+test('a download token cannot be reassigned to another purchaser order',async()=>{
+  const {sign}=require('../lib/tokens');
+  const now=Math.floor(Date.now()/1000);
+  const token=sign({v:1,purpose:'download',order:crypto.randomUUID(),file:0,iat:now,exp:now+600});
+  const [encoded,signature]=token.split('.');
+  const claims=JSON.parse(Buffer.from(encoded,'base64url').toString());
+  claims.order=crypto.randomUUID();
+  const reassigned=`${Buffer.from(JSON.stringify(claims)).toString('base64url')}.${signature}`;
+  const res=response();
+  await require('../api/download')({method:'GET',headers:{},query:{token:reassigned}},res);
+  assert.equal(res.statusCode,401);
+  assert.match(res.data.error,/expired or is invalid/i);
+});
 test('paused email disables recovery without touching the email provider',async()=>{
   process.env.EMAIL_ENABLED='false';
   const res=response();await require('../api/recover-purchase')({method:'POST',headers:{origin:'https://store.example','content-type':'application/json'},body:{email:'buyer@example.com',reference:'bgm-reference'}},res);
