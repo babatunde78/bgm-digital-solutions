@@ -42,5 +42,10 @@ test('desktop preview cannot advertise paid delivery without an approved install
   assert.match(pageText, /current installer is unsigned/i);
   assert.match(pageText, /default-path permissions, upgrade checks or compatibility testing across Windows versions/i);
   assert.match(pageText, /private installer integrity read-back, legitimate purchaser entitlement and signed-link expiry/i);
+  const homepage = new JSDOM(fs.readFileSync('index.html', 'utf8')).window.document;
+  const previewLink = homepage.querySelector('a[href="campus-documents.html"]');
+  assert.equal(previewLink?.textContent.trim(), 'View desktop preview');
+  assert.match(homepage.querySelector('.campus-desktop-preview')?.textContent || '', /request-pilot preview only/i);
+  assert.match(fs.readFileSync('sitemap.xml', 'utf8'), /https:\/\/www\.bgmsolutions\.site\/campus-documents\.html/);
   dom.window.close();
 });

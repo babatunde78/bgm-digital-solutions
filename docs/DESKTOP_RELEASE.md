@@ -2,7 +2,7 @@
 
 ## Buyer preview refresh - 10 November 2026
 
-The request-pilot page now leads with the three implemented workflows, import review, offline/local-data behaviour and precise limitations. It links to three one-page synthetic PDF samples (receipt, reconciled statement and voucher) and identifies both the files and application screenshot as preview material. The sample PDFs are public layout examples only; they contain fictional records and are not customer/buyer data. The unsigned installer remains unavailable, and there is no paid CTA, price or public installer URL. Catalogue status, payment availability and entitlement records are unchanged.
+The request-pilot page now leads with the three implemented workflows, import review, offline/local-data behaviour and precise limitations. It links to three one-page synthetic PDF samples (receipt, reconciled statement and voucher) and identifies both the files and application screenshot as preview material. The sample PDFs are public layout examples only; they contain fictional records and are not customer/buyer data. The homepage and sitemap now link to the request-pilot page. The unsigned installer remains unavailable, and there is no paid CTA, price or public installer URL. Catalogue status, payment availability and entitlement records are unchanged.
 
 Validation: all 113 repository tests, the focused desktop-release preview test, `npm run check`, and the 18-asset production build passed. PDF.js confirmed searchable text, page numbering, expected sample totals/references and one page per sample. Windows customer installation was not retested in this page-only change; the existing 0.1.1 Windows acceptance scope remains unchanged.
 
