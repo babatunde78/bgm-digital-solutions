@@ -33,4 +33,4 @@ Retain CSV inputs, expected totals, exported originals/marked copies, encrypted 
 
 Pass requires the reviewer to explain the source confirmation, statement arithmetic, correction history and recovery without assistance, and no unexplained financial discrepancy or missing record. Record usability issues separately from data defects. Any unresolved financial, restoration, confidentiality or document-state defect blocks progression. A human pass still does not approve prices/licence rights or replace signed installer/security acceptance.
 
-After review: resolve recorded defects, obtain owner's commercial decisions, configure signing/licence issuance, then conduct signed installer and controlled entitlement/download acceptance. Paid fulfilment remains disabled meanwhile.
+After review: resolve recorded defects, confirm commercial support terms and prior customer rights, then conduct controlled entitlement/download acceptance for the unsigned 0.1.1 installer. This selected release policy requires no activation or certificate. Paid fulfilment remains disabled until the release gates pass.

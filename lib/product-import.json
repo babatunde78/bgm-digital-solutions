@@ -207,5 +207,29 @@
     "blob_pathnames": [
       "campus-bursary/v0.2.1/campus-bursary-all-pilot-v0.2.1.zip"
     ]
+  },
+  {
+    "id": "campus-bursary-documents",
+    "name": "Campus Bursary Documents",
+    "category": "Business Software",
+    "short": "Offline Windows software for reviewed-source receipts, student statements and payment vouchers.",
+    "description": "Version 0.1.1 for Windows 11 x64 on one computer. Stage and validate CSV records, record source confirmation, prepare reviewed documents, retain original PDFs and correction history, search locally and create encrypted backups. No activation or institution licence file is required. Records and PDF generation work offline; customer bursary records are not uploaded by default.\n\nThis installer is unsigned. Windows may show a publisher warning; do not disable operating-system or antivirus protections. Payment confirmations are recorded from reviewed source records, not independently verified with a bank. This is not a complete accounting system and does not execute payments or grant clearance. Logo import, XLSX mapping, OCR, signature images and automatic updates are not included. Single-computer use does not provide authenticated multi-officer roles. Prior Campus customer rights and commercial support terms must be confirmed before publication.",
+    "features": [
+      "Offline receipts, account statements and payment vouchers",
+      "CSV staging with duplicate, date, amount and control-total checks",
+      "Reviewed PDF jobs, retained originals and marked copies",
+      "Local SQLite records, search and encrypted backups",
+      "No licence-file activation or mandatory online check",
+      "Unsigned installer; Windows security protections must remain enabled"
+    ],
+    "amounts": {
+      "NGN": 20000000,
+      "USD": 14900
+    },
+    "status": "draft",
+    "delivery_ready": false,
+    "blob_pathnames": [
+      "campus-bursary-documents/v0.1.1/campus-bursary-documents-setup-0.1.1.exe"
+    ]
   }
 ]

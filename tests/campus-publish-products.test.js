@@ -1,7 +1,8 @@
 'use strict';
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
-const definitions = require('../lib/product-import.json').filter(item => item.id.startsWith('campus-bursary-'));
+const excelIds = ['campus-bursary-package-a', 'campus-bursary-package-b', 'campus-bursary-full-excel'];
+const definitions = require('../lib/product-import.json').filter(item => excelIds.includes(item.id));
 const { priceBook, quote } = require('../lib/campus-pricing');
 const { publishCampusProducts } = require('../scripts/campus-publish-products');
 
@@ -34,7 +35,7 @@ test('Campus publication validates every exact package record and private file b
     query: state.query,
     verifyPrivateFile: async path => { verifiedFiles.push(path); }
   });
-  assert.deepEqual(imported, definitions.map(product => product.id));
+  assert.deepEqual(imported, excelIds);
   assert.deepEqual(verifiedFiles.sort(), definitions.map(product => product.blob_pathnames[0]).sort());
   assert.equal(state.calls.filter(call => call.options.method === 'PATCH').length, 1);
   assert.deepEqual(state.rows().map(row => row.status), ['published', 'published', 'published']);

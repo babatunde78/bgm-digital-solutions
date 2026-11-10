@@ -1,5 +1,5 @@
 'use strict';
-const definitions = require('../lib/product-import.json').filter(product => product.id.startsWith('campus-bursary-'));
+const definitions = require('../lib/product-import.json').filter(product => ['campus-bursary-package-a', 'campus-bursary-package-b', 'campus-bursary-full-excel'].includes(product.id));
 const { priceBook, quote } = require('../lib/campus-pricing');
 
 function expectedProduct(product) {

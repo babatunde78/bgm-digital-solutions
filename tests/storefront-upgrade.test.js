@@ -145,8 +145,9 @@ test('Campus Full Excel shows first-year savings against current published packa
 });
 
 test('Campus page shows live catalogue prices and secure product links', async () => {
+  const excelProductIds = ['campus-bursary-package-a', 'campus-bursary-package-b', 'campus-bursary-full-excel'];
   const definitions = JSON.parse(fs.readFileSync('lib/product-import.json', 'utf8'))
-    .filter(item => item.id.startsWith('campus-bursary-'))
+    .filter(item => excelProductIds.includes(item.id))
     .map(({ id, name, short, description, features }, index) => ({ id, name, short, description, features,
       paymentEnabled: true, price: `NGN ${800000 + index * 400000}`, usdReference: '593.42', usdRateDate: '2026-11-07' }));
   const dom = new JSDOM(fs.readFileSync('campus-bursary.html', 'utf8'), {
