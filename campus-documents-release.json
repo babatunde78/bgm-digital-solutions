@@ -5,9 +5,8 @@
   "status": "request-pilot",
   "pricing": {
     "status": "approved-not-for-sale",
-    "NGN": 200000,
-    "USDReference": 149,
-    "USDCheckout": false
+    "currency": "NGN",
+    "amount": 200000
   },
   "paymentEnabled": false,
   "deliveryReady": false,

@@ -63,6 +63,42 @@ test('deployment readiness checks are protected by the worker credential',async(
   process.env.CRON_SECRET='synthetic-worker-secret';
   const res=response();await require('../api/process-payments')({method:'GET',headers:{},query:{check:'readiness'}},res);assert.equal(res.statusCode,401);
 });
+test('private desktop release verification is preview-only and hashes the complete private object', async t => {
+  const previousEnvironment = process.env.VERCEL_ENV;
+  const db = require('../lib/db');
+  const storage = require('../lib/storage');
+  const contents = Buffer.from('synthetic installer bytes');
+  const sha256 = crypto.createHash('sha256').update(contents).digest('hex');
+  const path = 'campus-bursary-documents/v0.1.1/campus-bursary-documents-setup-0.1.1.exe';
+  t.mock.method(db, 'query', async () => [{
+    id: 'campus-bursary-documents', status: 'draft', amounts: { NGN: 20000000 },
+    delivery_ready: false, blob_pathnames: [path]
+  }]);
+  t.mock.method(storage, 'head', async () => ({ url: `https://store.private.blob.vercel-storage.com/${path}`, size: contents.length }));
+  t.mock.method(storage, 'get', async () => ({
+    statusCode: 200,
+    blob: { size: contents.length },
+    stream: new ReadableStream({ start(controller) { controller.enqueue(contents); controller.close(); } })
+  }));
+  const handler = require('../api/desktop-release-verify');
+  try {
+    process.env.VERCEL_ENV = 'production';
+    const production = response();
+    await handler({ method: 'GET', headers: {}, query: {} }, production);
+    assert.equal(production.statusCode, 404);
+    process.env.VERCEL_ENV = 'preview';
+    const preview = response();
+    await handler({ method: 'GET', headers: {}, query: {} }, preview);
+    assert.equal(preview.statusCode, 200);
+    assert.equal(preview.data.sha256, sha256);
+    assert.equal(preview.data.bytes, contents.length);
+    assert.equal(preview.data.private, true);
+    assert.equal(JSON.stringify(preview.data).includes(path), false);
+  } finally {
+    if (previousEnvironment === undefined) delete process.env.VERCEL_ENV;
+    else process.env.VERCEL_ENV = previousEnvironment;
+  }
+});
 test('invalid download tokens never fetch storage or payment data',async()=>{
   const res=response();await require('../api/download')({method:'GET',headers:{},query:{token:'invalid'}},res);assert.equal(res.statusCode,401);
 });

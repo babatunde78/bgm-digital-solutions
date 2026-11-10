@@ -223,8 +223,7 @@
       "Unsigned installer; Windows security protections must remain enabled"
     ],
     "amounts": {
-      "NGN": 20000000,
-      "USD": 14900
+      "NGN": 20000000
     },
     "status": "draft",
     "delivery_ready": false,

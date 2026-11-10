@@ -55,7 +55,7 @@ test('desktop import uses its approved prices and stays draft until publication'
     return reply([]);
   };
   await importProducts(['campus-bursary-documents']);
-  assert.deepEqual(written.map(row => ({ id: row.id, status: row.status, delivery_ready: row.delivery_ready, amounts: row.amounts, paths: row.blob_pathnames })), [{ id: 'campus-bursary-documents', status: 'draft', delivery_ready: false, amounts: { NGN: 20000000, USD: 14900 }, paths: ['campus-bursary-documents/v0.1.1/campus-bursary-documents-setup-0.1.1.exe'] }]);
+  assert.deepEqual(written.map(row => ({ id: row.id, status: row.status, delivery_ready: row.delivery_ready, amounts: row.amounts, paths: row.blob_pathnames })), [{ id: 'campus-bursary-documents', status: 'draft', delivery_ready: false, amounts: { NGN: 20000000 }, paths: ['campus-bursary-documents/v0.1.1/campus-bursary-documents-setup-0.1.1.exe'] }]);
 });
 test('invalid IDs and missing bundle constituents fail safely', async () => {
   await assert.rejects(importProducts(['unknown']), /known product IDs/);
