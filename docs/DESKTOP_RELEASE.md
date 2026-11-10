@@ -1,5 +1,11 @@
 # Campus Bursary Documents 0.1.0 release review
 
+## Buyer preview refresh - 10 November 2026
+
+The request-pilot page now leads with the three implemented workflows, import review, offline/local-data behaviour and precise limitations. It links to three one-page synthetic PDF samples (receipt, reconciled statement and voucher) and identifies both the files and application screenshot as preview material. The sample PDFs are public layout examples only; they contain fictional records and are not customer/buyer data. The unsigned installer remains unavailable, and there is no paid CTA, price or public installer URL. Catalogue status, payment availability and entitlement records are unchanged.
+
+Validation: all 113 repository tests, the focused desktop-release preview test, `npm run check`, and the 18-asset production build passed. PDF.js confirmed searchable text, page numbering, expected sample totals/references and one page per sample. Windows customer installation was not retested in this page-only change; the existing 0.1.1 Windows acceptance scope remains unchanged.
+
 ## Paid-delivery preparation — 9 November 2026
 
 The existing `lib/product-import.json` includes one draft `campus-bursary-documents` definition using the current importer/schema, approved NGN 20,000,000 kobo / USD 14,900 cents price books and private path `campus-bursary-documents/v0.1.1/campus-bursary-documents-setup-0.1.1.exe`. On 9 November 2026 the 121 MB installer was uploaded through the Vercel dashboard to the existing private Blob store at that versioned path. The dashboard displayed the exact filename, Windows installer content type and rounded size. An unauthenticated `HEAD` request returned **403**, confirming direct access was denied. A cryptographic read-back comparison remains outstanding. On 10 November 2026 an additive row was inserted in the existing catalogue with the exact product ID, prices and private path; its status is `draft` and `delivery_ready` is `false`, so it is absent from the public catalogue and cannot be checked out or downloaded. USD checkout is not newly enabled. Existing products and order snapshots are preserved.
@@ -113,9 +119,4 @@ No remote schema/data migration or paid-asset publication occurred, so there is 
 ## Remaining launch blockers
 
 Code-signing provider/certificate; approved NGN/USD prices and existing-customer rights; commercial licence issuance/public keys and support terms; clean Windows installer/uninstaller/permissions/data-preservation acceptance; signed update installation and migration recovery; legitimate desktop entitlement, private download integrity/expiry/cross-customer acceptance; recent scheduler cadence/alerting; and unsupported product scope described on the preview (including XLSX mapping, logo import and additional schedules). The preview must not be presented as a finished commercial installer.
-# Buyer preview refresh — 10 November 2026
-
-The request-pilot page now leads with the three implemented workflows, import review, offline/local-data behaviour and precise limitations. It links to three one-page synthetic PDF samples (receipt, reconciled statement and voucher) and identifies both the files and application screenshot as preview material. The sample PDFs are public layout examples only; they contain fictional records and are not customer/buyer data. The unsigned installer remains unavailable, and there is no paid CTA, price or public installer URL. Catalogue status, payment availability and entitlement records are unchanged.
-
-Validation: all 113 repository tests, the focused desktop-release preview test, `npm run check`, and the 18-asset production build passed. PDF.js confirmed searchable text, page numbering, expected sample totals/references and one page per sample. Windows customer installation was not retested in this page-only change; the existing 0.1.1 Windows acceptance scope remains unchanged.
 
