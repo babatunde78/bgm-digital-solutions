@@ -51,6 +51,9 @@ test('published desktop release accurately advertises price, delivery and limita
   assert.equal(document.querySelector('.product-screen img')?.getAttribute('src'), 'assets/campus-documents-pdf-mockup-v0.1.1.png');
   assert.match(document.querySelector('.product-screen figcaption')?.textContent || '', /Illustrative PDF document mockup, not an issued record/);
   assert.ok(fs.existsSync('assets/campus-documents-pdf-mockup-v0.1.1.png'));
+  assert.match(pageText, /Indicative equivalent: about US\$148\.11.*CBN central rate dated 10 November 2026.*checkout is NGN-only/i);
+  assert.match(document.querySelector('#difference-title')?.textContent || '', /focused document tool alongside Campus Excel/i);
+  assert.match(pageText, /Package A covers broader student-fee and treasury schedules.*Package B covers budgets, commitments, suppliers and expenditure/i);
   assert.equal(document.querySelector('.text-link')?.getAttribute('href'), '#samples');
   assert.equal(document.querySelector('#samples')?.tagName, 'SECTION');
   assert.match(pageText, /fictional sample data/i);

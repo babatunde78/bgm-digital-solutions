@@ -15,7 +15,8 @@ const presentations = {
   'bgm-collections-bank': { image: 'collections-bank', usdReference: 40.75, format: 'Excel toolkit', audience: 'For university bursaries and treasury teams reconciling collection records.' },
   'campus-bursary-package-a': { image: 'campus-bursary-a', format: 'Student revenue & treasury · Excel', audience: 'For student-accounts and treasury teams that need traceable schedules from fee billing through receipt allocation and settlement review.' },
   'campus-bursary-package-b': { image: 'campus-bursary-b', format: 'Budget & expenditure control · Excel', audience: 'For bursary teams reviewing budgets, commitments, supplier bills, payments, advances and actual expenditure.' },
-  'campus-bursary-full-excel': { image: 'campus-bursary-full-excel', format: 'Full bursary suite · Excel', audience: 'For institutions that want both operational packages plus manual ledger and control-account review schedules.' }
+  'campus-bursary-full-excel': { image: 'campus-bursary-full-excel', format: 'Full bursary suite · Excel', audience: 'For institutions that want both operational packages plus manual ledger and control-account review schedules.' },
+  'campus-bursary-documents': { image: 'campus-documents-pdf-mockup-v0.1.1', extension: 'png', imageFit: 'contain', width: 1102, height: 1378, usdReference: 148.11, usdRateDate: '2026-11-10', usdRateSource: 'CBN central rate', format: 'Offline Windows document software', audience: 'A focused offline Windows tool for receipts, student statements and payment vouchers; separate from the broader Campus Excel suites.' }
 };
 
 function node(tag, text, className) {
@@ -44,9 +45,11 @@ function purchaseAction(product, className) {
   const disabled = button('Checkout unavailable', () => {}, className); disabled.disabled = true; return disabled;
 }
 function displayPrice(product) {
-  const usd = product.usdReference || presentations[product.id]?.usdReference;
+  const presentation = presentations[product.id];
+  const usd = product.usdReference || presentation?.usdReference;
   if (!usd || product.amounts?.USD) return product.price;
-  const date = product.usdRateDate ? ' approximate equivalent (rate date ' + new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' }).format(new Date(product.usdRateDate + 'T00:00:00Z')) + ')' : ' reference';
+  const rateDate = product.usdRateDate || presentation?.usdRateDate;
+  const date = rateDate ? ' approximate equivalent (rate date ' + new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' }).format(new Date(rateDate + 'T00:00:00Z')) + ')' : ' reference';
   return product.price + ' / US$' + usd + date;
 }
 function cover(product) {
@@ -54,9 +57,10 @@ function cover(product) {
   const wrapper = node('div', undefined, 'cover');
   if (presentation?.image) {
     const image = document.createElement('img');
-    image.src = 'assets/' + presentation.image + '.jpg';
+    image.src = 'assets/' + presentation.image + '.' + (presentation.extension || 'jpg');
     image.alt = product.name + ' — illustrative product mockup';
-    image.width = 1200; image.height = 800; image.loading = 'lazy'; image.decoding = 'async';
+    if (presentation.imageFit === 'contain') image.classList.add('cover-contained');
+    image.width = presentation.width || 1200; image.height = presentation.height || 800; image.loading = 'lazy'; image.decoding = 'async';
     wrapper.append(image);
   } else wrapper.append(node('span', product.name));
   return wrapper;
@@ -107,7 +111,17 @@ function renderDetail() {
   summary.append(node('p', product.category, 'eyebrow'), node('h1', product.name), node('p', product.short, 'page-intro'));
   if (presentation) summary.append(node('p', presentation.audience, 'audience-description'));
   summary.append(node('div', displayPrice(product), 'detail-price'), purchaseAction(product, 'btn primary buy'));
-  if ((product.usdReference || presentation?.usdReference) && !product.amounts?.USD) summary.append(node('p', product.usdRateDate ? 'Approximate equivalent uses the historical reference rate in effect on ' + product.usdRateDate + '. Checkout charges NGN; your bank’s conversion may differ.' : 'USD is a reference value. Checkout charges NGN; your bank’s conversion may differ.', 'small'));
+  if ((product.usdReference || presentation?.usdReference) && !product.amounts?.USD) {
+    const rateDate = product.usdRateDate || presentation?.usdRateDate;
+    const rateSource = presentation?.usdRateSource;
+    const formattedDate = rateDate ? new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' }).format(new Date(rateDate + 'T00:00:00Z')) : null;
+    const note = rateSource && formattedDate
+      ? 'Indicative USD equivalent uses the ' + rateSource + ' dated ' + formattedDate + '. Checkout remains in NGN; your provider’s rate and fees may differ.'
+      : product.usdRateDate
+        ? 'Approximate equivalent uses the historical reference rate in effect on ' + product.usdRateDate + '. Checkout charges NGN; your bank’s conversion may differ.'
+        : 'USD is a reference value. Checkout charges NGN; your bank’s conversion may differ.';
+    summary.append(node('p', note, 'small'));
+  }
   if (product.status !== 'service') {
     const policy = node('a', '7-day refunds · Read the policy →', 'policy-link'); policy.href = 'support.html#refunds'; summary.append(policy);
   }

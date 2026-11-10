@@ -39,6 +39,8 @@ test('import preserves existing product edits and uses the current guide asset i
   const desktop = written.find(product => product.id === 'campus-bursary-documents');
   assert.match(desktop.description, /one-time NGN 200,000 licence.*version 0\.1\.1/i);
   assert.match(desktop.description, /Verified paid buyers of Campus Package A, Package B or Full Excel receive version 0\.1\.1 at no extra charge/i);
+  assert.match(desktop.description, /focused document generator.*broader Campus Excel suites/i);
+  assert.match(desktop.description, /about USD 148\.11.*NGN 1,350\.3587.*10 November 2026.*not a USD selling price/i);
 });
 test('missing private file prevents all catalogue writes', async t => {
   let writes = 0;

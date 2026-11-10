@@ -131,6 +131,22 @@ test('Campus product covers appear in the storefront catalogue and product detai
   detail.window.close();
 });
 
+test('Campus Documents shows the complete PDF mockup and dated USD comparison on the main storefront', () => {
+  const desktop = { ...product, id: 'campus-bursary-documents', name: 'Campus Bursary Documents', category: 'Business Software', price: 'NGN 200,000.00', amounts: { NGN: 20000000 } };
+  const catalogue = store('index.html', '', [desktop]);
+  const card = catalogue.window.document.querySelector('#product-grid .card');
+  assert.equal(card.querySelector('.cover img').getAttribute('src'), 'assets/campus-documents-pdf-mockup-v0.1.1.png');
+  assert.ok(card.querySelector('.cover img').classList.contains('cover-contained'));
+  assert.match(card.querySelector('.price').textContent, /US\$148\.11.*10 Nov 2026/);
+  catalogue.window.close();
+
+  const detail = store('product.html', '?id=campus-bursary-documents', [desktop]);
+  assert.match(detail.window.document.querySelector('.audience-description').textContent, /separate from the broader Campus Excel suites/);
+  assert.match(detail.window.document.querySelector('.detail-summary .small').textContent, /CBN central rate dated 10 Nov 2026.*Checkout remains in NGN/);
+  assert.deepEqual(desktop.amounts, { NGN: 20000000 });
+  detail.window.close();
+});
+
 test('Campus Full Excel shows first-year savings against current published package prices', () => {
   const packageA = { ...product, id: 'campus-bursary-package-a', amounts: { NGN: 80000000 } };
   const packageB = { ...product, id: 'campus-bursary-package-b', amounts: { NGN: 120000000 } };
