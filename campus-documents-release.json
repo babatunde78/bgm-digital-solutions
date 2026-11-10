@@ -2,27 +2,30 @@
   "productId": "campus-bursary-documents",
   "productName": "Campus Bursary Documents",
   "version": "0.1.1",
-  "status": "request-pilot",
+  "status": "live",
   "pricing": {
-    "status": "approved-not-for-sale",
+    "status": "published",
     "currency": "NGN",
     "amount": 200000
   },
-  "paymentEnabled": false,
-  "deliveryReady": false,
+  "paymentEnabled": true,
+  "deliveryReady": true,
   "installer": {
-    "published": false,
-    "sha256": null,
+    "published": true,
+    "sizeBytes": 121275598,
+    "sha256": "713f2984c64c95408317b0cf02580c717a84585deaa0e74696684e16fb97dd7b",
     "downloadUrl": null
   },
   "target": "Windows 11 x64",
-  "windowsVerification": "Per-user install to an isolated custom directory, packaged synthetic workflow, uninstall and profile preservation passed on one Windows 11 x64 machine. The designated reviewer reported all 14 pilot scenarios passed on 10 November 2026; detailed scenario artefacts were not attached. Default-path permissions, upgrades and other Windows versions remain pending.",
+  "windowsVerification": "Per-user install to an isolated custom directory, packaged synthetic workflow, uninstall and profile preservation passed on one Windows 11 x64 machine. The designated reviewer reported all 14 pilot scenarios passed on 10 November 2026; detailed scenario artefacts were not attached. Default-path permissions, upgrades and other Windows versions remain unverified.",
   "installationInstructions": "/campus-documents.html#installation",
   "limitations": [
     "Unsigned installer; installation and uninstallation passed only for the tested per-user custom-directory path and machine",
     "One-institution/one-computer limit is contractual; the offline application has no device lock and downloaded installers can be copied",
     "No ongoing product-use support or later-version updates; existing BGM purchase/access support and its published seven-day refund policy continue",
-    "No paid download or automatic updates are available"
+    "Authenticated purchase/download access has not been tested with a real purchaser; synthetic integration tests passed",
+    "Default-path permissions, upgrade recovery and Windows versions other than Windows 11 x64 are unverified",
+    "Third-party runtime notices and continuous worker monitoring remain to be confirmed"
   ],
   "licensing": {
     "activation": "none",

@@ -3,7 +3,7 @@ const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const { JSDOM } = require('jsdom');
-test('desktop preview cannot advertise paid delivery without an approved installer', () => {
+test('published desktop release accurately advertises price, delivery and limitations', () => {
   const release = JSON.parse(fs.readFileSync('campus-documents-release.json', 'utf8'));
   const desktop = require('../desktop/release.json');
   assert.equal(release.productId, desktop.productId);
@@ -16,11 +16,16 @@ test('desktop preview cannot advertise paid delivery without an approved install
     laterVersionUpdates: 'not included',
     existingCampusExcelBuyers: 'verified paid buyers of Package A, Package B or Full Excel receive version 0.1.1 at no extra charge'
   });
-  assert.equal(release.status, 'request-pilot');
-  assert.deepEqual(release.pricing, { status: 'approved-not-for-sale', currency: 'NGN', amount: 200000 });
-  assert.equal(release.paymentEnabled, false);
-  assert.equal(release.deliveryReady, false);
-  assert.deepEqual(release.installer, { published: false, sha256: null, downloadUrl: null });
+  assert.equal(release.status, 'live');
+  assert.deepEqual(release.pricing, { status: 'published', currency: 'NGN', amount: 200000 });
+  assert.equal(release.paymentEnabled, true);
+  assert.equal(release.deliveryReady, true);
+  assert.deepEqual(release.installer, {
+    published: true,
+    sizeBytes: 121275598,
+    sha256: '713f2984c64c95408317b0cf02580c717a84585deaa0e74696684e16fb97dd7b',
+    downloadUrl: null
+  });
   assert.match(release.windowsVerification, /per-user install.*passed on one Windows 11 x64 machine/i);
   assert.match(release.windowsVerification, /reviewer reported all 14 pilot scenarios passed/i);
   assert.ok(release.limitations.some(item => /unsigned installer.*installation and uninstallation passed only/i.test(item)));
@@ -48,21 +53,19 @@ test('desktop preview cannot advertise paid delivery without an approved install
   assert.match(pageText, /fictional sample data/i);
   assert.match(pageText, /not a shared network database/i);
   assert.match(pageText, /not an accounting system/i);
-  assert.ok(pageText.includes('No activation or institution licence file is required'));
+  assert.ok(pageText.includes('No activation or internet connection is required for ordinary document work'));
   assert.match(pageText, /current installer is unsigned/i);
-  assert.match(pageText, /reviewer reported all 14 pilot scenarios passed/i);
-  assert.match(pageText, /detailed scenario artefacts were not attached/i);
   assert.doesNotMatch(pageText, /has not completed officer acceptance/i);
-  assert.match(pageText, /default-path permissions, upgrade checks and compatibility across Windows versions/i);
-  assert.match(pageText, /live entitlement\/download and link-expiry\/cross-customer verification/i);
-  assert.match(pageText, /approved one-time price.*NGN 200,000.*sales and downloads are not open/i);
+  assert.match(pageText, /authenticated order flow.*no permanent public installer URL/i);
+  assert.match(pageText, /default-path permissions, upgrade checks and Windows versions other than Windows 11 x64 remain unverified/i);
+  assert.match(pageText, /available now.*one-time NGN 200,000/i);
   assert.match(pageText, /verified paid buyers of Campus Package A, Package B or Full Excel receive version 0\.1\.1 at no extra charge/i);
-  assert.match(pageText, /device limit is contractual.*does not enforce it and downloaded installers can be copied/i);
-  assert.match(pageText, /Sales and downloads are not open/i);
+  assert.match(pageText, /contractual limit.*does not enforce a device lock.*downloaded installers can be copied/i);
+  assert.match(pageText, /Buy version 0\.1\.1/);
   const homepage = new JSDOM(fs.readFileSync('index.html', 'utf8')).window.document;
   const previewLink = homepage.querySelector('a[href="campus-documents.html"]');
-  assert.equal(previewLink?.textContent.trim(), 'View desktop preview');
-  assert.match(homepage.querySelector('.campus-desktop-preview')?.textContent || '', /request-pilot preview only/i);
+  assert.equal(previewLink?.textContent.trim(), 'See the Windows edition');
+  assert.match(homepage.querySelector('.campus-desktop-preview')?.textContent || '', /One-time NGN 200,000/);
   assert.match(fs.readFileSync('sitemap.xml', 'utf8'), /https:\/\/www\.bgmsolutions\.site\/campus-documents\.html/);
   dom.window.close();
 });

@@ -5,13 +5,13 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#173f32">
   <title>Campus Bursary Documents | BGM Digital Solutions</title>
-  <meta name="description" content="Preview an offline Windows application for confirmed-payment receipts, student account statements and payment vouchers, with synthetic sample PDFs.">
+  <meta name="description" content="Buy an offline Windows application for confirmed-payment receipts, student account statements and payment vouchers, with synthetic sample PDFs.">
   <link rel="stylesheet" href="campus-documents.css">
 </head>
 <body>
   <header class="site-header">
     <a class="wordmark" href="/">BGM <span>Digital Solutions</span></a>
-    <span class="release-pill">Desktop preview <span aria-hidden="true">·</span> v0.1.1</span>
+    <span class="release-pill">Windows 11 x64 <span aria-hidden="true">·</span> v0.1.1</span>
   </header>
   <main>
     <section class="hero" aria-labelledby="page-title">
@@ -20,14 +20,14 @@
         <h1 id="page-title" aria-label="Campus Bursary Documents">Campus Bursary<br><span>Documents</span></h1>
         <p class="lead">Turn reviewed bursary records into clear, consistent receipts, account statements and payment vouchers—with core work saved on the computer, even when offline.</p>
         <div class="actions">
-          <a class="button" href="https://wa.me/2349031921294?text=I%20would%20like%20to%20discuss%20the%20Campus%20Bursary%20Documents%20desktop%20pilot">Discuss a pilot</a>
+          <a class="button" href="product.html?id=campus-bursary-documents">Buy version 0.1.1</a>
           <a class="text-link" href="#samples">View sample PDFs <span aria-hidden="true">↓</span></a>
         </div>
-        <p class="availability"><span class="status-dot" aria-hidden="true"></span><strong>Preview only.</strong> Approved one-time price: NGN 200,000 for one institution on one computer, version 0.1.1. Sales and downloads are not open.</p>
+        <p class="availability"><span class="status-dot" aria-hidden="true"></span><strong>Available now.</strong> One-time NGN 200,000 for one institution on one computer, version 0.1.1. Eligible paid Campus Excel buyers receive it at no extra charge.</p>
       </div>
       <figure class="product-screen">
-        <img src="assets/campus-documents-pilot.png" alt="Actual development application showing fictional bursary records and generated documents" width="1240" height="880">
-        <figcaption>Actual development interface · fictional records · not a released installer</figcaption>
+        <img src="assets/campus-documents-pilot.png" alt="Actual application showing fictional bursary records and generated documents" width="1240" height="880">
+        <figcaption>Actual application interface · fictional records · Windows installer is unsigned</figcaption>
       </figure>
     </section>
 
@@ -43,8 +43,8 @@
       <p class="sample-note"><strong>Sample files:</strong> PDFs use fictional sample data, are provided to show document layout, and are not valid for payment, clearance or student records.</p>
     </section>
 
-    <section class="details-grid" aria-label="How the preview works">
-      <article class="detail-card"><p class="eyebrow">Review before commit</p><h2>Catch import problems early</h2><p>CSV imports are staged for preview. The pilot checks required fields, duplicate references, dates, amounts and control totals, and reports row-level errors before records are accepted together.</p><p>These checks help catch data issues; they do not independently audit or verify the source system.</p></article>
+    <section class="details-grid" aria-label="Included workflows and data handling">
+      <article class="detail-card"><p class="eyebrow">Review before commit</p><h2>Catch import problems early</h2><p>CSV imports are staged for preview. The application checks required fields, duplicate references, dates, amounts and control totals, and reports row-level errors before records are accepted together.</p><p>These checks help catch data issues; they do not independently audit or verify the source system.</p></article>
       <article class="detail-card"><p class="eyebrow">Designed for local work</p><h2>Keep records on the computer</h2><p>Core calculations and PDF generation run locally with a SQLite record store and local encrypted backup and restoration. Bursary records, signatures, documents and backups are not uploaded by default.</p><p>This single-computer edition is not a shared network database and does not support officers working concurrently on separate computers.</p></article>
     </section>
 
@@ -55,20 +55,20 @@
 
     <section class="limits" aria-labelledby="limits-title">
       <p class="eyebrow">Know what is included</p><h2 id="limits-title">A focused document tool, not an accounting system</h2>
-      <div class="limits-grid"><p>The application does not contact banks, execute payments, independently audit imported records or grant financial clearance. Finalisation requires the configured review steps; local editable records are not tamper-proof evidence.</p><p>The designated reviewer reported all 14 pilot scenarios passed; detailed scenario artefacts were not attached. Default-path permissions, upgrade checks and compatibility across Windows versions remain pending. Logo import, XLSX mapping, OCR, signature images and additional financial schedules are not available in this preview.</p></div>
+      <div class="limits-grid"><p>The application does not contact banks, execute payments, independently audit imported records or grant financial clearance. Finalisation requires the configured review steps; local editable records are not tamper-proof evidence.</p><p>The designated reviewer reported all 14 acceptance scenarios passed; detailed scenario artefacts were not attached. Default-path permissions, upgrade checks and Windows versions other than Windows 11 x64 remain unverified. Logo import, XLSX mapping, OCR, signature images and additional financial schedules are not included in version 0.1.1.</p></div>
     </section>
 
     <section class="pilot-callout" aria-labelledby="pilot-title">
-      <div><p class="eyebrow">Release status · version 0.1.1</p><h2 id="pilot-title">Interested in reviewing the pilot?</h2><p>Contact BGM to discuss a controlled pilot. The current installer is unsigned and has only passed per-user installation and uninstallation to an isolated custom folder on one Windows 11 x64 machine. Do not disable Windows security protections.</p></div>
-      <a class="button" href="https://wa.me/2349031921294?text=I%20would%20like%20to%20discuss%20the%20Campus%20Bursary%20Documents%20desktop%20pilot">Discuss with BGM</a>
+      <div><p class="eyebrow">Release · version 0.1.1</p><h2 id="pilot-title">Install and work offline</h2><p>The installer is unsigned and was tested on one Windows 11 x64 computer using a per-user custom install folder. Windows may show an unknown-publisher warning. Do not disable Windows or antivirus protections; contact BGM if you are unsure about a warning.</p></div>
+      <a class="button" href="product.html?id=campus-bursary-documents">Buy version 0.1.1</a>
     </section>
 
     <details id="installation" class="technical-details">
       <summary>Technical requirements and release checks</summary>
-      <div class="technical-copy"><p>Target: Windows 11 x64. The pilot is not offered as a customer installer. A source-code development run requires Node 24 and npm from the repository’s <code>desktop</code> directory; this is not a customer installation method.</p><p>Records are stored under <code>%LOCALAPPDATA%/BGM Digital Solutions/CampusBursaryDocuments/</code>. The local profile should not be placed on a shared/network drive. No activation or institution licence file is required for offline document generation, retrieval or export in version 0.1.1.</p><p>The approved licence is a one-time NGN 200,000 for one institution on one computer, version 0.1.1. The device limit is contractual; the offline application does not enforce it and downloaded installers can be copied. There is no recurring renewal, ongoing product-use support or later-version updates; existing BGM purchase/access support and its published seven-day refund policy continue. Verified paid buyers of Campus Package A, Package B or Full Excel receive version 0.1.1 at no extra charge; existing workbook purchases and rights remain unchanged. Paid downloads and automatic updates are disabled. Private installer integrity read-back is verified. Remaining checks include live entitlement/download and link-expiry/cross-customer verification, large-file transfer, local permissions, upgrade recovery, third-party runtime notices and worker monitoring. The designated reviewer reported all 14 pilot scenarios passed; detailed scenario artefacts were not attached.</p><p><a href="campus-documents-release.json">Release metadata</a> is informational. The existing BGM catalogue remains authoritative for product sales and entitlements.</p></div>
+      <div class="technical-copy"><p>Target: Windows 11 x64. After payment confirmation, download the installer from the BGM purchase confirmation page and run it as a per-user installation. The current installer is unsigned; verify the publisher warning carefully and never disable Windows or antivirus protections. Its installation was tested only in a custom per-user folder on one Windows 11 x64 computer. Default-path permissions, upgrades and other Windows versions are unverified.</p><p>Records are stored under <code>%LOCALAPPDATA%/BGM Digital Solutions/CampusBursaryDocuments/</code>. Keep this local profile off shared/network drives. Back up records using the encrypted backup feature and keep the passphrase safe; it cannot be recovered. No activation or internet connection is required for ordinary document work.</p><p>The one-time NGN 200,000 licence covers one institution on one computer and version 0.1.1. This is a contractual limit; the offline application does not enforce a device lock, and downloaded installers can be copied. There is no recurring renewal, ongoing product-use support or later-version updates. Existing BGM purchase/access support and the published seven-day refund policy continue. Verified paid buyers of Campus Package A, Package B or Full Excel receive version 0.1.1 at no extra charge; use the existing purchase confirmation rather than buying twice. The installer is delivered through the existing authenticated order flow; no permanent public installer URL is provided.</p><p><a href="campus-documents-release.json">Release metadata</a> describes the published version. The existing BGM catalogue remains authoritative for price and purchase availability.</p></div>
     </details>
     <p class="existing-products"><a href="campus-bursary.html">Explore the existing Campus Excel products</a></p>
   </main>
-  <footer><a href="support.html">BGM support and policies</a><span>Campus Bursary Documents · development preview</span></footer>
+  <footer><a href="support.html">BGM support and policies</a><span>Campus Bursary Documents · Windows release 0.1.1</span></footer>
 </body>
 </html>
