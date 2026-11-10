@@ -1,6 +1,6 @@
 # Controlled Windows bursary pilot — 0.1.0
 
-Purpose: a bursary officer checks whether the three document workflows and their source/recovery controls are usable. Use fictional data only. This is an internal source-mode pilot, not a signed installer, approved commercial licence or completed institutional acceptance. Recorded officer names are workflow labels, not authenticated identities.
+Purpose: a bursary officer checks whether the three document workflows and their source/recovery controls are usable. Use fictional data only. This source-mode pilot is not an approved commercial licence or a signed installer. The designated reviewer attested that all 14 scenarios passed on 10 November 2026; see `PILOT-REVIEW.md` for the evidence limitation. Recorded officer names are workflow labels, not authenticated identities.
 
 ## Start an isolated pilot
 

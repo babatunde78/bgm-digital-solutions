@@ -15,6 +15,7 @@ test('desktop preview cannot advertise paid delivery without an approved install
   assert.equal(release.deliveryReady, false);
   assert.deepEqual(release.installer, { published: false, sha256: null, downloadUrl: null });
   assert.match(release.windowsVerification, /per-user install.*passed on one Windows 11 x64 machine/i);
+  assert.match(release.windowsVerification, /reviewer reported all 14 pilot scenarios passed/i);
   assert.ok(release.limitations.some(item => /unsigned installer.*installation and uninstallation passed only/i.test(item)));
   const dom = new JSDOM(fs.readFileSync('campus-documents.html', 'utf8'));
   const document = dom.window.document;
@@ -40,8 +41,11 @@ test('desktop preview cannot advertise paid delivery without an approved install
   assert.match(pageText, /not an accounting system/i);
   assert.ok(pageText.includes('No activation or institution licence file is required'));
   assert.match(pageText, /current installer is unsigned/i);
-  assert.match(pageText, /default-path permissions, upgrade checks or compatibility testing across Windows versions/i);
-  assert.match(pageText, /private installer integrity read-back, legitimate purchaser entitlement and signed-link expiry/i);
+  assert.match(pageText, /reviewer reported all 14 pilot scenarios passed/i);
+  assert.match(pageText, /detailed scenario artefacts were not attached/i);
+  assert.doesNotMatch(pageText, /has not completed officer acceptance/i);
+  assert.match(pageText, /default-path permissions, upgrade checks and compatibility across Windows versions/i);
+  assert.match(pageText, /legitimate purchaser entitlement and signed-link expiry\/cross-customer denial/i);
   assert.match(pageText, /planned price.*NGN 200,000.*sales are not open/i);
   assert.match(pageText, /no customer installer or paid download is available/i);
   const homepage = new JSDOM(fs.readFileSync('index.html', 'utf8')).window.document;

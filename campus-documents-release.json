@@ -16,7 +16,7 @@
     "downloadUrl": null
   },
   "target": "Windows 11 x64",
-  "windowsVerification": "Per-user install to an isolated custom directory, packaged synthetic workflow, uninstall and profile preservation passed on one Windows 11 x64 machine; default-path permissions, upgrades, other Windows versions and officer acceptance remain pending",
+  "windowsVerification": "Per-user install to an isolated custom directory, packaged synthetic workflow, uninstall and profile preservation passed on one Windows 11 x64 machine. The designated reviewer reported all 14 pilot scenarios passed on 10 November 2026; detailed scenario artefacts were not attached. Default-path permissions, upgrades and other Windows versions remain pending.",
   "installationInstructions": "/campus-documents.html#installation",
   "limitations": [
     "Unsigned installer; installation and uninstallation passed only for the tested per-user custom-directory path and machine",
