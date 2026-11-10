@@ -6,7 +6,8 @@
   "pricing": {
     "status": "approved-not-for-sale",
     "NGN": 200000,
-    "USD": 149
+    "USDReference": 149,
+    "USDCheckout": false
   },
   "paymentEnabled": false,
   "deliveryReady": false,

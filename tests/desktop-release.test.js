@@ -10,7 +10,7 @@ test('desktop preview cannot advertise paid delivery without an approved install
   assert.equal(release.version, desktop.version);
   assert.deepEqual(release.licensing, { activation: 'none' });
   assert.equal(release.status, 'request-pilot');
-  assert.deepEqual(release.pricing, { status: 'approved-not-for-sale', NGN: 200000, USD: 149 });
+  assert.deepEqual(release.pricing, { status: 'approved-not-for-sale', NGN: 200000, USDReference: 149, USDCheckout: false });
   assert.equal(release.paymentEnabled, false);
   assert.equal(release.deliveryReady, false);
   assert.deepEqual(release.installer, { published: false, sha256: null, downloadUrl: null });
@@ -42,8 +42,8 @@ test('desktop preview cannot advertise paid delivery without an approved install
   assert.match(pageText, /current installer is unsigned/i);
   assert.match(pageText, /default-path permissions, upgrade checks or compatibility testing across Windows versions/i);
   assert.match(pageText, /private installer integrity read-back, legitimate purchaser entitlement and signed-link expiry/i);
-  assert.match(pageText, /planned launch price.*NGN 200,000.*USD 149/i);
-  assert.match(pageText, /this is not a live checkout offer/i);
+  assert.match(pageText, /planned price.*NGN 200,000.*USD 149.*reference only.*NGN only/i);
+  assert.match(pageText, /neither price is available at checkout yet/i);
   const homepage = new JSDOM(fs.readFileSync('index.html', 'utf8')).window.document;
   const previewLink = homepage.querySelector('a[href="campus-documents.html"]');
   assert.equal(previewLink?.textContent.trim(), 'View desktop preview');
