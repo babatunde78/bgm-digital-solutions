@@ -14,11 +14,17 @@ test('desktop preview cannot advertise paid delivery without an approved install
   assert.equal(release.paymentEnabled, false);
   assert.equal(release.deliveryReady, false);
   assert.deepEqual(release.installer, { published: false, sha256: null, downloadUrl: null });
+  assert.match(release.windowsVerification, /per-user install.*passed on one Windows 11 x64 machine/i);
+  assert.ok(release.limitations.some(item => /unsigned installer.*installation and uninstallation passed only/i.test(item)));
   const dom = new JSDOM(fs.readFileSync('campus-documents.html', 'utf8'));
   const document = dom.window.document;
+  const pageText = document.body.textContent;
   assert.equal(document.querySelector('a[href="campus-documents-release.json"]')?.textContent, 'Release metadata');
   assert.equal(document.querySelector('a.buy, button.buy, form'), null);
   assert.ok(document.querySelector('#installation'));
-  assert.ok(document.body.textContent.includes('No activation or institution licence file is required'));
+  assert.ok(pageText.includes('No activation or institution licence file is required'));
+  assert.match(pageText, /unsigned and not available for paid download/i);
+  assert.match(pageText, /default-path permissions, upgrades, other Windows versions and officer acceptance remain untested/i);
+  assert.match(pageText, /cryptographic read-back.*legitimate purchaser entitlement/i);
   dom.window.close();
 });
