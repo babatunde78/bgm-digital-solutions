@@ -2,7 +2,7 @@
 
 Planned reviewer: Babatunde GBADAMOSI, product owner, as designated by the owner. Review execution and approval remain pending.
 
-Product publisher: BGM Digital Solutions. Certificate issuer verification of the legal publisher identity remains pending.
+Product publisher: BGM Digital Solutions. The owner waived certificate acquisition; do not represent this unsigned installer as publisher-verified or signed.
 
 Planned pilot machine: the current Windows test computer; reviewer to confirm the version/build and computer label below.
 
