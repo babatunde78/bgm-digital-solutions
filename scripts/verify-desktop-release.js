@@ -39,7 +39,7 @@ async function run() {
   assert.equal(release.installer.downloadUrl, null, 'Paid installer must not have a permanent public URL');
   const paths = [
     ['/campus-documents.html', 200], ['/campus-documents-release.json', 200], ['/campus-documents.css', 200],
-    ['/assets/campus-documents-pilot.png', 200],
+    ['/assets/campus-documents-pdf-mockup-v0.1.1.png', 200],
     ['/assets/campus-documents-samples/receipt.pdf', 200],
     ['/assets/campus-documents-samples/statement.pdf', 200],
     ['/assets/campus-documents-samples/voucher.pdf', 200],
@@ -52,7 +52,7 @@ async function run() {
     assert.equal(response.status, expected, pathname);
     const bytes = Buffer.from(await response.arrayBuffer());
     if (pathname === '/campus-documents-release.json') assert.deepEqual(JSON.parse(bytes), release);
-    if (['/campus-documents.html', '/campus-documents.css', '/assets/campus-documents-pilot.png', '/assets/campus-documents-samples/receipt.pdf', '/assets/campus-documents-samples/statement.pdf', '/assets/campus-documents-samples/voucher.pdf'].includes(pathname)) {
+    if (['/campus-documents.html', '/campus-documents.css', '/assets/campus-documents-pdf-mockup-v0.1.1.png', '/assets/campus-documents-samples/receipt.pdf', '/assets/campus-documents-samples/statement.pdf', '/assets/campus-documents-samples/voucher.pdf'].includes(pathname)) {
       const localBytes = fs.readFileSync(path.resolve(__dirname, '..', pathname.slice(1)));
       const text = pathname.endsWith('.html') || pathname.endsWith('.css');
       assert.equal(assetDigest(bytes, text), assetDigest(localBytes, text), `Deployed asset differs: ${pathname}`);

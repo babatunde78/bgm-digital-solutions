@@ -48,6 +48,9 @@ test('published desktop release accurately advertises price, delivery and limita
   }
   assert.match(document.querySelector('main h1')?.textContent, /Campus Bursary\s*Documents/);
   assert.equal(document.querySelector('#page-title')?.getAttribute('aria-label'), 'Campus Bursary Documents');
+  assert.equal(document.querySelector('.product-screen img')?.getAttribute('src'), 'assets/campus-documents-pdf-mockup-v0.1.1.png');
+  assert.match(document.querySelector('.product-screen figcaption')?.textContent || '', /Illustrative PDF document mockup, not an issued record/);
+  assert.ok(fs.existsSync('assets/campus-documents-pdf-mockup-v0.1.1.png'));
   assert.equal(document.querySelector('.text-link')?.getAttribute('href'), '#samples');
   assert.equal(document.querySelector('#samples')?.tagName, 'SECTION');
   assert.match(pageText, /fictional sample data/i);
