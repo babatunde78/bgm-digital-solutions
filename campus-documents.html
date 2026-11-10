@@ -1,9 +1,74 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Campus Bursary Documents — desktop development preview | BGM Digital Solutions</title><meta name="description" content="An offline Windows bursary document application in development. Request a pilot discussion; no paid installer is available yet."><link rel="stylesheet" href="campus-documents.css"></head>
-<body><header><a href="/">BGM DIGITAL SOLUTIONS</a><span>DESKTOP DEVELOPMENT PREVIEW · v0.1.1</span></header><main><p class="eyebrow">For bursary teams working on one computer</p><h1>Campus Bursary<br>Documents</h1><p class="lead">Prepare consistent receipts, student statements and payment vouchers from reviewed source records — with an offline Windows application.</p><p class="notice">Development preview. The current installer is unsigned and not available for paid download. No payment is being accepted for this product.</p><a class="button" href="https://wa.me/2349031921294?text=I%20would%20like%20to%20discuss%20the%20Campus%20Bursary%20Documents%20desktop%20pilot">Discuss a pilot on WhatsApp</a><a class="secondary" href="campus-bursary.html">Explore existing Campus Excel products</a>
-<section><h2>The implemented foundation</h2><div class="grid"><article><h3>Reviewed imports</h3><p>CSV staging with row errors, duplicate references, explicit dates, exact amounts and control totals. Records are committed together after recorded source review.</p></article><article><h3>Three document workflows</h3><p>Confirmed-source payment receipts, selected-account statements and payment vouchers. Draft, review, PDF generation, retained originals and marked copies.</p></article><article><h3>Local records and recovery</h3><p>SQLite storage, durable per-document PDF jobs, search, encrypted backup and restoration into an empty profile. Core calculations and PDFs do not require Supabase.</p></article></div></section>
-<section><h2>What the pilot does — and what still needs testing</h2><p>On one Windows 11 x64 machine, a per-user install to an isolated custom directory, packaged synthetic workflow, uninstall and profile preservation passed. Default-path permissions, upgrades, other Windows versions and officer acceptance remain untested. The single-computer target is not a shared multi-officer system.</p><p>Institution names, colours, academic labels, officer titles and manual signature blocks are configurable. Logo import, XLSX mapping, OCR, signature images and the additional financial schedules are not available in this pilot.</p><p>The application records an officer’s source confirmation; it does not contact your bank, independently audit imports, execute payments or grant financial clearance. A payment screenshot is insufficient source evidence. This is not a complete accounting system.</p></section>
-<section><h2>Actual development interface</h2><figure><img src="assets/campus-documents-pilot.png" alt="The actual development application displaying synthetic source records and three retained documents" width="1240" height="880"><figcaption>Development pilot with fictional records. This screenshot does not represent a released installer.</figcaption></figure></section>
-<section><h2>Private by default</h2><p>Customer bursary records, documents, signatures and backups are not uploaded by default. The single-computer edition is not a shared network database or a concurrent multi-officer system. Local administrator access remains a trust boundary.</p><p>Commercial licence scope, support terms and existing Campus customer rights are being confirmed. The owner-approved planned launch price is NGN 200,000 or USD 149. Sales are not enabled; earlier Excel or SaaS prices do not apply automatically. Paid releases will use the existing BGM purchase and private download flow after validation.</p></section>
-<section id="installation"><h2>Installation and release status</h2><p>Version 0.1.1 is a request-pilot preview. The unsigned Windows installer passed only the per-user custom-directory installation and uninstallation path described above. There is no paid download yet. Contact BGM before attempting an institutional installation; do not disable Windows security protections.</p><p>For an authorised source-code pilot, use Node 24 and npm: open the repository's <code>desktop</code> directory, run <code>npm ci</code>, then <code>npm start</code>. No production credentials are required. This developer setup is not a commercially licensed installer. Start with fictional records, back up locally and keep the SQLite profile off shared/network drives.</p><p>Records are stored under <code>%LOCALAPPDATA%/BGM Digital Solutions/CampusBursaryDocuments/</code>. Default-path permissions, upgrades, broad Windows compatibility and data-preservation outside the tested custom directory remain unverified. No activation or institution licence file is required for offline document generation, retrieval or export in version 0.1.1.</p><p><a href="campus-documents-release.json">Release metadata</a> states the product ID, version and disabled fulfilment. It is informational; the existing Supabase catalogue remains authoritative for sales and entitlements.</p></section>
-<section><h2>Before a customer release</h2><p>Remaining gates include cryptographic read-back of the stored installer, server-side private storage validation, legitimate purchaser entitlement and signed-link expiry checks, large-file download validation, local permission checks, officer acceptance, agreed commercial terms and existing-customer rights confirmation. No activation service, automatic update service, PDF/A or accessibility certification is being advertised as complete.</p></section></main><footer><a href="support.html">BGM support and policies</a><p>Product name provisional. Preview reflects development v0.1.1.</p></footer></body></html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#173f32">
+  <title>Campus Bursary Documents | BGM Digital Solutions</title>
+  <meta name="description" content="Preview an offline Windows application for confirmed-payment receipts, student account statements and payment vouchers, with synthetic sample PDFs.">
+  <link rel="stylesheet" href="campus-documents.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="wordmark" href="/">BGM <span>Digital Solutions</span></a>
+    <span class="release-pill">Desktop preview <span aria-hidden="true">·</span> v0.1.1</span>
+  </header>
+  <main>
+    <section class="hero" aria-labelledby="page-title">
+      <div class="hero-copy">
+        <p class="eyebrow">For bursary teams working on one Windows computer</p>
+        <h1 id="page-title" aria-label="Campus Bursary Documents">Campus Bursary<br><span>Documents</span></h1>
+        <p class="lead">Turn reviewed bursary records into clear, consistent receipts, account statements and payment vouchers—with core work saved on the computer, even when offline.</p>
+        <div class="actions">
+          <a class="button" href="https://wa.me/2349031921294?text=I%20would%20like%20to%20discuss%20the%20Campus%20Bursary%20Documents%20desktop%20pilot">Discuss a pilot</a>
+          <a class="text-link" href="#samples">View sample PDFs <span aria-hidden="true">↓</span></a>
+        </div>
+        <p class="availability"><span class="status-dot" aria-hidden="true"></span><strong>Preview only.</strong> There is no customer installer or paid download yet. This page does not take payment.</p>
+      </div>
+      <figure class="product-screen">
+        <img src="assets/campus-documents-pilot.png" alt="Actual development application showing fictional bursary records and generated documents" width="1240" height="880">
+        <figcaption>Actual development interface · fictional records · not a released installer</figcaption>
+      </figure>
+    </section>
+
+    <section id="samples" class="workflow-section" aria-labelledby="workflow-title">
+      <p class="eyebrow">Three focused document workflows</p>
+      <h2 id="workflow-title">A clearer path from source record to document</h2>
+      <p class="section-intro">Import a prepared CSV, review the validation results, then create the document your team needs.</p>
+      <div class="workflow-grid">
+        <article class="workflow-card"><span class="step">01</span><h3>Confirmed-payment receipt</h3><p>Prepare a receipt from a reviewed payment record. A screenshot alone is not treated as payment confirmation.</p><a href="assets/campus-documents-samples/receipt.pdf" data-sample-pdf>Open sample receipt <span aria-hidden="true">↗</span></a></article>
+        <article class="workflow-card"><span class="step">02</span><h3>Student account statement</h3><p>Show charges, credits and payments separately, with an opening-to-closing balance reconciliation.</p><a href="assets/campus-documents-samples/statement.pdf" data-sample-pdf>Open sample statement <span aria-hidden="true">↗</span></a></article>
+        <article class="workflow-card"><span class="step">03</span><h3>Payment voucher</h3><p>Prepare a reviewable approval document. Generating a voucher does not make or prove a payment.</p><a href="assets/campus-documents-samples/voucher.pdf" data-sample-pdf>Open sample voucher <span aria-hidden="true">↗</span></a></article>
+      </div>
+      <p class="sample-note"><strong>Sample files:</strong> PDFs use fictional sample data, are provided to show document layout, and are not valid for payment, clearance or student records.</p>
+    </section>
+
+    <section class="details-grid" aria-label="How the preview works">
+      <article class="detail-card"><p class="eyebrow">Review before commit</p><h2>Catch import problems early</h2><p>CSV imports are staged for preview. The pilot checks required fields, duplicate references, dates, amounts and control totals, and reports row-level errors before records are accepted together.</p><p>These checks help catch data issues; they do not independently audit or verify the source system.</p></article>
+      <article class="detail-card"><p class="eyebrow">Designed for local work</p><h2>Keep records on the computer</h2><p>Core calculations and PDF generation run locally with a SQLite record store and local encrypted backup and restoration. Bursary records, signatures, documents and backups are not uploaded by default.</p><p>This single-computer edition is not a shared network database and does not support officers working concurrently on separate computers.</p></article>
+    </section>
+
+    <section class="configuration" aria-labelledby="configuration-title">
+      <div><p class="eyebrow">Made to carry your institution’s identity</p><h2 id="configuration-title">Configure the document details</h2><p>Set institution name, colours, academic labels, officer titles and manual signature blocks. Branding changes apply to new documents; previously finalised documents remain as issued.</p></div>
+      <ul class="check-list"><li>Receipt, statement and voucher layouts</li><li>Draft, reviewed, final, cancelled and reprint markings</li><li>Searchable PDF output and retained document revisions</li><li>Traceable source reference and template version</li></ul>
+    </section>
+
+    <section class="limits" aria-labelledby="limits-title">
+      <p class="eyebrow">Know what is included</p><h2 id="limits-title">A focused document tool, not an accounting system</h2>
+      <div class="limits-grid"><p>The application does not contact banks, execute payments, independently audit imported records or grant financial clearance. Finalisation requires the configured review steps; local editable records are not tamper-proof evidence.</p><p>The current pilot has not completed officer acceptance, default-path permissions, upgrade checks or compatibility testing across Windows versions. Logo import, XLSX mapping, OCR, signature images and additional financial schedules are not available in this preview.</p></div>
+    </section>
+
+    <section class="pilot-callout" aria-labelledby="pilot-title">
+      <div><p class="eyebrow">Release status · version 0.1.1</p><h2 id="pilot-title">Interested in reviewing the pilot?</h2><p>Contact BGM to discuss a controlled pilot. The current installer is unsigned and has only passed per-user installation and uninstallation to an isolated custom folder on one Windows 11 x64 machine. Do not disable Windows security protections.</p></div>
+      <a class="button" href="https://wa.me/2349031921294?text=I%20would%20like%20to%20discuss%20the%20Campus%20Bursary%20Documents%20desktop%20pilot">Discuss with BGM</a>
+    </section>
+
+    <details id="installation" class="technical-details">
+      <summary>Technical requirements and release checks</summary>
+      <div class="technical-copy"><p>Target: Windows 11 x64. The pilot is not offered as a customer installer. A source-code development run requires Node 24 and npm from the repository’s <code>desktop</code> directory; this is not a customer installation method.</p><p>Records are stored under <code>%LOCALAPPDATA%/BGM Digital Solutions/CampusBursaryDocuments/</code>. The local profile should not be placed on a shared/network drive. No activation or institution licence file is required for offline document generation, retrieval or export in version 0.1.1.</p><p>Commercial licence scope and existing Campus customer rights are still being confirmed. No desktop price is approved or displayed; earlier Excel or SaaS prices do not apply automatically. Paid downloads and automatic updates are disabled. Remaining checks include private installer integrity read-back, legitimate purchaser entitlement and signed-link expiry, large-file transfer, local permissions, officer acceptance and agreed commercial terms.</p><p><a href="campus-documents-release.json">Release metadata</a> is informational. The existing BGM catalogue remains authoritative for product sales and entitlements.</p></div>
+    </details>
+    <p class="existing-products"><a href="campus-bursary.html">Explore the existing Campus Excel products</a></p>
+  </main>
+  <footer><a href="support.html">BGM support and policies</a><span>Campus Bursary Documents · development preview</span></footer>
+</body>
+</html>

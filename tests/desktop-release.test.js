@@ -22,9 +22,25 @@ test('desktop preview cannot advertise paid delivery without an approved install
   assert.equal(document.querySelector('a[href="campus-documents-release.json"]')?.textContent, 'Release metadata');
   assert.equal(document.querySelector('a.buy, button.buy, form'), null);
   assert.ok(document.querySelector('#installation'));
+  assert.deepEqual([...document.querySelectorAll('[data-sample-pdf]')].map(link => link.getAttribute('href')), [
+    'assets/campus-documents-samples/receipt.pdf',
+    'assets/campus-documents-samples/statement.pdf',
+    'assets/campus-documents-samples/voucher.pdf'
+  ]);
+  for (const link of document.querySelectorAll('[data-sample-pdf]')) {
+    const sample = fs.readFileSync(link.getAttribute('href'));
+    assert.equal(sample.subarray(0, 5).toString('ascii'), '%PDF-');
+  }
+  assert.match(document.querySelector('main h1')?.textContent, /Campus Bursary\s*Documents/);
+  assert.equal(document.querySelector('#page-title')?.getAttribute('aria-label'), 'Campus Bursary Documents');
+  assert.equal(document.querySelector('.text-link')?.getAttribute('href'), '#samples');
+  assert.equal(document.querySelector('#samples')?.tagName, 'SECTION');
+  assert.match(pageText, /fictional sample data/i);
+  assert.match(pageText, /not a shared network database/i);
+  assert.match(pageText, /not an accounting system/i);
   assert.ok(pageText.includes('No activation or institution licence file is required'));
-  assert.match(pageText, /unsigned and not available for paid download/i);
-  assert.match(pageText, /default-path permissions, upgrades, other Windows versions and officer acceptance remain untested/i);
-  assert.match(pageText, /cryptographic read-back.*legitimate purchaser entitlement/i);
+  assert.match(pageText, /current installer is unsigned/i);
+  assert.match(pageText, /default-path permissions, upgrade checks or compatibility testing across Windows versions/i);
+  assert.match(pageText, /private installer integrity read-back, legitimate purchaser entitlement and signed-link expiry/i);
   dom.window.close();
 });

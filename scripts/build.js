@@ -11,4 +11,7 @@ const images = ['bgm-guides-mockup','business-prompts','ai-side-hustles','remote
 fs.mkdirSync(path.join(output, 'assets'), { recursive: true });
 for (const name of images) fs.copyFileSync(path.resolve(__dirname, '../assets', name + '.jpg'), path.join(output, 'assets', name + '.jpg'));
 fs.copyFileSync(path.resolve(__dirname, '../assets/campus-documents-pilot.png'), path.join(output, 'assets/campus-documents-pilot.png'));
+const sampleDir = path.join(output, 'assets', 'campus-documents-samples');
+fs.mkdirSync(sampleDir, { recursive: true });
+for (const name of ['receipt', 'statement', 'voucher']) fs.copyFileSync(path.resolve(__dirname, '../assets/campus-documents-samples', name + '.pdf'), path.join(sampleDir, name + '.pdf'));
 console.log(`Built ${assets.length} public assets. Server code, SQL, tests and documentation are excluded.`);

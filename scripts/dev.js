@@ -8,8 +8,9 @@ const port = Number(process.env.PORT || 3000);
 const cataloguePreview = process.argv.includes('--preview-catalogue');
 const images = new Set(['bgm-guides-mockup','business-prompts','ai-side-hustles','remote-jobs','scholarships','upwork','five-guide-bundle','collections-bank'].map(name => 'assets/' + name + '.jpg'));
 images.add('assets/campus-documents-pilot.png');
+const samples = new Set(['receipt', 'statement', 'voucher'].map(name => 'assets/campus-documents-samples/' + name + '.pdf'));
 process.env.SITE_URL ||= `http://localhost:${port}`;
-const types = { '.html':'text/html; charset=utf-8', '.css':'text/css; charset=utf-8', '.js':'text/javascript; charset=utf-8', '.json':'application/json; charset=utf-8', '.txt':'text/plain', '.xml':'application/xml; charset=utf-8', '.jpg':'image/jpeg' };
+const types = { '.html':'text/html; charset=utf-8', '.css':'text/css; charset=utf-8', '.js':'text/javascript; charset=utf-8', '.json':'application/json; charset=utf-8', '.txt':'text/plain', '.xml':'application/xml; charset=utf-8', '.jpg':'image/jpeg', '.pdf':'application/pdf' };
 http.createServer(async (req,res) => {
   const url = new URL(req.url, 'http://localhost');
   res.status = code => { res.statusCode = code; return res; };
@@ -40,7 +41,7 @@ http.createServer(async (req,res) => {
     return;
   }
   const file = url.pathname === '/' ? 'index.html' : url.pathname.slice(1);
-  const found=assets.has(file)||images.has(file);
+  const found=assets.has(file)||images.has(file)||samples.has(file);
   res.statusCode=found?200:404;
   res.setHeader('Content-Type', path.extname(file) === '.png' && found ? 'image/png' : types[path.extname(found?file:'404.html')]);
   fs.createReadStream(path.resolve(__dirname,'..',found?file:'404.html')).pipe(res);
