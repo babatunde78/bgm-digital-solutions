@@ -4,9 +4,9 @@
   "version": "0.1.1",
   "status": "request-pilot",
   "pricing": {
-    "status": "request-quote",
-    "NGN": null,
-    "USD": null
+    "status": "approved-not-for-sale",
+    "NGN": 200000,
+    "USD": 149
   },
   "paymentEnabled": false,
   "deliveryReady": false,
