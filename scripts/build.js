@@ -7,7 +7,7 @@ fs.rmSync(output, { recursive: true, force: true });
 fs.mkdirSync(output, { recursive: true });
 for (const file of assets) fs.copyFileSync(path.resolve(__dirname, '..', file), path.join(output, file));
 fs.copyFileSync(path.resolve(__dirname, '../site.js'), path.join(output, 'site.js'));
-const images = ['bgm-guides-mockup','business-prompts','ai-side-hustles','remote-jobs','scholarships','upwork','five-guide-bundle','collections-bank','campus-bursary-a','campus-bursary-b','campus-bursary-full-excel'];
+const images = ['bgm-guides-mockup','business-prompts','ai-side-hustles','remote-jobs','scholarships','upwork','five-guide-bundle','collections-bank','campus-bursary-a','campus-bursary-b','campus-bursary-full-excel','batch-and-balance'];
 fs.mkdirSync(path.join(output, 'assets'), { recursive: true });
 for (const name of images) fs.copyFileSync(path.resolve(__dirname, '../assets', name + '.jpg'), path.join(output, 'assets', name + '.jpg'));
 fs.copyFileSync(path.resolve(__dirname, '../assets/campus-documents-pdf-mockup-v0.1.1.png'), path.join(output, 'assets/campus-documents-pdf-mockup-v0.1.1.png'));

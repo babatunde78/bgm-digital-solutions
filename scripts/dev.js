@@ -6,7 +6,7 @@ const path = require('node:path');
 const assets = new Set(['index.html','404.html','product.html','support.html','payment-success.html','campus-documents.html','campus-documents.css','campus-documents-release.json','styles.css','app.js','site.js','products.js','catalog-loader.js','purchase.js','robots.txt','sitemap.xml']);
 const port = Number(process.env.PORT || 3000);
 const cataloguePreview = process.argv.includes('--preview-catalogue');
-const images = new Set(['bgm-guides-mockup','business-prompts','ai-side-hustles','remote-jobs','scholarships','upwork','five-guide-bundle','collections-bank'].map(name => 'assets/' + name + '.jpg'));
+const images = new Set(['bgm-guides-mockup','business-prompts','ai-side-hustles','remote-jobs','scholarships','upwork','five-guide-bundle','collections-bank','batch-and-balance'].map(name => 'assets/' + name + '.jpg'));
 images.add('assets/campus-documents-pilot.png');
 const samples = new Set(['receipt', 'statement', 'voucher'].map(name => 'assets/campus-documents-samples/' + name + '.pdf'));
 process.env.SITE_URL ||= `http://localhost:${port}`;
