@@ -6,6 +6,8 @@ const modal = $('#modal'), checkoutModal = $('#checkout-modal');
 const form = $('#checkout-form'), errorBox = $('#checkout-error'), submit = $('#checkout-submit');
 let selection = null, requestVersion = 0, lastFocus, audience = 'all';
 const presentations = {
+  'paint-job-ledger': { image: 'paint-job-ledger-mockup', extension: 'png', width: 1536, height: 1024, usdReference: 29, format: 'Painting estimates & cost tracking · Excel', audience: 'For small residential painting contractors estimating measured surfaces and reviewing actual job costs.' },
+  'rent-clear': { image: 'rent-clear-mockup', extension: 'png', width: 1536, height: 1024, usdReference: 29, format: 'Rental payment ledger · Excel', audience: 'For landlords managing 1–20 units with partial, irregular, monthly, quarterly or annual rent payments.' },
   '500-business-prompts': { image: 'business-prompts', usdReference: 9, format: 'Business resource', audience: 'For business owners planning, marketing and running their business.' },
   'ai-side-hustles': { image: 'ai-side-hustles', usdReference: 15, format: 'Business guide', audience: 'For people exploring and validating an AI-assisted service offer.' },
   'remote-job-2026-2027': { image: 'remote-jobs', usdReference: 12, format: 'Career guide', audience: 'For job seekers preparing applications and screening remote opportunities.' },
