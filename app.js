@@ -6,6 +6,7 @@ const modal = $('#modal'), checkoutModal = $('#checkout-modal');
 const form = $('#checkout-form'), errorBox = $('#checkout-error'), submit = $('#checkout-submit');
 let selection = null, requestVersion = 0, lastFocus, audience = 'all';
 const presentations = {
+  'school-fee-reconciliation': { image: 'school-fee-reconciliation', usdReference: 7.39, usdRateDate: '2026-11-14', usdRateSource: 'CEII mid-market reference (ExchangeRate-API)', format: 'School fee reconciliation - Excel', audience: 'For Nigerian private-school proprietors and bursars allocating family payments across siblings, charges and terms.' },
   'paint-job-ledger': { image: 'paint-job-ledger-mockup', extension: 'png', width: 1536, height: 1024, usdReference: 29, format: 'Painting estimates and cost tracking - Excel', audience: 'For small residential painting contractors estimating measured surfaces and reviewing actual job costs.' },
   'rent-clear': { image: 'rent-clear-mockup', extension: 'png', width: 1536, height: 1024, usdReference: 29, format: 'Rental payment ledger - Excel', audience: 'For landlords managing 1 to 20 units with partial, irregular, monthly, quarterly or annual rent payments.' },
   '500-business-prompts': { image: 'business-prompts', usdReference: 9, format: 'Business resource', audience: 'For business owners planning, marketing and running their business.' },
@@ -138,6 +139,10 @@ function renderDetail() {
   if (product.id.startsWith('campus-bursary-')) {
     requirements.append(node('p', 'Microsoft 365 Excel for Windows 64-bit is the tested target. These are single-writer pilot workbooks, not secure multi-user accounting software. Review the operating guide, institution mappings and controls before use. Mac, Excel for the web and other versions are unverified.'),
       node('p', 'The displayed first-year amount includes the annual licence and standard setup. Storefront checkout is a one-time NGN payment; automatic renewal billing is not implemented. Renewal terms must be agreed before the licence term ends. The USD figure is a dated approximate equivalent.'));
+  } else if (product.id === 'school-fee-reconciliation') {
+    requirements.append(node('p', 'Macro-free offline workbook tested in Microsoft Excel desktop for Windows 16.0, build 13127. Other Excel releases, Mac, web and mobile are unverified. One school and one writer per file; an Excel licence may be required.'),
+      node('p', 'Prepared capacity: 100 rows per master table, 500 charges and allocations each, and 300 payments, credits, releases and returns each. Fees, optional charges, allocations, printing and PDF export are manual. Worksheet protection prevents accidental edits and is not data security.'),
+      node('p', 'Unallocated family credit is shown separately from student debt. Reconcile against actual bank and cash evidence. No bank connection, online school-fee collection, automated reminders or secure multi-user access is included.'));
   } else if (product.id === 'bgm-collections-bank') {
     requirements.append(node('p', 'This is an offline Excel toolkit. It compares receipts, Paystack records, settlements, bank deposits and cashbook entries. It does not connect to your bank account.'),
       node('p', 'Ask BGM to confirm compatibility with your Excel version, input files and intended use before buying.'));

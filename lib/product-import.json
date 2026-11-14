@@ -230,5 +230,25 @@
     "blob_pathnames": [
       "campus-bursary-documents/v0.1.1/campus-bursary-documents-setup-0.1.1.exe"
     ]
+  },
+  {
+    "id": "school-fee-reconciliation",
+    "name": "School Fee Reconciliation Workbook",
+    "category": "Business Software",
+    "short": "Allocate one family transfer across siblings and school terms, keep unallocated credit visible, and track fee arrears in offline Excel.",
+    "description": "For small Nigerian private-school proprietors and bursars who need a clear record of what each student and family owes. Record verified receipts once, explicitly allocate them across siblings, charges and terms, and retain linked releases, refunds and reversals without deleting the original register entries. Scholarships and discounts reduce identified charges; opening arrears and unpaid balances remain visible across term rollover and after a pupil leaves.\n\nIncludes clean and fictional demonstration XLSX workbooks, a three-page PDF quick start and HTML guide, calculation notes, validation evidence and fictional printable receipt/statement examples. Forty-nine native assertions passed in Windows desktop Excel 16.0, build 13127. Other Excel versions, Mac, web and mobile, independent school-staff usability and full-capacity performance remain unverified.\n\nOne school and one writer per file. Fixed capacity: 100 rows per master table; 500 charges and allocations each; 300 payments, credits, releases and returns each. Amounts are NGN only, with up to two decimals. Fee snapshots, optional-charge opt-ins, payment allocation, printing and PDF export are manual. Worksheet protection prevents accidents and is not data security. This workbook does not connect to banks, collect fees online or provide secure multi-user access. Reconcile source records independently.\n\nOne-time NGN 10,000. Approximately US$7.39 is a dated display reference only, using NGN 1,352.36 per USD reported by CEII from ExchangeRate-API on 14 November 2026; it does not enable USD checkout or guarantee your bank's rate. Download after confirmed payment using the original browser. Existing BGM support and seven-day digital-product refund policy apply.",
+    "features": [
+      "School, academic-session, term, class, student and family setup",
+      "Fee reference schedules, optional charges, scholarships and discounts",
+      "Opening arrears, instalments, overpayments and unique receipt IDs",
+      "Split allocations across siblings, charges and terms in one family",
+      "Unallocated credit plus linked releases, refunds and reversals",
+      "Student/family statements, debtor ageing, collections and printable receipts",
+      "Clean and fictional demo workbooks, guides and 49 native Excel checks"
+    ],
+    "amounts": { "NGN": 1000000 },
+    "status": "draft",
+    "delivery_ready": false,
+    "blob_pathnames": ["school-fee-reconciliation/v1.0.0/school-fee-reconciliation-v1.0.0-customer.zip"]
   }
 ]
