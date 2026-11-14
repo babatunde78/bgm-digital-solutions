@@ -250,5 +250,26 @@
     "status": "draft",
     "delivery_ready": false,
     "blob_pathnames": ["school-fee-reconciliation/v1.0.0/school-fee-reconciliation-v1.0.0-customer.zip"]
+  },
+  {
+    "id": "aluminium-job-costing",
+    "name": "Aluminium Job Costing Workbook",
+    "category": "Business Software",
+    "short": "Connect site measurements, editable costing rules, preserved quote versions, approved variations and actual job profit in offline Excel.",
+    "description": "For small aluminium window and door fabricators in Nigeria who want one commercial record from measurements to quotation and job review. Configure materials, dated supplier prices, purchase units and editable quantity assumptions. Separate materials, workshop labour, transport, installation, overhead and contingency, with distinct markup, pricing-margin and gross-margin calculations.\n\nIncludes clean and fictional-demo XLSX files with two illustrative jobs, values-only quotation versions, customer print layouts, variation approval/cancellation history, milestones, receipts, outstanding balances and estimated-versus-actual cost categories. A three-page PDF/HTML quick start, calculation notes, fabricator rule-review checklist, validation evidence and four fictional sample printouts are included. Seventeen arithmetic tests and 59 native Excel assertions passed.\n\nTested in Windows desktop Excel 16.0, build 13127. Other Excel versions, Mac, web and mobile, independent fabricator usability, full-capacity performance and real fabrication outcomes remain unverified. Prepared limits: 20 jobs/types, 40 estimates, 100 measurements, 60 materials, 100 supplier-price rows, eight rule slots per type across 160 rows, 100 extra-cost rows, 100 quotes/variations, 200 variation events/costs/milestones and 300 quote lines/cost snapshots/payments/actual-cost rows. Formula ranges do not grow automatically.\n\nAll supplied fabrication rules, allowances and prices are fictional examples requiring competent fabricator review. This is not engineering design, validated manufacturer-system data, a cutting list or cutting/nesting optimisation. Pooled quantities do not prove cut feasibility. Quote snapshots, approvals, signatures, printing and PDF export are manual. Worksheet protection is not data security or immutable history. No automatic tax, bank connection, supplier feed, inventory or CNC output is included. Job profit depends on complete cost records; deposits are not profit and Open-job figures are not final profit.\n\nOne-time NGN 25,000. Approximate US$18.49 is a dated display reference using NGN 1,352.36 per USD reported by CEII from ExchangeRate-API on 14 November 2026, not USD checkout or a guaranteed bank conversion. Download after confirmed payment in the original browser. Existing BGM purchase/access support and seven-day digital-product refunds apply.",
+    "features": [
+      "Materials, dated supplier prices, units and editable type-costing rules",
+      "Measurements, cutting allowances, waste, accessories and workshop labour",
+      "Transport, installation, overhead and contingency with separate margin/markup",
+      "Values-only quote revisions and manual customer quotation PDF layouts",
+      "Approved and cancelled variation events with retained original records",
+      "Deposits, milestones, receipts and customer outstanding balances",
+      "Frozen budget versus actual materials, labour and job profit",
+      "Clean/demo workbooks, guides, rule-review checklist and validation evidence"
+    ],
+    "amounts": { "NGN": 2500000 },
+    "status": "draft",
+    "delivery_ready": false,
+    "blob_pathnames": ["aluminium-job-costing/v1.0.0/aluminium-job-costing-v1.0.0-customer.zip"]
   }
 ]
