@@ -2,7 +2,7 @@
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const { Readable } = require('node:stream');
-const handler = require('../api/rental-release-upload');
+const handler = require('../api/store-status');
 
 function response() {
   const result = { code: 200, headers: {}, body: undefined };
@@ -12,6 +12,14 @@ function response() {
     json(value) { result.body = value; return result; }
   });
 }
+
+test('store status remains readable after sharing the existing function for release upload', async t => {
+  const res = response();
+  const req = Object.assign(Readable.from([]), { method: 'GET', headers: {} });
+  await handler(req, res);
+  assert.equal(res.code, 200);
+  assert.equal(typeof res.body.emailEnabled, 'boolean');
+});
 
 test('private rental package upload rejects a request without its temporary bearer secret', async t => {
   const previous = process.env.DRINKS_RELEASE_UPLOAD_TOKEN;
