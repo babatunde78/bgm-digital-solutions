@@ -22,11 +22,16 @@ test('import preserves existing product edits and uses the current guide asset i
   };
   const ids = require('../lib/product-import.json').map(product => product.id);
   const result = await importProducts(ids);
-  assert.equal(result.imported.length, 13);
+  assert.equal(result.imported.length, 14);
   assert.equal(written.some(product => product.id === first.id), false);
   const bundle = written.find(product => product.id === 'five-guide-bundle');
   assert.equal(bundle.blob_pathnames.length, 5); assert.equal(bundle.blob_pathnames[0], 'current/prompts-v2.zip');
-  assert.equal(result.checkedFiles, 13);
+  assert.equal(result.checkedFiles, 14);
+  const drinks = written.find(product => product.id === 'drinks-stock-customer-book');
+  assert.deepEqual({ amount: drinks.amounts.NGN, status: drinks.status, ready: drinks.delivery_ready, path: drinks.blob_pathnames[0] }, {
+    amount: 1250000, status: 'draft', ready: false,
+    path: 'drinks-stock-customer-book/v1.0.0/drinks-stock-customer-book-v1.0.0-customer.zip'
+  });
   assert.equal(written.find(product => product.id === 'ai-side-hustles').amounts.NGN, 1200000);
   const campusA = written.find(product => product.id === 'campus-bursary-package-a');
   const campusB = written.find(product => product.id === 'campus-bursary-package-b');

@@ -304,5 +304,28 @@
     "blob_pathnames": [
       "bakery-recipe-costing/v1.0.0/bakery-recipe-costing-v1.0.0-customer.zip"
     ]
+  },
+  {
+    "id": "drinks-stock-customer-book",
+    "name": "BGM Drinks Stock & Customer Book",
+    "category": "Business Software",
+    "short": "Track beverage stock, customer credit and returnable bottles or crates in one offline Excel workbook.",
+    "description": "For small Nigerian beverage wholesalers who need a clearer view of stock, customer debts, and returnable bottles and crates. Record purchases and sales by crate, pack, bottle, or another configured unit. The workbook converts transactions into a product base unit, tracks customer credit and receipts, suggests reorders, supports physical counts, and keeps returnable-container balances and lost-container charges separate from beverage stock and sales.\n\nIncludes clean and fictional demonstration XLSX workbooks, item-specific unit conversions, purchase/sale/return/adjustment/reversal logging, supplier records, customer statements, container balances, inventory value, weighted-average gross-profit reporting, and reorder suggestions. A quick-start guide, costing-method notes, research sources and validation record are included. The workbook has 12 sheets and formula-level controls for duplicates, invalid units, transaction chronology and negative stock.\n\nMacro-free .xlsx for one user and one depot, with 1,000 transaction lines. Formula cells can be edited. The final rebuilt files were formula-scanned with the authoring spreadsheet engine; the earlier workbook build was opened in desktop Excel and exposed a formula issue that was corrected, but the final rebuild was not reopened in native Excel. Desktop Excel is recommended; other versions and full-capacity performance are unverified. Print statements or export to PDF manually. Keep backups and reconcile source records independently. This is not secure multi-user software, bank reconciliation, invoice-level receipt allocation, or accounting/tax compliance.\n\nOne-time NGN 12,500. Approximate US$9.24 is a dated display reference using the CEII USD/NGN mid-market rate of NGN 1,352.07 per USD on 15 November 2026; it is not USD checkout or a guaranteed bank conversion. Download after confirmed payment in the original browser. Existing BGM purchase/access support and the published seven-day digital-product refund policy apply.",
+    "features": [
+      "Configurable crate, pack, bottle and unit conversions",
+      "Purchases, sales, credit, receipts, returns, adjustments and linked reversals",
+      "Customer beverage debts and returnable-container balances kept separate",
+      "Weighted-average stock costing, inventory value and gross-profit view",
+      "Supplier records, minimum stock, reorder suggestions and physical counts",
+      "Clean and fictional demo workbooks, quick start and calculation notes"
+    ],
+    "amounts": {
+      "NGN": 1250000
+    },
+    "status": "draft",
+    "delivery_ready": false,
+    "blob_pathnames": [
+      "drinks-stock-customer-book/v1.0.0/drinks-stock-customer-book-v1.0.0-customer.zip"
+    ]
   }
 ]

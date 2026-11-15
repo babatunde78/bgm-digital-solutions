@@ -11,6 +11,7 @@ const images = ['bgm-guides-mockup','business-prompts','ai-side-hustles','remote
 fs.mkdirSync(path.join(output, 'assets'), { recursive: true });
 for (const name of images) fs.copyFileSync(path.resolve(__dirname, '../assets', name + '.jpg'), path.join(output, 'assets', name + '.jpg'));
 fs.copyFileSync(path.resolve(__dirname, '../assets/campus-documents-pdf-mockup-v0.1.1.png'), path.join(output, 'assets/campus-documents-pdf-mockup-v0.1.1.png'));
+fs.copyFileSync(path.resolve(__dirname, '../assets/drinks-stock-customer-book-mockup.png'), path.join(output, 'assets/drinks-stock-customer-book-mockup.png'));
 for (const name of ['paint-job-ledger-mockup','rent-clear-mockup']) fs.copyFileSync(path.resolve(__dirname, '../assets', name + '.png'), path.join(output, 'assets', name + '.png'));
 const sampleDir = path.join(output, 'assets', 'campus-documents-samples');
 fs.mkdirSync(sampleDir, { recursive: true });
