@@ -246,10 +246,14 @@
       "Student/family statements, debtor ageing, collections and printable receipts",
       "Clean and fictional demo workbooks, guides and 49 native Excel checks"
     ],
-    "amounts": { "NGN": 1000000 },
+    "amounts": {
+      "NGN": 1000000
+    },
     "status": "draft",
     "delivery_ready": false,
-    "blob_pathnames": ["school-fee-reconciliation/v1.0.0/school-fee-reconciliation-v1.0.0-customer.zip"]
+    "blob_pathnames": [
+      "school-fee-reconciliation/v1.0.0/school-fee-reconciliation-v1.0.0-customer.zip"
+    ]
   },
   {
     "id": "aluminium-job-costing",
@@ -267,9 +271,38 @@
       "Frozen budget versus actual materials, labour and job profit",
       "Clean/demo workbooks, guides, rule-review checklist and validation evidence"
     ],
-    "amounts": { "NGN": 2500000 },
+    "amounts": {
+      "NGN": 2500000
+    },
     "status": "draft",
     "delivery_ready": false,
-    "blob_pathnames": ["aluminium-job-costing/v1.0.0/aluminium-job-costing-v1.0.0-customer.zip"]
+    "blob_pathnames": [
+      "aluminium-job-costing/v1.0.0/aluminium-job-costing-v1.0.0-customer.zip"
+    ]
+  },
+  {
+    "id": "bakery-recipe-costing",
+    "name": "Bakery & Catering Recipe Costing Workbook",
+    "category": "Business Software",
+    "short": "Offline recipe costing that connects actual pack prices, nested recipes, repricing checks and saved order costs.",
+    "description": "For Nigerian small bakers and caterers who want to update an ingredient purchase and see which products may need repricing. Enter actual pack contents, supplier prices, user-measured densities, usable yields and recipe quantities. Build up to three recipe levels, compare current and selected baseline costs, and separate food, labour, energy, packaging, delivery and allocated overhead. Margin, markup, gross margin and profit after allocation are labelled separately.\n\nIncludes clean and fictional demonstration XLSX workbooks, a repricing overview, printable costing card and quotation, values-only order snapshots, actual cost register, quick-start PDF/HTML, formula notes, validation results, market research and fictional sample printouts. Ten independent calculation tests and 64 native Excel assertions passed. Tested in Windows desktop Excel 16.0 build 13127; other versions/platforms remain unverified.\n\nPack contents, densities, prices, recipes and yields are buyer-supplied or fictional examples. No production recipe, food safety, nutrition, allergen, tax or inventory function is certified. Manual snapshot capture and PDF export. One writer; fixed capacity 60 ingredients, 120 purchases, 30 recipes, 180 lines, 100 snapshots and 200 actual costs. Worksheet protection is not data security. Actual profit depends on complete cost capture.\n\nOne-time NGN 25,000. Approximate US$18.49 is a dated reference at NGN 1,352.36/USD from 14 November 2026, not USD checkout or a guaranteed conversion. Existing BGM purchase/access support and seven-day digital-product refund policy apply.",
+    "features": [
+      "Central ingredient purchase rates flow through affected recipes",
+      "Explicit bag, carton, bottle, mass, volume and unit contents",
+      "User-supplied density required for mass-volume conversion",
+      "Up to three directed subrecipe levels with cycle checks",
+      "Batch scaling, yields and separate usable and finished loss",
+      "Separate direct costs, overhead, markup, margin and profit",
+      "Current versus baseline ingredient-price impact and repricing flags",
+      "Manual values-only historical order snapshots and actual costs"
+    ],
+    "amounts": {
+      "NGN": 2500000
+    },
+    "status": "draft",
+    "delivery_ready": false,
+    "blob_pathnames": [
+      "bakery-recipe-costing/v1.0.0/bakery-recipe-costing-v1.0.0-customer.zip"
+    ]
   }
 ]
