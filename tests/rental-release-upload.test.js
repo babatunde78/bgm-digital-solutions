@@ -22,9 +22,9 @@ test('store status remains readable after sharing the existing function for rele
 });
 
 test('private rental package upload rejects a request without its temporary bearer secret', async t => {
-  const previous = process.env.DRINKS_RELEASE_UPLOAD_TOKEN;
-  delete process.env.DRINKS_RELEASE_UPLOAD_TOKEN;
-  t.after(() => { if (previous !== undefined) process.env.DRINKS_RELEASE_UPLOAD_TOKEN = previous; });
+  const previous = process.env.RENTAL_RELEASE_UPLOAD_TOKEN;
+  delete process.env.RENTAL_RELEASE_UPLOAD_TOKEN;
+  t.after(() => { if (previous !== undefined) process.env.RENTAL_RELEASE_UPLOAD_TOKEN = previous; });
   const res = response();
   const req = Object.assign(Readable.from([]), { method: 'POST', headers: {} });
   await handler(req, res);
@@ -33,9 +33,9 @@ test('private rental package upload rejects a request without its temporary bear
 });
 
 test('private rental package upload rejects an invalid bearer secret before reading content', async t => {
-  const previous = process.env.DRINKS_RELEASE_UPLOAD_TOKEN;
-  process.env.DRINKS_RELEASE_UPLOAD_TOKEN = 'test-release-token-abcdefghijklmnopqrstuvwxyz';
-  t.after(() => { if (previous === undefined) delete process.env.DRINKS_RELEASE_UPLOAD_TOKEN; else process.env.DRINKS_RELEASE_UPLOAD_TOKEN = previous; });
+  const previous = process.env.RENTAL_RELEASE_UPLOAD_TOKEN;
+  process.env.RENTAL_RELEASE_UPLOAD_TOKEN = 'test-release-token-abcdefghijklmnopqrstuvwxyz';
+  t.after(() => { if (previous === undefined) delete process.env.RENTAL_RELEASE_UPLOAD_TOKEN; else process.env.RENTAL_RELEASE_UPLOAD_TOKEN = previous; });
   const res = response();
   const req = Object.assign(Readable.from([]), { method: 'POST', headers: { authorization: 'Bearer invalid', 'content-type': 'application/zip', 'content-length': '445394' } });
   await handler(req, res);

@@ -44,7 +44,7 @@ async function verifyStored(options) {
 
 const getStatus = endpoint('GET', async (req, res) => res.status(200).json({ emailEnabled: emailEnabled() }));
 const upload = endpoint('POST', async (req, res) => {
-  const secret = process.env.DRINKS_RELEASE_UPLOAD_TOKEN;
+  const secret = process.env.RENTAL_RELEASE_UPLOAD_TOKEN;
   if (typeof secret !== 'string' || secret.length < 32) throw new HttpError(503, 'Release upload is unavailable.');
   if (!equal(req.headers.authorization, `Bearer ${secret}`)) throw new HttpError(401, 'Unauthorized.');
   if (req.headers['content-type'] !== 'application/zip' || Number(req.headers['content-length']) !== size) {
