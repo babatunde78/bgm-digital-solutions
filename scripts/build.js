@@ -13,6 +13,7 @@ for (const name of images) fs.copyFileSync(path.resolve(__dirname, '../assets', 
 fs.copyFileSync(path.resolve(__dirname, '../assets/campus-documents-pdf-mockup-v0.1.1.png'), path.join(output, 'assets/campus-documents-pdf-mockup-v0.1.1.png'));
 fs.copyFileSync(path.resolve(__dirname, '../assets/drinks-stock-customer-book-mockup.png'), path.join(output, 'assets/drinks-stock-customer-book-mockup.png'));
 for (const name of ['paint-job-ledger-mockup','rent-clear-mockup']) fs.copyFileSync(path.resolve(__dirname, '../assets', name + '.png'), path.join(output, 'assets', name + '.png'));
+fs.copyFileSync(path.resolve(__dirname, '../assets/rental-income-arrears-ledger-mockup.png'), path.join(output, 'assets/rental-income-arrears-ledger-mockup.png'));
 const sampleDir = path.join(output, 'assets', 'campus-documents-samples');
 fs.mkdirSync(sampleDir, { recursive: true });
 for (const name of ['receipt', 'statement', 'voucher']) fs.copyFileSync(path.resolve(__dirname, '../assets/campus-documents-samples', name + '.pdf'), path.join(sampleDir, name + '.pdf'));

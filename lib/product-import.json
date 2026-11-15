@@ -327,5 +327,30 @@
     "blob_pathnames": [
       "drinks-stock-customer-book/v1.0.0/drinks-stock-customer-book-v1.0.0-customer.zip"
     ]
+  },
+  {
+    "id": "rental-income-arrears-ledger",
+    "name": "Nigeria Rent & Property Ledger Workbook",
+    "category": "Business Software",
+    "short": "Track rent due, tenant payments, arrears, service charges, deposits, property expenses and landlord payouts in one offline workbook.",
+    "description": "A macro-free Excel workbook for small Nigerian landlords and property managers. Maintain separate property, unit, landlord, tenant and tenancy records; configure rent schedules and due dates per tenancy; and allocate partial or advance payments to charges while leaving unallocated receipts visible. Record rent, service charges, other charges and refundable deposits separately, with expenses attributed to a property and landlord, configurable management fees, remittances and reconciliation checks.\n\nIncludes clean and fictional demonstration workbooks, tenant and landlord statements, printable receipts, a manual follow-up list, vacancy and rent-collection summaries, quick-start instructions, calculation definitions, sourced market research and validation results.\n\nMacro-free .xlsx, designed for one user working offline. Prepared first-release capacity: up to 300 charges and receipts; formula ranges do not grow automatically. Tenant statements, receipts and landlord statements require manual printing or PDF export. No automatic reminders, bank feed, multi-user editing, legal late-fee or tenancy rules, automatic rent proration, automatic rollover, tax reporting or audited accounting features are included. Worksheet protection is not data security. This is an operational record-keeping tool, not legal or accounting advice.\n\nOne-time NGN 12,500. Approximate US$9.30 is a dated exchange-rate reference from 15 November 2026, not a USD checkout price or guaranteed bank conversion. Download after confirmed payment in the original browser. Existing BGM purchase/access support and seven-day digital-product refunds apply.",
+    "features": [
+      "Property, unit, landlord, tenant and dated tenancy registers",
+      "Per-tenancy rent schedules, service charges and other charges",
+      "Partial and advance receipts with charge allocations and visible unallocated balances",
+      "Separate refundable deposits, deposit refunds, property expenses and management fees",
+      "Landlord remittances with collected, retained and paid-out reconciliation checks",
+      "Tenant statements, owner statements, printable receipts and manual follow-up list",
+      "Vacancy, arrears and collection summaries",
+      "Clean and fictional demo workbooks, instructions and validation results"
+    ],
+    "amounts": {
+      "NGN": 1250000
+    },
+    "status": "published",
+    "delivery_ready": true,
+    "blob_pathnames": [
+      "rental-income-arrears-ledger/v1.0.0/rental-income-arrears-ledger-v1.0.0-customer.zip"
+    ]
   }
 ]
