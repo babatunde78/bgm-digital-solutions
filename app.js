@@ -22,7 +22,8 @@ const presentations = {
   'campus-bursary-package-b': { image: 'campus-bursary-b', format: 'Budget & expenditure control · Excel', audience: 'For bursary teams reviewing budgets, commitments, supplier bills, payments, advances and actual expenditure.' },
   'campus-bursary-full-excel': { image: 'campus-bursary-full-excel', format: 'Full bursary suite · Excel', audience: 'For institutions that want both operational packages plus manual ledger and control-account review schedules.' },
   'campus-bursary-documents': { image: 'campus-documents-pdf-mockup-v0.1.1', extension: 'png', imageFit: 'contain', width: 1102, height: 1378, usdReference: 148.11, usdRateDate: '2026-11-10', usdRateSource: 'CBN central rate', format: 'Offline Windows document software', audience: 'A focused offline Windows tool for receipts, student statements and payment vouchers; separate from the broader Campus Excel suites.' },
-  'batch-and-balance': { image: 'batch-and-balance', format: 'Excel costing toolkit', audience: 'For custom cake sellers and small home bakeries already fulfilling paid orders.' }
+  'batch-and-balance': { image: 'batch-and-balance', format: 'Excel costing toolkit', audience: 'For custom cake sellers and small home bakeries already fulfilling paid orders.' },
+  'training-certificate-generator': { image: 'training-certificate-generator-v1.1.0', extension: 'png', width: 1536, height: 1024, usdReference: 18.61, usdRateDate: '2026-11-16', usdRateSource: 'ExchangeRates.me USD/NGN reference', format: 'Offline Windows certificate and letter app', audience: 'For Nigerian training organisations issuing participant certificates and completion letters from Excel rosters.' }
 };
 
 function node(tag, text, className) {
@@ -147,6 +148,10 @@ function renderDetail() {
       node('p', 'Quote snapshots, customer approvals, printing and PDF export are manual. Worksheet protection prevents accidents and is not data security or immutable history. No tax engine, bank connection, inventory, supplier feed or CNC output is included. Review the stated fixed capacities and record complete actual costs before relying on job profit.'));
   } else if (product.id === 'bakery-recipe-costing') {
     requirements.append(node('p', 'Macro-free workbook tested in Windows desktop Excel 16.0, build 13127. Other versions and platforms are unverified. One writer, NGN only; Excel licence separate.'), node('p', 'Pack contents, recipe quantities, densities, yields and allocations are user inputs. Fictional examples are not production or food-safety advice. Manual snapshots, printing and PDF export. Sheet protection is not data security.'), node('p', 'No inventory, tax, nutrition, allergen, banking or food-safety system. Actual profit depends on complete costs.'));
+  } else if (product.id === 'training-certificate-generator') {
+    requirements.append(node('p', 'Windows 10/11 x64 is the target. The included installer was built locally but its complete installed-app import-to-PDF workflow has not been smoke-tested. The installer is unsigned and may trigger a Windows SmartScreen warning.'),
+      node('p', 'The app processes files locally. The roster template targets Excel 2016 or later; Excel itself is not required by the app. One worksheet and up to 5,000 records per batch. Review every generated PDF before issue.'),
+      node('p', 'No online authenticity lookup, QR verification, email sending, or combined-PDF assembly. Printed participant IDs are references only.'));
   } else if (product.id === 'school-fee-reconciliation') {
     requirements.append(node('p', 'Macro-free offline workbook tested in Microsoft Excel desktop for Windows 16.0, build 13127. Other Excel releases, Mac, web and mobile are unverified. One school and one writer per file; an Excel licence may be required.'),
       node('p', 'Prepared capacity: 100 rows per master table, 500 charges and allocations each, and 300 payments, credits, releases and returns each. Fees, optional charges, allocations, printing and PDF export are manual. Worksheet protection prevents accidental edits and is not data security.'),

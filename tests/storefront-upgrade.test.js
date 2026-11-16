@@ -23,6 +23,21 @@ function store(file = 'index.html', query = '', catalogue = [product]) {
   return dom;
 }
 
+test('training certificate generator shows its six-theme visual and Windows release limits', () => {
+  const certificateTool = { ...product, id: 'training-certificate-generator', name: 'BGM Training Certificate & Letter Generator' };
+  const catalogue = store('index.html', '', [certificateTool]);
+  assert.equal(catalogue.window.document.querySelector('.cover img').getAttribute('src'), 'assets/training-certificate-generator-v1.1.0.png');
+  assert(fs.existsSync('assets/training-certificate-generator-v1.1.0.png'));
+  catalogue.window.close();
+
+  const detail = store('product.html', '?id=training-certificate-generator', [certificateTool]);
+  const requirements = detail.window.document.querySelector('.detail-content section:nth-child(2)').textContent;
+  assert.match(requirements, /has not been smoke-tested/);
+  assert.match(requirements, /unsigned/);
+  assert.match(requirements, /Printed participant IDs are references only/);
+  detail.window.close();
+});
+
 test('navigation works before the catalogue is available and closes after choosing a destination', () => {
   const dom = new JSDOM(fs.readFileSync('index.html', 'utf8'), { url: 'https://store.example', runScripts: 'outside-only' });
   const { window } = dom;
