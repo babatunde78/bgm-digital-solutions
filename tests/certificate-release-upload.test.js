@@ -20,7 +20,7 @@ Module._load = function (request, parent, isMain) {
   return originalLoad.call(this, request, parent, isMain);
 };
 process.env.CERTIFICATE_RELEASE_UPLOAD_TOKEN = secret;
-const handler = require('../api/certificate-release-upload');
+const handler = require('../api/store-status');
 Module._load = originalLoad;
 test.after(() => {
   if (previousSecret === undefined) delete process.env.CERTIFICATE_RELEASE_UPLOAD_TOKEN;
@@ -40,11 +40,12 @@ function response() {
 
 function request(method, headers = {}, body = {}) { return { method, headers, body }; }
 
-test('certificate release upload rejects unauthorized status reads', async () => {
+test('store status remains public without touching the uploader', async () => {
   uploadCalls = 0;
   const res = response();
   await handler(request('GET'), res);
-  assert.equal(res.code, 401);
+  assert.equal(res.code, 200);
+  assert.equal(typeof res.body.emailEnabled, 'boolean');
   assert.equal(uploadCalls, 0);
 });
 
@@ -65,6 +66,12 @@ test('certificate release upload denies a different pathname', async () => {
   const res = response();
   await handler(request('POST', {}, { phase: 'token', pathname: 'other.zip', clientPayload: secret }), res);
   assert.equal(res.code, 400);
+});
+
+test('certificate release upload rejects an incorrect one-time client credential', async () => {
+  const res = response();
+  await handler(request('POST', {}, { phase: 'token', pathname: 'training-certificate-generator/v1.2.0/training-certificate-generator-v1.2.0-customer.zip', clientPayload: 'wrong-token' }), res);
+  assert.equal(res.code, 401);
 });
 
 test('certificate release upload denies a missing temporary token', async () => {
