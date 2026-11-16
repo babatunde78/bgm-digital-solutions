@@ -7,25 +7,38 @@ const Module = require('node:module');
 const secret = 'test-release-token-at-least-thirty-two-chars';
 let uploadOptions;
 let uploadCalls;
+let signedResult;
 const previousSecret = process.env.CERTIFICATE_RELEASE_UPLOAD_TOKEN;
+const previousStore = process.env.BLOB_STORE_ID;
 const originalLoad = Module._load;
 Module._load = function (request, parent, isMain) {
-  if (request === '@vercel/blob/client') return { handleUpload: async options => {
+  if (request === '@vercel/blob/client') return { handleUploadPresigned: async options => {
     uploadOptions = options;
     uploadCalls += 1;
-    if (options.body?.phase === 'token') await options.onBeforeGenerateToken(options.body.pathname, options.body.clientPayload);
+    if (options.body?.type === 'blob.generate-presigned-url') {
+      signedResult = await options.getSignedToken(options.body.payload.pathname, options.body.payload.clientPayload, options.body.payload.multipart);
+    }
     return { accepted: true };
   } };
-  if (request === '@vercel/blob') return { get: async () => ({}), head: async () => ({}) };
+  if (request === '@vercel/blob') return {
+    get: async () => ({}),
+    head: async () => ({}),
+    issueSignedToken: async options => { signedTokenOptions = options; return { delegationToken: 'synthetic', clientSigningToken: 'synthetic', validUntil: options.validUntil }; },
+  };
   return originalLoad.call(this, request, parent, isMain);
 };
 process.env.CERTIFICATE_RELEASE_UPLOAD_TOKEN = secret;
+process.env.BLOB_STORE_ID = 'store_synthetic';
 const handler = require('../api/store-status');
 Module._load = originalLoad;
 test.after(() => {
   if (previousSecret === undefined) delete process.env.CERTIFICATE_RELEASE_UPLOAD_TOKEN;
   else process.env.CERTIFICATE_RELEASE_UPLOAD_TOKEN = previousSecret;
+  if (previousStore === undefined) delete process.env.BLOB_STORE_ID;
+  else process.env.BLOB_STORE_ID = previousStore;
 });
+
+let signedTokenOptions;
 
 function response() {
   return {
@@ -38,7 +51,7 @@ function response() {
   };
 }
 
-function request(method, headers = {}, body = {}) { return { method, headers, body }; }
+function request(method, headers = {}, body = {}) { return { method, headers: { 'x-vercel-oidc-token': 'synthetic-oidc', ...headers }, body }; }
 
 test('store status remains public without touching the uploader', async () => {
   uploadCalls = 0;
@@ -49,28 +62,34 @@ test('store status remains public without touching the uploader', async () => {
   assert.equal(uploadCalls, 0);
 });
 
-test('certificate release upload grants a token only for the pinned private ZIP', async () => {
+test('certificate release upload grants a presigned token only for the pinned private ZIP', async () => {
   uploadCalls = 0;
   const res = response();
-  await handler(request('POST', {}, { phase: 'token', pathname: 'training-certificate-generator/v1.2.0/training-certificate-generator-v1.2.0-customer.zip', clientPayload: secret }), res);
+  const body = { type: 'blob.generate-presigned-url', payload: { pathname: 'training-certificate-generator/v1.2.0/training-certificate-generator-v1.2.0-customer.zip', clientPayload: secret, multipart: true } };
+  await handler(request('POST', {}, body), res);
   assert.equal(res.code, 200);
   assert.equal(uploadCalls, 1);
-  const options = await uploadOptions.onBeforeGenerateToken(uploadOptions.body.pathname, uploadOptions.body.clientPayload);
-  assert.deepEqual(options.allowedContentTypes, ['application/zip']);
-  assert.equal(options.maximumSizeInBytes, 126638654);
-  assert.equal(options.addRandomSuffix, false);
-  assert.equal(options.tokenPayload, JSON.stringify({ pathname: 'training-certificate-generator/v1.2.0/training-certificate-generator-v1.2.0-customer.zip', size: 126638654, sha256: 'da610514c0afea27c49edee17f6c44091c303b6c82814f823812269ba8398bf5' }));
+  assert.equal(signedTokenOptions.pathname, 'training-certificate-generator/v1.2.0/training-certificate-generator-v1.2.0-customer.zip');
+  assert.deepEqual(signedTokenOptions.operations, ['put']);
+  assert.equal(signedTokenOptions.oidcToken, 'synthetic-oidc');
+  assert.equal(signedTokenOptions.storeId, 'store_synthetic');
+  assert.deepEqual(signedResult.urlOptions.allowedContentTypes, ['application/zip']);
+  assert.equal(signedResult.urlOptions.maximumSizeInBytes, 126638654);
+  assert.equal(signedResult.urlOptions.addRandomSuffix, false);
+  assert.equal(signedResult.urlOptions.allowOverwrite, false);
+  assert.equal(signedResult.urlOptions.tokenPayload, JSON.stringify({ pathname: 'training-certificate-generator/v1.2.0/training-certificate-generator-v1.2.0-customer.zip', size: 126638654, sha256: 'da610514c0afea27c49edee17f6c44091c303b6c82814f823812269ba8398bf5' }));
+  assert.deepEqual(uploadOptions.body, body);
 });
 
 test('certificate release upload denies a different pathname', async () => {
   const res = response();
-  await handler(request('POST', {}, { phase: 'token', pathname: 'other.zip', clientPayload: secret }), res);
+  await handler(request('POST', {}, { type: 'blob.generate-presigned-url', payload: { pathname: 'other.zip', clientPayload: secret, multipart: true } }), res);
   assert.equal(res.code, 400);
 });
 
 test('certificate release upload rejects an incorrect one-time client credential', async () => {
   const res = response();
-  await handler(request('POST', {}, { phase: 'token', pathname: 'training-certificate-generator/v1.2.0/training-certificate-generator-v1.2.0-customer.zip', clientPayload: 'wrong-token' }), res);
+  await handler(request('POST', {}, { type: 'blob.generate-presigned-url', payload: { pathname: 'training-certificate-generator/v1.2.0/training-certificate-generator-v1.2.0-customer.zip', clientPayload: 'wrong-token', multipart: true } }), res);
   assert.equal(res.code, 401);
 });
 

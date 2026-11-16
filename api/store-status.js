@@ -1,7 +1,7 @@
 'use strict';
 const crypto = require('node:crypto');
-const { handleUpload } = require('@vercel/blob/client');
-const { get, head } = require('@vercel/blob');
+const { handleUploadPresigned } = require('@vercel/blob/client');
+const { get, head, issueSignedToken } = require('@vercel/blob');
 const { endpoint, HttpError, equal } = require('../lib/http');
 const { emailEnabled } = require('../lib/config');
 
@@ -9,8 +9,15 @@ const pathname = 'training-certificate-generator/v1.2.0/training-certificate-gen
 const size = 126638654;
 const sha256 = 'da610514c0afea27c49edee17f6c44091c303b6c82814f823812269ba8398bf5';
 
-async function verifyStored() {
-  const options = { abortSignal: AbortSignal.timeout(150000) };
+function blobOptions(req) {
+  const oidcToken = req.headers['x-vercel-oidc-token'];
+  const storeId = process.env.BLOB_STORE_ID;
+  if (typeof oidcToken !== 'string' || typeof storeId !== 'string') throw new Error('Private Blob authentication is unavailable.');
+  return { oidcToken, storeId, abortSignal: AbortSignal.timeout(150000) };
+}
+
+async function verifyStored(req) {
+  const options = blobOptions(req);
   const metadata = await head(pathname, options);
   if (metadata.size !== size || !metadata.url.includes('.private.blob.vercel-storage.com/')) {
     throw new Error('Private release metadata verification failed.');
@@ -32,7 +39,7 @@ async function verifyStored() {
 const getStatus = endpoint('GET', async (req, res) => {
   const secret = process.env.CERTIFICATE_RELEASE_UPLOAD_TOKEN;
   if (typeof secret === 'string' && secret.length >= 32 && equal(req.headers.authorization, `Bearer ${secret}`)) {
-    await verifyStored();
+    await verifyStored(req);
     return res.status(200).json({ verified: true, pathname, size, sha256 });
   }
   return res.status(200).json({ emailEnabled: emailEnabled() });
@@ -41,24 +48,37 @@ const getStatus = endpoint('GET', async (req, res) => {
 const upload = endpoint('POST', async (req, res) => {
   const secret = process.env.CERTIFICATE_RELEASE_UPLOAD_TOKEN;
   if (typeof secret !== 'string' || secret.length < 32) throw new HttpError(503, 'Release upload is unavailable.');
-  const result = await handleUpload({
+  const result = await handleUploadPresigned({
     body: req.body,
     request: req,
-    onBeforeGenerateToken: async (requestedPath, clientPayload) => {
+    getSignedToken: async (requestedPath, clientPayload) => {
       if (!equal(clientPayload, secret)) throw new HttpError(401, 'Unauthorized.');
       if (requestedPath !== pathname) throw new HttpError(400, 'Invalid release path.');
-      return {
+      const options = {
+        ...blobOptions(req),
+        pathname,
+        operations: ['put'],
+        validUntil: Date.now() + 20 * 60 * 1000,
         allowedContentTypes: ['application/zip'],
         maximumSizeInBytes: size,
-        addRandomSuffix: false,
-        tokenPayload: JSON.stringify({ pathname, size, sha256 }),
+      };
+      const token = await issueSignedToken(options);
+      return {
+        token,
+        urlOptions: {
+          allowedContentTypes: ['application/zip'],
+          maximumSizeInBytes: size,
+          addRandomSuffix: false,
+          allowOverwrite: false,
+          tokenPayload: JSON.stringify({ pathname, size, sha256 }),
+        },
       };
     },
     onUploadCompleted: async ({ blob, tokenPayload }) => {
       if (blob.pathname !== pathname || tokenPayload !== JSON.stringify({ pathname, size, sha256 })) {
         throw new Error('Unexpected release upload.');
       }
-      await verifyStored();
+      await verifyStored(req);
     },
   });
   return res.status(200).json(result);
