@@ -23,7 +23,7 @@ const presentations = {
   'campus-bursary-full-excel': { image: 'campus-bursary-full-excel', format: 'Full bursary suite · Excel', audience: 'For institutions that want both operational packages plus manual ledger and control-account review schedules.' },
   'campus-bursary-documents': { image: 'campus-documents-pdf-mockup-v0.1.1', extension: 'png', imageFit: 'contain', width: 1102, height: 1378, usdReference: 148.11, usdRateDate: '2026-11-10', usdRateSource: 'CBN central rate', format: 'Offline Windows document software', audience: 'A focused offline Windows tool for receipts, student statements and payment vouchers; separate from the broader Campus Excel suites.' },
   'batch-and-balance': { image: 'batch-and-balance', format: 'Excel costing toolkit', audience: 'For custom cake sellers and small home bakeries already fulfilling paid orders.' },
-  'training-certificate-generator': { image: 'training-certificate-generator-v1.1.0', extension: 'png', width: 1536, height: 1024, usdReference: 18.61, usdRateDate: '2026-11-16', usdRateSource: 'ExchangeRates.me USD/NGN reference', format: 'Offline Windows certificate and letter app', audience: 'For Nigerian training organisations issuing participant certificates and completion letters from Excel rosters.' }
+  'training-certificate-generator': { image: 'training-certificate-generator-v1.1.0', extension: 'png', width: 1536, height: 1024, usdReference: '33.50', usdRateDate: '2026-11-16', usdRateSource: 'ExchangeRates.me mid-market reference (₦1,343.35 per US$1)', format: 'Offline Windows certificate and letter app', audience: 'For Nigerian training organisations issuing participant certificates and completion letters from Excel rosters, with 30 selectable designs.' }
 };
 
 function node(tag, text, className) {
@@ -150,6 +150,7 @@ function renderDetail() {
     requirements.append(node('p', 'Macro-free workbook tested in Windows desktop Excel 16.0, build 13127. Other versions and platforms are unverified. One writer, NGN only; Excel licence separate.'), node('p', 'Pack contents, recipe quantities, densities, yields and allocations are user inputs. Fictional examples are not production or food-safety advice. Manual snapshots, printing and PDF export. Sheet protection is not data security.'), node('p', 'No inventory, tax, nutrition, allergen, banking or food-safety system. Actual profit depends on complete costs.'));
   } else if (product.id === 'training-certificate-generator') {
     requirements.append(node('p', 'Windows 10/11 x64 is the target. The included installer was built locally but its complete installed-app import-to-PDF workflow has not been smoke-tested. The installer is unsigned and may trigger a Windows SmartScreen warning.'),
+      node('p', 'The app includes 30 certificate designs across six palettes and five page compositions, also available for completion letters.'),
       node('p', 'The app processes files locally. The roster template targets Excel 2016 or later; Excel itself is not required by the app. One worksheet and up to 5,000 records per batch. Review every generated PDF before issue.'),
       node('p', 'No online authenticity lookup, QR verification, email sending, or combined-PDF assembly. Printed participant IDs are references only.'));
   } else if (product.id === 'school-fee-reconciliation') {

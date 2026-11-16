@@ -23,18 +23,21 @@ function store(file = 'index.html', query = '', catalogue = [product]) {
   return dom;
 }
 
-test('training certificate generator shows its six-theme visual and Windows release limits', () => {
-  const certificateTool = { ...product, id: 'training-certificate-generator', name: 'BGM Training Certificate & Letter Generator' };
+test('training certificate generator shows 30 designs, current price reference and Windows release limits', () => {
+  const certificateTool = { ...product, id: 'training-certificate-generator', name: 'BGM Training Certificate & Letter Generator', price: '₦45,000.00', amounts: { NGN: 4500000 } };
   const catalogue = store('index.html', '', [certificateTool]);
   assert.equal(catalogue.window.document.querySelector('.cover img').getAttribute('src'), 'assets/training-certificate-generator-v1.1.0.png');
   assert(fs.existsSync('assets/training-certificate-generator-v1.1.0.png'));
+  assert.match(catalogue.window.document.querySelector('.price').textContent, /₦45,000\.00 \/ US\$33\.50 approximate equivalent/);
   catalogue.window.close();
 
   const detail = store('product.html', '?id=training-certificate-generator', [certificateTool]);
   const requirements = detail.window.document.querySelector('.detail-content section:nth-child(2)').textContent;
+  assert.match(requirements, /30 certificate designs across six palettes and five page compositions/);
   assert.match(requirements, /has not been smoke-tested/);
   assert.match(requirements, /unsigned/);
   assert.match(requirements, /Printed participant IDs are references only/);
+  assert.match(detail.window.document.querySelector('.detail-summary .small').textContent, /ExchangeRates\.me mid-market reference.*dated 16 Nov 2026/);
   detail.window.close();
 });
 
