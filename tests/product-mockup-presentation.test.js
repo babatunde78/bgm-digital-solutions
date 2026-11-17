@@ -17,9 +17,9 @@ const cases = [
     asset: 'drinks-stock-customer-book-mockup-v2.jpg'
   },
   {
-    id: 'social-seller-bookkeeping',
-    name: 'Social Seller Books & Settlement Check (Excel)',
-    asset: 'social-seller-bookkeeping.jpg'
+    id: 'contractor-cash-flow-planner',
+    name: 'Contractor Cash Flow Planner for Nigeria (Excel)',
+    asset: 'contractor-cash-flow-planner-mockup.jpg'
   }
 ];
 
