@@ -15,6 +15,11 @@ const cases = [
     id: 'drinks-stock-customer-book',
     name: 'BGM Drinks Stock & Customer Book',
     asset: 'drinks-stock-customer-book-mockup-v2.jpg'
+  },
+  {
+    id: 'social-seller-bookkeeping',
+    name: 'Social Seller Books & Settlement Check (Excel)',
+    asset: 'social-seller-bookkeeping.jpg'
   }
 ];
 

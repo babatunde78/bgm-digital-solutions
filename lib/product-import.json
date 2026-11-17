@@ -304,5 +304,17 @@
     "blob_pathnames": [
       "bakery-recipe-costing/v1.0.0/bakery-recipe-costing-v1.0.0-customer.zip"
     ]
+  },
+  {
+    "id": "social-seller-bookkeeping",
+    "name": "Social Seller Books & Settlement Check (Excel)",
+    "category": "Business Software",
+    "short": "Track delivered orders, match customer payments and reconcile Paystack payouts without counting settlement transfers as new sales.",
+    "description": "An offline Excel bookkeeping workbook for Nigerian Instagram and WhatsApp sellers who record orders manually and receive money through Paystack, bank transfer, cash or cash on delivery. Record sales, customer payments, allocation splits, refunds, delivery charges, processing fees, expenses, owner transactions and account transfers separately. Reconcile Paystack transaction and payout exports using configurable CSV templates.\n\nIncludes clean and fictional demonstration macro-free workbooks, normalized payment and payout CSV templates, quick-start guide, calculation notes, market research, validation results and sample statements. Up to 200 prepared rows per ledger sheet. Reports include a monthly cashbook, management profit-and-loss estimate, receivables, account reconciliation and printable customer statements.\n\nDesigned for one user in desktop Excel 2016 or later. No bank connection, provider API, automatic CSV import, inventory quantity tracking, tax filing, statutory accounting or multi-user synchronization. Map provider exports into the supplied normalized CSV format; this workbook does not assume fixed Paystack headers. Manual filtering, print setup and PDF export are required. Inventory is out of scope; capture order-level product cost at sale for management COGS. Results depend on complete, accurate records and are not tax or statutory accounts.\n\nOne-time price ₦15,000. Approximate reference US$11.05 at ₦1,357.19 per US$1 on 17 November 2026; not a USD checkout option or guaranteed card conversion.",
+    "features": ["Separate delivered sales, customer receipts, allocations and settlement transfers", "Split one customer payment across multiple orders and flag unallocated money", "Reconcile Paystack transactions, fees, payouts and bank deposits with configurable CSV templates", "Record partial refunds, credit notes, expenses, owner drawings and internal transfers", "Review monthly cashbook, management profit estimate, receivables and reconciliation exceptions", "Clean workbook, fictional demo, two CSV templates, instructions and calculation notes"],
+    "amounts": {"NGN": 1500000},
+    "status": "draft",
+    "delivery_ready": false,
+    "blob_pathnames": ["social-seller-bookkeeping/v1.0.0/social-seller-bookkeeping-v1.0.0-customer.zip"]
   }
 ]

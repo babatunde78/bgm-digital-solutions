@@ -22,11 +22,11 @@ test('import preserves existing product edits and uses the current guide asset i
   };
   const ids = require('../lib/product-import.json').map(product => product.id);
   const result = await importProducts(ids);
-  assert.equal(result.imported.length, 13);
+  assert.equal(result.imported.length, 14);
   assert.equal(written.some(product => product.id === first.id), false);
   const bundle = written.find(product => product.id === 'five-guide-bundle');
   assert.equal(bundle.blob_pathnames.length, 5); assert.equal(bundle.blob_pathnames[0], 'current/prompts-v2.zip');
-  assert.equal(result.checkedFiles, 13);
+  assert.equal(result.checkedFiles, 14);
   assert.equal(written.find(product => product.id === 'ai-side-hustles').amounts.NGN, 1200000);
   const campusA = written.find(product => product.id === 'campus-bursary-package-a');
   const campusB = written.find(product => product.id === 'campus-bursary-package-b');
@@ -91,6 +91,15 @@ test('Campus product copy explains practical differences without unsupported sup
     assert.equal(product.status, 'draft');
     assert.doesNotMatch(`${product.name} ${product.short} ${product.description}`, /market-leading|better than competitors|number one/i);
   }
+});
+test('social seller listing keeps one-time NGN pricing and stated operational limits', () => {
+  const product = require('../lib/product-import.json').find(item => item.id === 'social-seller-bookkeeping');
+  assert.equal(product.amounts.NGN, 1500000);
+  assert.equal(product.status, 'draft');
+  assert.equal(product.delivery_ready, false);
+  assert.match(product.description, /Manual filtering, print setup and PDF export are required/i);
+  assert.match(product.description, /not tax or statutory accounts/i);
+  assert.deepEqual(product.blob_pathnames, ['social-seller-bookkeeping/v1.0.0/social-seller-bookkeeping-v1.0.0-customer.zip']);
 });
 test('product synchronization requires the operator credential', async () => {
   process.env.CRON_SECRET = 'synthetic';
