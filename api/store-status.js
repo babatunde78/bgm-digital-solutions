@@ -5,6 +5,7 @@ const { get, head, issueSignedToken } = require('@vercel/blob');
 const { endpoint, HttpError, equal, secure } = require('../lib/http');
 const { emailEnabled } = require('../lib/config');
 
+// The temporary upload route accepts writes only for this checksum-pinned release.
 const pathname = 'sales-settlement-reconciler/v0.1.0/sales-settlement-reconciler-v0.1.0-customer.zip';
 const size = 43753;
 const sha256 = '6a9301c403e75b14fc23763b1c2d1fcf8187f66e090d8045d4b821bbe8655f01';
