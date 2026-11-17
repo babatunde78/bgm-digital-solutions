@@ -101,6 +101,19 @@ test('USD reference values are visible beside naira without enabling dollar chec
   dom.window.close();
 });
 
+test('Contractor Cash Flow Planner shows a dated USD reference while checkout stays in NGN', () => {
+  const planner = { ...product, id: 'contractor-cash-flow-planner', name: 'Contractor Cash Flow Planner for Nigeria (Excel)', price: '₦15,000.00', amounts: { NGN: 1500000 } };
+  const dom = store('product.html', '?id=contractor-cash-flow-planner', [planner]);
+  const doc = dom.window.document;
+  assert.equal(doc.querySelector('.detail-price').textContent, '₦15,000.00 / US$11.05 approximate equivalent (rate date 17 Nov 2026)');
+  assert.match(doc.querySelector('.detail-summary .small').textContent, /Proshare daily NAFEM rate \(FMDQ source\) dated 17 Nov 2026.*Checkout remains in NGN/);
+  doc.querySelector('#product-detail .buy').click();
+  assert.equal(doc.querySelectorAll('#checkout-currency option').length, 1);
+  assert.equal(doc.querySelector('#checkout-currency').value, 'NGN');
+  assert.equal(doc.querySelector('#checkout-product-name').textContent.includes('11.05'), false);
+  dom.window.close();
+});
+
 test('the university toolkit shows the owner supplied US$40.75 reference beside ₦54,900', () => {
   const toolkit = { ...product, id: 'bgm-collections-bank', price: '₦54,900.00', amounts: { NGN: 5490000 } };
   const dom = store('product.html', '?id=bgm-collections-bank', [toolkit]);
