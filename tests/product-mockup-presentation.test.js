@@ -62,3 +62,36 @@ for (const item of cases) {
     dom.window.close();
   });
 }
+
+test('Sales & Settlement Reconciler uses its illustrative cover and current USD reference', () => {
+  const product = {
+    id: 'sales-settlement-reconciler',
+    name: 'Sales & Settlement Reconciler',
+    category: 'Business Software',
+    short: 'Local reconciliation utility.',
+    description: 'Local reconciliation utility.',
+    features: ['Manual review'],
+    price: 'NGN 15,000.00',
+    amounts: { NGN: 1500000 },
+    paymentEnabled: true,
+    status: 'live'
+  };
+  const dom = new JSDOM(fs.readFileSync('product.html', 'utf8'), {
+    url: 'https://store.example/product.html?id=sales-settlement-reconciler',
+    runScripts: 'outside-only'
+  });
+  dom.window.PRODUCTS = [product];
+  dom.window.eval(fs.readFileSync('app.js', 'utf8'));
+  const image = dom.window.document.querySelector('#product-detail .detail-visual .cover img');
+  assert.ok(image);
+  assert.equal(image.getAttribute('src'), 'assets/sales-settlement-reconciler-mockup.png');
+  assert.equal(image.getAttribute('width'), '1536');
+  assert.equal(image.getAttribute('height'), '1024');
+  assert.match(dom.window.document.querySelector('#product-detail').textContent, /US\$11\.07/);
+  for (const file of ['assets/sales-settlement-reconciler-mockup.png', 'public/assets/sales-settlement-reconciler-mockup.png']) {
+    const bytes = fs.readFileSync(file);
+    assert.deepEqual([...bytes.subarray(0, 8)], [137, 80, 78, 71, 13, 10, 26, 10]);
+  }
+  assert.equal(fs.existsSync('public/Sales-Settlement-Reconciler-v0.1.0.zip'), false);
+  dom.window.close();
+});

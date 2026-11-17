@@ -14,6 +14,7 @@ fs.copyFileSync(path.resolve(__dirname, '../assets/campus-documents-pdf-mockup-v
 for (const name of ['paint-job-ledger-mockup','rent-clear-mockup']) fs.copyFileSync(path.resolve(__dirname, '../assets', name + '.png'), path.join(output, 'assets', name + '.png'));
 fs.copyFileSync(path.resolve(__dirname, '../assets/furniture-quote-invoice-mockup.png'), path.join(output, 'assets/furniture-quote-invoice-mockup.png'));
 fs.copyFileSync(path.resolve(__dirname, '../assets/training-certificate-generator-v1.1.0.png'), path.join(output, 'assets/training-certificate-generator-v1.1.0.png'));
+fs.copyFileSync(path.resolve(__dirname, '../assets/sales-settlement-reconciler-mockup.png'), path.join(output, 'assets/sales-settlement-reconciler-mockup.png'));
 const sampleDir = path.join(output, 'assets', 'campus-documents-samples');
 fs.mkdirSync(sampleDir, { recursive: true });
 for (const name of ['receipt', 'statement', 'voucher']) fs.copyFileSync(path.resolve(__dirname, '../assets/campus-documents-samples', name + '.pdf'), path.join(sampleDir, name + '.pdf'));
