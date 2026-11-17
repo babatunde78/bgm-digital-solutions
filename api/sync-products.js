@@ -37,11 +37,16 @@ async function readInput(req) {
 
 async function uploadSocialSellerPackage(buffer, authorization) {
   if (!validUploadToken(authorization?.replace(/^Bearer\s+/i, ''))) throw new HttpError(401, 'Unauthorized');
-  if (!process.env.VERCEL_OIDC_TOKEN || !process.env.BLOB_STORE_ID) throw new HttpError(503, 'Private storage is unavailable');
+  const auth = process.env.BLOB_READ_WRITE_TOKEN
+    ? { token: process.env.BLOB_READ_WRITE_TOKEN }
+    : process.env.VERCEL_OIDC_TOKEN && process.env.BLOB_STORE_ID
+      ? { oidcToken: process.env.VERCEL_OIDC_TOKEN, storeId: process.env.BLOB_STORE_ID }
+      : null;
+  if (!auth) throw new HttpError(503, 'Private storage is unavailable');
   if (!Buffer.isBuffer(buffer) || buffer.length !== expectedSize || createHash('sha256').update(buffer).digest('hex') !== expectedHash) {
     throw new HttpError(400, 'Release package checksum failed');
   }
-  const options = { oidcToken: process.env.VERCEL_OIDC_TOKEN, storeId: process.env.BLOB_STORE_ID, abortSignal: AbortSignal.timeout(120000) };
+  const options = { ...auth, abortSignal: AbortSignal.timeout(120000) };
   let exists = false;
   try { await head(filePath, options); exists = true; }
   catch (error) { if (!(error instanceof BlobNotFoundError)) throw error; }
