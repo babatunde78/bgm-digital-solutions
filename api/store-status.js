@@ -47,7 +47,7 @@ const getStatus = endpoint('GET', async (req, res) => {
 const upload = endpoint('POST', async (req, res) => {
   const secret = process.env.SALES_RECONCILER_RELEASE_UPLOAD_TOKEN;
   if (typeof secret !== 'string' || secret.length < 32) throw new HttpError(503, 'Release upload is unavailable.');
-  await handleUploadPresigned({
+  const response = await handleUploadPresigned({
     body: req.body,
     request: req,
     getSignedToken: async (requestedPath, clientPayload) => {
@@ -66,7 +66,7 @@ const upload = endpoint('POST', async (req, res) => {
       };
     },
   });
-  return res.status(200).json({ uploaded: true, pathname, size });
+  return res.status(200).json(response);
 });
 
 module.exports = (req, res) => {
