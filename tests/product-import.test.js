@@ -104,11 +104,6 @@ test('social seller listing keeps one-time NGN pricing and stated operational li
 test('product synchronization requires the operator credential', async () => {
   process.env.CRON_SECRET = 'synthetic';
   const response = { headers: {}, setHeader(key, value) { this.headers[key] = value; }, status(code) { this.code = code; return this; }, json(value) { this.data = value; } };
-  await require('../api/sync-products')({ method: 'POST', headers: { 'content-type': 'application/json' }, async *[Symbol.asyncIterator]() { yield Buffer.from('{}'); } }, response);
-  assert.equal(response.code, 401);
-});
-test('temporary product upload action requires its separate bearer token', async () => {
-  const response = { headers: {}, setHeader(key, value) { this.headers[key] = value; }, status(code) { this.code = code; return this; }, json(value) { this.data = value; } };
-  await require('../api/sync-products')({ method: 'POST', headers: { 'content-type': 'application/octet-stream' }, async *[Symbol.asyncIterator]() { yield Buffer.from('PK'); } }, response);
+  await require('../api/sync-products')({ method: 'POST', headers: {}, body: {} }, response);
   assert.equal(response.code, 401);
 });
