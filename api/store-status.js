@@ -65,10 +65,6 @@ const upload = endpoint('POST', async (req, res) => {
         },
       };
     },
-    onUploadCompleted: async ({ blob, tokenPayload }) => {
-      if (blob.pathname !== pathname || tokenPayload !== JSON.stringify({ pathname, size, sha256 })) throw new Error('Unexpected private release upload.');
-      await verifyStored(req);
-    },
   });
   return res.status(200).json({ uploaded: true, pathname, size });
 });
