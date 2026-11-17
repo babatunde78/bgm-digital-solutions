@@ -306,6 +306,18 @@
     ]
   },
   {
+    "id": "furniture-quote-invoice",
+    "name": "Workshop Quote-to-Invoice Workbook",
+    "category": "Business Software",
+    "short": "Cost custom furniture jobs, revise quotes and track staged invoices with one editable offline workbook.",
+    "description": "A macro-free Excel workbook for small Nigerian custom-furniture workshops. Connect customer and material catalogues, editable furniture specifications and component quantities, dated supplier rates, labour, delivery, installation, overhead, contingency and either markup or gross-margin pricing. Preserve quote revisions and accepted values, then carry them into invoices without retyping. Track staged receipts, balances and credit notes.\n\nIncludes clean and fictional demonstration workbooks, printable quote, invoice, receipt and credit-note layouts, quick-start instructions, calculation notes, market research and validation results.\n\nOne-time download: NGN 20,000. Approximate US$14.82 is a dated indicative USD/NGN reference from 17 November 2026, not a USD checkout price or guaranteed bank conversion. The starter dimensions, BOM quantities and prices are fictional and require fabricator review. This is a costing and document aid, not a furniture design, engineering, cut-list, inventory or tax-compliance system. One user, manual document numbering, one quote builder with up to 10 lines, manual value snapshots and manual print/PDF export. Excel 2016 or later is intended; native Excel acceptance for this release has not been verified. Download after confirmed payment in the original browser. Existing BGM purchase/access support and seven-day digital-product refunds apply.",
+    "features": ["Editable customer, furniture and dated supplier-price catalogues", "Per-item specifications, component quantities and transparent cost build-up", "Separate markup, gross-margin and configurable tax fields", "Quote revisions and accepted-price snapshot register", "Invoice conversion, staged receipts, balances and credit notes", "Printable customer-facing documents and fictional sample job", "Clean and demonstration workbooks, instructions and validation results"],
+    "amounts": { "NGN": 2000000 },
+    "status": "draft",
+    "delivery_ready": false,
+    "blob_pathnames": ["furniture-quote-invoice/v1.0.0/furniture-quote-invoice-v1.0.0-customer.zip"]
+  },
+  {
     "id": "social-seller-bookkeeping",
     "name": "Social Seller Books & Settlement Check (Excel)",
     "category": "Business Software",
