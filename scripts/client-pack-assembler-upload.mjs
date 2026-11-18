@@ -38,6 +38,8 @@ async function main() {
 }
 
 main().catch(error => {
-  process.stderr.write(`${error?.name || 'Error'}: private upload stopped; no credentials or URLs were printed.\n`);
+  const token = process.env.VERCEL_OIDC_TOKEN || process.env.BLOB_READ_WRITE_TOKEN || '';
+  const detail = String(error?.message || '').replaceAll(token, '[credential redacted]').replace(/https?:\/\/\S+/g, '[URL redacted]');
+  process.stderr.write(`${error?.name || 'Error'}: ${detail.slice(0, 220)}; no credentials or URLs were printed.\n`);
   process.exitCode = 1;
 });
