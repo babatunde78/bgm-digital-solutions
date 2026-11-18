@@ -22,11 +22,16 @@ test('import preserves existing product edits and uses the current guide asset i
   };
   const ids = require('../lib/product-import.json').map(product => product.id);
   const result = await importProducts(ids);
-  assert.equal(result.imported.length, 16);
+  assert.equal(result.imported.length, 17);
   assert.equal(written.some(product => product.id === first.id), false);
   const bundle = written.find(product => product.id === 'five-guide-bundle');
   assert.equal(bundle.blob_pathnames.length, 5); assert.equal(bundle.blob_pathnames[0], 'current/prompts-v2.zip');
-  assert.equal(result.checkedFiles, 16);
+  assert.equal(result.checkedFiles, 17);
+  const clientPack = written.find(product => product.id === 'client-pack-assembler');
+  assert.equal(clientPack.status, 'draft');
+  assert.equal(clientPack.delivery_ready, false);
+  assert.equal(clientPack.amounts.NGN, 2500000);
+  assert.equal(clientPack.blob_pathnames[0], 'client-pack-assembler/v0.1.0/bgm-client-pack-assembler-v0.1.0-customer.zip');
   const furniture = written.find(product => product.id === 'furniture-quote-invoice');
   assert.equal(furniture.status, 'draft');
   assert.equal(furniture.delivery_ready, false);

@@ -95,3 +95,25 @@ test('Sales & Settlement Reconciler uses its illustrative cover and current USD 
   assert.equal(fs.existsSync('public/Sales-Settlement-Reconciler-v0.1.0.zip'), false);
   dom.window.close();
 });
+
+test('Client Pack Assembler shows its illustrative cover, price reference and verified release limits', () => {
+  const product = {
+    id: 'client-pack-assembler', name: 'BGM Client Pack Assembler', category: 'Business Software',
+    short: 'Ordered local PDF packs.', description: 'Manifest-driven PDF packs.', features: ['Preflight'],
+    price: 'NGN 25,000.00', amounts: { NGN: 2500000 }, usdReference: 18.45,
+    paymentEnabled: true, status: 'live'
+  };
+  const dom = new JSDOM(fs.readFileSync('product.html', 'utf8'), {
+    url: 'https://store.example/product.html?id=client-pack-assembler', runScripts: 'outside-only'
+  });
+  dom.window.PRODUCTS = [product];
+  dom.window.eval(fs.readFileSync('app.js', 'utf8'));
+  const detail = dom.window.document.querySelector('#product-detail');
+  assert.equal(detail.querySelector('.detail-visual img').getAttribute('src'), 'assets/client-pack-assembler-mockup.png');
+  assert.match(detail.textContent, /US\$18\.45/);
+  assert.match(detail.textContent, /end-to-end GUI preflight and generation.*unverified/i);
+  assert.match(detail.textContent, /does not convert Office files or images/i);
+  assert.equal(fs.existsSync('public/assets/client-pack-assembler-mockup.png'), true);
+  assert.equal(fs.existsSync('public/bgm-client-pack-assembler-v0.1.0-customer.zip'), false);
+  dom.window.close();
+});
