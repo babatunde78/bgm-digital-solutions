@@ -57,3 +57,9 @@ test('upload rejects incorrect credentials and every other pathname', async () =
   await handler(request('POST', {}, { type: 'blob.generate-presigned-url', payload: { pathname: 'other.zip', clientPayload: secret, multipart: true } }), other);
   assert.equal(other.code, 400);
 });
+
+test('authenticated diagnostics expose only OIDC and store availability booleans', async () => {
+  const res = response();
+  await handler(request('GET', { 'x-client-pack-preflight': '1' }), res);
+  assert.deepEqual(res.body, { oidcHeaderPresent: true, storeIdPresent: true });
+});

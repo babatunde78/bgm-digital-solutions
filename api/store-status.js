@@ -37,6 +37,9 @@ async function verifyStored(req) {
 const getStatus = endpoint('GET', async (req, res) => {
   const secret = process.env.CLIENT_PACK_RELEASE_UPLOAD_TOKEN;
   if (typeof secret === 'string' && secret.length >= 32 && equal(req.headers.authorization, `Bearer ${secret}`)) {
+    if (req.headers['x-client-pack-preflight'] === '1') {
+      return res.status(200).json({ oidcHeaderPresent: typeof req.headers['x-vercel-oidc-token'] === 'string', storeIdPresent: typeof process.env.BLOB_STORE_ID === 'string' });
+    }
     await verifyStored(req);
     return res.status(200).json({ verified: true, pathname, size, sha256 });
   }
