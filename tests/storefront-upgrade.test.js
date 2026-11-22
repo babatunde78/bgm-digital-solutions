@@ -23,6 +23,24 @@ function store(file = 'index.html', query = '', catalogue = [product]) {
   return dom;
 }
 
+test('a published product detail sends one anonymous product view', () => {
+  const events = [];
+  for (const id of ['guide', 'unavailable', 'service']) {
+    const dom = new JSDOM(fs.readFileSync('product.html', 'utf8'), {
+      url: `https://store.example/product.html?id=${id}`, runScripts: 'outside-only'
+    });
+    dom.window.PRODUCTS = [product, { ...product, id: 'service', status: 'service', paymentEnabled: false }];
+    dom.window.fetch = async (url, options) => events.push({
+      url, data: JSON.parse(options.body), credentials: options.credentials
+    });
+    dom.window.eval(fs.readFileSync('app.js', 'utf8'));
+    dom.window.close();
+  }
+  assert.deepEqual(events, [{
+    url: '/api/store-status', data: { event: 'product_viewed', productId: 'guide' }, credentials: 'omit'
+  }]);
+});
+
 test('navigation works before the catalogue is available and closes after choosing a destination', () => {
   const dom = new JSDOM(fs.readFileSync('index.html', 'utf8'), { url: 'https://store.example', runScripts: 'outside-only' });
   const { window } = dom;
