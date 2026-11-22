@@ -101,6 +101,30 @@ test('USD reference values are visible beside naira without enabling dollar chec
   dom.window.close();
 });
 
+test('restored products show their naira and dated USD references while checkout stays in naira', () => {
+  const restored = [
+    ['client-pack-assembler', '18.45', '17 Nov 2026'],
+    ['contractor-cash-flow-planner', '11.05', '17 Nov 2026'],
+    ['drinks-stock-customer-book', '9.24', '15 Nov 2026'],
+    ['furniture-quote-invoice', '14.82', '17 Nov 2026'],
+    ['rental-income-arrears-ledger', '9.3', '15 Nov 2026'],
+    ['sales-settlement-reconciler', '11.07', '17 Nov 2026'],
+    ['social-seller-bookkeeping', '11.01', '18 Nov 2026'],
+    ['training-certificate-generator', '33.02', '18 Nov 2026']
+  ];
+  const items = restored.map(([id]) => ({ ...product, id, price: 'NGN 15,000.00', amounts: { NGN: 1500000 }, paymentEnabled: true }));
+  const dom = store('index.html', '', items);
+  const doc = dom.window.document;
+  const prices = [...doc.querySelectorAll('.price')].map(element => element.textContent);
+  for (const [, usd, date] of restored) {
+    assert.ok(prices.some(text => text.includes(`US$${usd} approximate equivalent (rate date ${date})`)));
+  }
+  doc.querySelector('.buy').click();
+  assert.equal(doc.querySelectorAll('#checkout-currency option').length, 1);
+  assert.equal(doc.querySelector('#checkout-currency').value, 'NGN');
+  dom.window.close();
+});
+
 test('the university toolkit shows the owner supplied US$40.75 reference beside ₦54,900', () => {
   const toolkit = { ...product, id: 'bgm-collections-bank', price: '₦54,900.00', amounts: { NGN: 5490000 } };
   const dom = store('product.html', '?id=bgm-collections-bank', [toolkit]);
