@@ -6,14 +6,14 @@ const modal = $('#modal'), checkoutModal = $('#checkout-modal');
 const form = $('#checkout-form'), errorBox = $('#checkout-error'), submit = $('#checkout-submit');
 let selection = null, requestVersion = 0, lastFocus, audience = 'all';
 const presentations = {
-  'client-pack-assembler': { image: 'client-pack-assembler-mockup', extension: 'png', width: 1536, height: 1024 },
-  'contractor-cash-flow-planner': { image: 'contractor-cash-flow-planner-mockup', extension: 'jpg', width: 1200, height: 800 },
-  'drinks-stock-customer-book': { image: 'drinks-stock-customer-book-mockup-v2', extension: 'jpg', width: 1200, height: 800 },
-  'furniture-quote-invoice': { image: 'furniture-quote-invoice-mockup', extension: 'png', width: 1536, height: 1024 },
-  'rental-income-arrears-ledger': { image: 'rental-income-arrears-ledger-mockup-v2', extension: 'jpg', width: 1200, height: 800 },
-  'sales-settlement-reconciler': { image: 'sales-settlement-reconciler-mockup', extension: 'png', width: 1536, height: 1024 },
-  'social-seller-bookkeeping': { image: 'social-seller-bookkeeping', extension: 'jpg', width: 1200, height: 800 },
-  'training-certificate-generator': { image: 'training-certificate-generator-v1.1.0', extension: 'png', width: 1536, height: 1024 },
+  'client-pack-assembler': { image: 'client-pack-assembler-mockup', extension: 'png', width: 1536, height: 1024, usdReference: 18.45, usdRateDate: '2026-11-17', usdRateSource: 'CBN central reference displayed by Canjean' },
+  'contractor-cash-flow-planner': { image: 'contractor-cash-flow-planner-mockup', extension: 'jpg', width: 1200, height: 800, usdReference: 11.05, usdRateDate: '2026-11-17', usdRateSource: 'Proshare daily NAFEM rate (FMDQ source)' },
+  'drinks-stock-customer-book': { image: 'drinks-stock-customer-book-mockup-v2', extension: 'jpg', width: 1200, height: 800, usdReference: 9.24, usdRateDate: '2026-11-15', usdRateSource: 'CEII USD/NGN mid-market reference' },
+  'furniture-quote-invoice': { image: 'furniture-quote-invoice-mockup', extension: 'png', width: 1536, height: 1024, usdReference: 14.82, usdRateDate: '2026-11-17', usdRateSource: 'ForexInvestors indicative USD/NGN reference' },
+  'rental-income-arrears-ledger': { image: 'rental-income-arrears-ledger-mockup-v2', extension: 'jpg', width: 1200, height: 800, usdReference: 9.30, usdRateDate: '2026-11-15', usdRateSource: 'Public USD/NGN exchange-rate reference' },
+  'sales-settlement-reconciler': { image: 'sales-settlement-reconciler-mockup', extension: 'png', width: 1536, height: 1024, usdReference: 11.07, usdRateDate: '2026-11-17', usdRateSource: 'CBN central reference displayed by Canjean' },
+  'social-seller-bookkeeping': { image: 'social-seller-bookkeeping', extension: 'jpg', width: 1200, height: 800, usdReference: 11.01, usdRateDate: '2026-11-18', usdRateSource: 'Approximate equivalent at CBN central reference of NGN 1,362.73/USD' },
+  'training-certificate-generator': { image: 'training-certificate-generator-v1.1.0', extension: 'png', width: 1536, height: 1024, usdReference: 33.02, usdRateDate: '2026-11-18', usdRateSource: 'Approximate equivalent at CBN central reference of NGN 1,362.73/USD' },
   'bakery-recipe-costing': { image: 'bakery-recipe-costing', width: 1536, height: 1024, usdReference: 18.49, usdRateDate: '2026-11-14', usdRateSource: 'CEII mid-market reference (ExchangeRate-API)', format: 'Bakery recipe costing - Excel', audience: 'For Nigerian small bakers and caterers updating ingredient prices and checking products due for repricing.' },
   'aluminium-job-costing': { image: 'aluminium-job-costing', width: 1536, height: 1024, usdReference: 18.49, usdRateDate: '2026-11-14', usdRateSource: 'CEII mid-market reference (ExchangeRate-API)', format: 'Fabricator costing and quotations - Excel', audience: 'For small Nigerian aluminium window and door workshops connecting measurements, quote versions, variations and actual job costs.' },
   'school-fee-reconciliation': { image: 'school-fee-reconciliation', usdReference: 7.39, usdRateDate: '2026-11-14', usdRateSource: 'CEII mid-market reference (ExchangeRate-API)', format: 'School fee reconciliation - Excel', audience: 'For Nigerian private-school proprietors and bursars allocating family payments across siblings, charges and terms.' },
