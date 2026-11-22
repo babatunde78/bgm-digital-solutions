@@ -260,6 +260,7 @@ function renderDetail() {
     }
   }
   target.replaceChildren(intro, content);
+  if (product.status === 'live') trackStorefront('product_viewed', product.id);
 }
 function show(dialog) {
   lastFocus = document.activeElement;

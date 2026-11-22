@@ -7,8 +7,10 @@ const { emailEnabled, storefrontAnalytics } = require('../lib/config');
 const captureEvent = endpoint('POST', async (req, res) => {
   sameOrigin(req);
   const { event, productId } = body(req);
+  const productEvent = event === 'checkout_started' || event === 'product_viewed';
+  const payrollSample = event === 'payroll_sample_opened' && productId === 'nigeria-small-employer-payroll';
   if (typeof productId !== 'string' || !/^[a-z0-9-]{1,100}$/.test(productId) ||
-      (event !== 'checkout_started' && (event !== 'payroll_sample_opened' || productId !== 'nigeria-small-employer-payroll'))) {
+      (!productEvent && !payrollSample)) {
     throw new HttpError(400, 'Invalid storefront event.', 'invalid_storefront_event');
   }
 
