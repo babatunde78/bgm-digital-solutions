@@ -18,6 +18,28 @@ test('catalogue strings cannot inject HTML or inline JavaScript and currencies f
   window.document.querySelector('#checkout-close').click();assert.equal(window.document.querySelector('#checkout-modal').hidden,true);
   dom.window.close();
 });
+test('published product details expose matching Product structured data',()=>{
+  const dom=new JSDOM(fs.readFileSync('product.html','utf8'),{url:'https://store.example/product.html?id=school-fee-reconciliation',runScripts:'outside-only'});
+  const {window}=dom;
+  window.PRODUCTS=[{id:'school-fee-reconciliation',name:'School Fee Reconciliation',category:'School Administration',short:'Allocate family payments across students and terms.',description:'A workbook for reconciling school fees.',features:['Payment allocation'],price:'NGN 7,500',amounts:{NGN:750000},paymentEnabled:true,status:'live'}];
+  window.eval(fs.readFileSync('app.js','utf8'));
+  const data=JSON.parse(window.document.querySelector('#product-structured-data').textContent);
+  assert.equal(data['@type'],'Product');
+  assert.equal(data.name,'School Fee Reconciliation');
+  assert.equal(data.offers[0].priceCurrency,'NGN');
+  assert.equal(data.offers[0].price,'7500.00');
+  assert.equal(data.offers[0].url,window.location.href);
+  assert.equal(window.document.querySelectorAll('#product-detail h1').length,1);
+  dom.window.close();
+});
+test('product structured data omits currency offers when one URL shows multiple checkout currencies',()=>{
+  const dom=new JSDOM(fs.readFileSync('product.html','utf8'),{url:'https://store.example/product.html?id=school-fee-reconciliation',runScripts:'outside-only'});
+  dom.window.PRODUCTS=[{id:'school-fee-reconciliation',name:'School Fee Reconciliation',category:'School Administration',short:'Allocate family payments across students and terms.',description:'A workbook for reconciling school fees.',features:[],price:'NGN 7,500 / GHS 900',amounts:{NGN:750000,GHS:90000},paymentEnabled:true,status:'live'}];
+  dom.window.eval(fs.readFileSync('app.js','utf8'));
+  const data=JSON.parse(dom.window.document.querySelector('#product-structured-data').textContent);
+  assert.equal(Object.hasOwn(data,'offers'),false);
+  dom.window.close();
+});
 test('store and purchase support links use the supplied WhatsApp number',()=>{
   for(const file of ['index.html','payment-success.html']){
     const dom=new JSDOM(fs.readFileSync(file,'utf8'));

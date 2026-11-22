@@ -144,6 +144,30 @@ function renderDetail() {
   if (product.status !== 'service') visual.append(node('figcaption', 'Illustrative mockup. Digital download; no physical product.'));
   const detailImage = visual.querySelector('img');
   if (detailImage) { detailImage.loading = 'eager'; detailImage.fetchPriority = 'high'; }
+  const structuredData = document.createElement('script');
+  structuredData.id = 'product-structured-data';
+  structuredData.type = 'application/ld+json';
+  structuredData.textContent = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: product.name,
+    description: product.description,
+    category: product.category,
+    sku: product.id,
+    ...(detailImage ? { image: new URL(detailImage.src, location.origin).href } : {}),
+    brand: { '@type': 'Brand', name: 'BGM Digital Solutions' },
+    ...(product.paymentEnabled && Object.keys(product.amounts).length === 1 ? {
+      offers: Object.entries(product.amounts).map(([priceCurrency, amount]) => ({
+        '@type': 'Offer',
+        url: location.href,
+        priceCurrency,
+        price: (amount / 100).toFixed(2),
+        availability: 'https://schema.org/InStock',
+        itemCondition: 'https://schema.org/NewCondition'
+      }))
+    } : {})
+  });
+  document.head.append(structuredData);
   summary.append(node('p', product.category, 'eyebrow'), node('h1', product.name), node('p', product.short, 'page-intro'));
   if (presentation) summary.append(node('p', presentation.audience, 'audience-description'));
   const isPayrollWorkbook = product.id === 'nigeria-small-employer-payroll';
