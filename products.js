@@ -123,7 +123,7 @@ status: "draft",
       "Workflow automation"
     ],
     paymentEnabled: false,
-    checkoutUrl: "mailto:badmurs0@gmail.com?subject=Payroll%20and%20Payslip%20Automation%20Enquiry",
+    checkoutUrl: "mailto:bgmsolutionsdigital@gmail.com?subject=Payroll%20and%20Payslip%20Automation%20Enquiry",
     status: "service"
   },
 

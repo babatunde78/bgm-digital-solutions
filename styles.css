@@ -17,3 +17,15 @@
 .cover img.cover-contained{object-fit:contain;padding:10px;background:var(--paper)}
 
 .detail-content .product-description{white-space:pre-line}
+
+.dashboard-preview figure{margin:0}
+.dashboard-preview img{display:block;width:100%;height:auto;border:1px solid var(--line)}
+.dashboard-preview figcaption{font-size:.85rem;color:var(--muted);margin-top:.75rem}
+.product-comparison{margin-bottom:20px}
+.product-comparison summary{width:fit-content}
+.comparison-scroll{overflow-x:auto;margin-bottom:16px}
+.product-comparison table{width:100%;min-width:40rem;border-collapse:collapse;font-size:.85rem;text-align:left}
+.product-comparison th,.product-comparison td{padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+.product-comparison thead{background:var(--soft)}
+.product-comparison tbody a{text-decoration:underline;text-underline-offset:3px}
+.product-comparison td p{margin:6px 0 0;padding:0}

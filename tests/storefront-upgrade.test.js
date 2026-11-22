@@ -238,8 +238,13 @@ test('a single payment currency is displayed without asking the buyer to choose'
 test('session rejection shows the server reason and does not initialize a payment', async () => {
   const dom = store();
   const requests = [];
-  dom.window.fetch = async url => {
+  dom.window.fetch = async (url, options) => {
     requests.push(url);
+    if (url === '/api/store-status') {
+      assert.deepEqual(JSON.parse(options.body), { event: 'checkout_started', productId: 'guide' });
+      assert.equal(options.credentials, 'omit');
+      return { ok: true, status: 204 };
+    }
     return { ok: false, status: 403, json: async () => ({ error: 'Please submit this form from the store.' }) };
   };
   const doc = dom.window.document;
@@ -248,7 +253,7 @@ test('session rejection shows the server reason and does not initialize a paymen
   doc.querySelector('#checkout-form').dispatchEvent(new dom.window.Event('submit', { cancelable: true }));
   await new Promise(resolve => setImmediate(resolve));
   assert.equal(doc.querySelector('#checkout-error').textContent, 'Please submit this form from the store.');
-  assert.deepEqual(requests, ['/api/session']);
+  assert.deepEqual(requests, ['/api/store-status', '/api/session']);
   assert.equal(doc.querySelector('#checkout-submit').disabled, false);
   dom.window.close();
 });
@@ -259,6 +264,7 @@ test('closing checkout while the session starts prevents payment initialization'
   let finishSession;
   dom.window.fetch = url => {
     requests.push(url);
+    if (url === '/api/store-status') return Promise.resolve({ ok: true, status: 204 });
     if (url === '/api/session') return new Promise(resolve => { finishSession = resolve; });
     return Promise.resolve({ ok: false, json: async () => ({ error: 'Unexpected initialization' }) });
   };
@@ -270,7 +276,7 @@ test('closing checkout while the session starts prevents payment initialization'
   finishSession({ ok: true });
   await new Promise(resolve => setImmediate(resolve));
   dom.window.close();
-  assert.deepEqual(requests, ['/api/session']);
+  assert.deepEqual(requests, ['/api/store-status', '/api/session']);
 });
 
 test('download buttons are hidden while payment access is being rechecked', async () => {

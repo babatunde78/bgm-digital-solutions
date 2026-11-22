@@ -52,8 +52,14 @@ test('published desktop release accurately advertises price, delivery and limita
   assert.match(document.querySelector('.product-screen figcaption')?.textContent || '', /Illustrative PDF document mockup, not an issued record/);
   assert.ok(fs.existsSync('assets/campus-documents-pdf-mockup-v0.1.1.png'));
   assert.match(pageText, /Indicative equivalent: about US\$148\.11.*CBN central rate dated 10 November 2026.*checkout is NGN-only/i);
-  assert.match(document.querySelector('#difference-title')?.textContent || '', /focused document tool alongside Campus Excel/i);
-  assert.match(pageText, /Package A covers broader student-fee and treasury schedules.*Package B covers budgets, commitments, suppliers and expenditure/i);
+  const editions = [...document.querySelectorAll('#compare-campus tbody tr')];
+  assert.deepEqual(editions.map(row => row.querySelector('th a').textContent), [
+    'Campus Bursary Documents', 'Package A', 'Package B', 'Full Excel'
+  ]);
+  assert.deepEqual(editions.map(row => row.lastElementChild.textContent), [
+    'Windows 11 x64. Runs without Excel.',
+    ...Array(3).fill('Microsoft 365 Excel for Windows, 64-bit')
+  ]);
   assert.equal(document.querySelector('.text-link')?.getAttribute('href'), '#samples');
   assert.equal(document.querySelector('#samples')?.tagName, 'SECTION');
   assert.match(pageText, /fictional sample data/i);

@@ -21,6 +21,7 @@ const presentations = {
   'campus-bursary-package-a': { image: 'campus-bursary-a', format: 'Student revenue & treasury · Excel', audience: 'For student-accounts and treasury teams that need traceable schedules from fee billing through receipt allocation and settlement review.' },
   'campus-bursary-package-b': { image: 'campus-bursary-b', format: 'Budget & expenditure control · Excel', audience: 'For bursary teams reviewing budgets, commitments, supplier bills, payments, advances and actual expenditure.' },
   'campus-bursary-full-excel': { image: 'campus-bursary-full-excel', format: 'Full bursary suite · Excel', audience: 'For institutions that want both operational packages plus manual ledger and control-account review schedules.' },
+  'nigeria-small-employer-payroll': { image: 'nigeria-small-employer-payroll-mockup-v1', extension: 'png', width: 1536, height: 1024, usdReference: 18.35, usdRateDate: '2026-11-18', usdRateSource: 'CBN central reference reported at ₦1,362.73/USD', format: 'Offline payroll and payslips · Excel', audience: 'For small Nigerian employers organising monthly payroll and reviewed deductions before professional sign-off.' },
   'campus-bursary-documents': { image: 'campus-documents-pdf-mockup-v0.1.1', extension: 'png', imageFit: 'contain', width: 1102, height: 1378, usdReference: 148.11, usdRateDate: '2026-11-10', usdRateSource: 'CBN central rate', format: 'Offline Windows document software', audience: 'A focused offline Windows tool for receipts, student statements and payment vouchers; separate from the broader Campus Excel suites.' },
   'batch-and-balance': { image: 'batch-and-balance', format: 'Excel costing toolkit', audience: 'For custom cake sellers and small home bakeries already fulfilling paid orders.' }
 };
@@ -77,6 +78,25 @@ function render() {
   const items = products.filter(p => (category.value === 'all' || p.category === category.value) &&
     (audience === 'all' || (audience === 'learning' ? ['Career Guides', 'Education Guides', 'Bundles'].includes(p.category) : ['Business Resources', 'Business Software', 'Bundles'].includes(p.category))) &&
     `${p.name} ${p.short} ${p.category}`.toLowerCase().includes(query));
+  const comparison = $('#compare');
+  if (comparison) {
+    const rows = items.filter(product => product.status === 'live').map(product => {
+      const presentation = presentations[product.id];
+      const link = node('a', product.name);
+      link.href = 'product.html?id=' + encodeURIComponent(product.id);
+      const heading = node('th');
+      heading.scope = 'row';
+      heading.append(link);
+      const use = node('td', product.short);
+      if (presentation?.audience) use.append(node('p', presentation.audience));
+      const row = node('tr');
+      row.append(heading, use, node('td', presentation?.format || product.category),
+        node('td', product.price || 'See product details'));
+      return row;
+    });
+    $('#comparison-rows').replaceChildren(...rows);
+    comparison.hidden = rows.length === 0;
+  }
   grid.replaceChildren(...items.map(p => {
     const card = node('article', undefined, 'card'), body = node('div', undefined, 'card-body');
     const actions = node('div', undefined, 'card-actions');
@@ -94,6 +114,16 @@ function render() {
   grid.setAttribute('aria-busy', 'false');
 }
 if (grid) grid.before(node('p', 'USD values are for reference. Checkout charges Nigerian naira (NGN); your bank’s conversion may differ. Product images are illustrative mockups.', 'small collection-note'));
+function trackStorefront(event, productId) {
+  window.fetch?.('/api/store-status', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ event, productId }),
+    credentials: 'omit',
+    referrerPolicy: 'no-referrer',
+    keepalive: true
+  }).catch(() => {});
+}
 function renderDetail() {
   const target = $('#product-detail');
   if (!target) return;
@@ -116,7 +146,17 @@ function renderDetail() {
   if (detailImage) { detailImage.loading = 'eager'; detailImage.fetchPriority = 'high'; }
   summary.append(node('p', product.category, 'eyebrow'), node('h1', product.name), node('p', product.short, 'page-intro'));
   if (presentation) summary.append(node('p', presentation.audience, 'audience-description'));
-  summary.append(node('div', displayPrice(product), 'detail-price'), purchaseAction(product, 'btn primary buy'));
+  const isPayrollWorkbook = product.id === 'nigeria-small-employer-payroll';
+  const buy = purchaseAction(product, 'btn primary buy');
+  summary.append(node('div', displayPrice(product), 'detail-price'));
+  if (isPayrollWorkbook) {
+    const sampleLink = node('a', 'View sample', 'btn');
+    sampleLink.href = '#payroll-sample';
+    sampleLink.addEventListener('click', () => trackStorefront('payroll_sample_opened', product.id));
+    const actions = node('div', undefined, 'actions');
+    actions.append(buy, sampleLink);
+    summary.append(actions);
+  } else summary.append(buy);
   if ((product.usdReference || presentation?.usdReference) && !product.amounts?.USD) {
     const rateDate = product.usdRateDate || presentation?.usdRateDate;
     const rateSource = presentation?.usdRateSource;
@@ -151,6 +191,10 @@ function renderDetail() {
     requirements.append(node('p', 'Macro-free offline workbook tested in Microsoft Excel desktop for Windows 16.0, build 13127. Other Excel releases, Mac, web and mobile are unverified. One school and one writer per file; an Excel licence may be required.'),
       node('p', 'Prepared capacity: 100 rows per master table, 500 charges and allocations each, and 300 payments, credits, releases and returns each. Fees, optional charges, allocations, printing and PDF export are manual. Worksheet protection prevents accidental edits and is not data security.'),
       node('p', 'Unallocated family credit is shown separately from student debt. Reconcile against actual bank and cash evidence. No bank connection, online school-fee collection, automated reminders or secure multi-user access is included.'));
+  } else if (isPayrollWorkbook) {
+    requirements.append(
+      node('p', 'Designed for desktop Microsoft Excel 2016 or later. The workbook is macro-free and works offline for one user. Native Excel, Excel for the web and LibreOffice compatibility have not been verified.'),
+      node('p', 'Have a qualified Nigerian payroll professional review your rules and deductions before live use. Enter reviewed PAYE and statutory amounts manually. Printing and PDF export are manual.'));
   } else if (product.id === 'bgm-collections-bank') {
     requirements.append(node('p', 'This is an offline Excel toolkit. It compares receipts, Paystack records, settlements, bank deposits and cashbook entries. It does not connect to your bank account.'),
       node('p', 'Ask BGM to confirm compatibility with your Excel version, input files and intended use before buying.'));
@@ -161,6 +205,29 @@ function renderDetail() {
   const access = node('section');
   access.append(node('h2', 'Your files & support'), node('p', 'After payment, return to the confirmation page to download your files. Keep the page in the same browser. For access on another device, contact support with your payment reference and checkout email.'));
   const support = node('a', 'Downloads, support & 7-day refunds →', 'text-link'); support.href = 'support.html'; access.append(support);
+  if (isPayrollWorkbook) {
+    const sample = node('section', undefined, 'dashboard-preview');
+    sample.id = 'payroll-sample';
+    const figure = node('figure');
+    const image = node('img');
+    image.src = 'assets/payroll-sample-payslip.png';
+    image.alt = 'Fictional October payslip showing NGN 347,000 gross pay, NGN 24,500 in reviewed deductions and NGN 322,500 net pay.';
+    image.width = 1022;
+    image.height = 566;
+    image.loading = 'lazy';
+    const fullSize = node('a');
+    fullSize.href = image.src;
+    fullSize.setAttribute('aria-label', 'Open full-size sample payslip');
+    fullSize.append(image);
+    figure.append(fullSize, node('figcaption', 'Payslip worksheet from the demonstration workbook, using fictional employer and employee records.'));
+    const steps = node('ol', undefined, 'included-list');
+    steps.append(
+      node('li', 'Set the pay period and enter employee records and effective-dated pay structures.'),
+      node('li', 'Enter reviewed deductions in the payroll register and check the gross-to-net reconciliation.'),
+      node('li', 'Select an employee’s payroll row on the Payslip sheet, review the layout, then print or export to PDF from Excel.'));
+    sample.append(node('h2', 'Sample payslip and walkthrough'), figure, steps);
+    content.append(sample);
+  }
   content.append(included, requirements);
   if (product.status !== 'service') content.append(access);
   if (product.id === 'five-guide-bundle') {
@@ -233,6 +300,7 @@ function startPayment(id) {
   currency.onchange = () => { $('#checkout-product-name').textContent = product.name + ' — ' + currency.selectedOptions[0].textContent; };
   errorBox.hidden = true; submit.disabled = false; submit.textContent = 'Continue to secure payment';
   show(checkoutModal); $('#checkout-email').focus();
+  trackStorefront('checkout_started', product.id);
 }
 $('#close').addEventListener('click', () => closeDialog(modal));
 $('#checkout-close').addEventListener('click', () => closeDialog(checkoutModal));
@@ -290,10 +358,10 @@ form.addEventListener('submit', async event => {
   }
 });
 search?.addEventListener('input', render); category?.addEventListener('change', render);
-for (const element of document.querySelectorAll('[data-filter], [data-audience]')) {
+for (const element of document.querySelectorAll('[data-filter], [data-audience], [data-task]')) {
   element.addEventListener('click', () => {
-    audience = element.dataset.filter || element.dataset.audience;
-    category.value = 'all'; search.value = '';
+    audience = element.dataset.filter || element.dataset.audience || 'all';
+    category.value = 'all'; search.value = element.dataset.task || '';
     for (const tab of document.querySelectorAll('[data-filter]')) tab.setAttribute('aria-pressed', String(tab.dataset.filter === audience));
     render();
   });

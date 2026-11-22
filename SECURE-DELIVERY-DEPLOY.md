@@ -58,6 +58,8 @@ Then run “Process payment inbox and emails” manually once. Enable Actions fo
 
 The callback can confirm purchases immediately even before the next worker run. The worker is necessary for independent confirmation if the browser never returns. Do not enable production checkout without a working scheduler.
 
+Migration `20261122182006_purchase_analytics.sql` is already recorded on the shared storefront Supabase project. For a new environment, apply it after the base payments migration before deploying the worker. With the Production PostHog token and region configured, the live payment worker sends verified purchases using their confirmation timestamps. The chart counts distinct order-scoped identifiers so retries do not add purchases. It counts gross confirmed purchases, including later refunds.
+
 ## 5. Publish only deliverable products
 
 Use Supabase `products`; do not edit static browser prices or legacy `_products.js` to activate checkout.
