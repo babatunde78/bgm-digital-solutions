@@ -1,6 +1,7 @@
 'use strict';
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
+const { execFileSync } = require('node:child_process');
 const fs = require('node:fs');
 const path = require('node:path');
 const { JSDOM } = require('jsdom');
@@ -17,6 +18,7 @@ const products = [
 ];
 
 test('restored product mockups appear on cards and detail pages and ship in the public build', () => {
+  execFileSync(process.execPath, ['scripts/build.js'], { stdio: 'ignore' });
   for (const [id, asset] of products) {
     for (const [page, selector] of [['index.html', '#product-grid .cover img'], ['product.html', '#product-detail .cover img']]) {
       const dom = new JSDOM(fs.readFileSync(page, 'utf8'), {
