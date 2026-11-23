@@ -28,5 +28,30 @@ if (menu && navigation) {
     menu.focus();
   });
 }
+const storeHelp = document.querySelector('#store-help');
+if (storeHelp) {
+  storeHelp.addEventListener('click', event => {
+    const link = event.target.closest('a');
+    if (!link) return;
+    storeHelp.open = false;
+    if (link.hash === '#compare') {
+      const comparison = document.querySelector('#compare');
+      if (comparison.hidden) {
+        event.preventDefault();
+        document.querySelector('#search').focus();
+        return;
+      }
+      comparison.open = true;
+      comparison.querySelector('summary').focus();
+    }
+    if (link.hash === '#faq') document.querySelector('#faq-heading').focus();
+  });
+  storeHelp.addEventListener('keydown', event => {
+    if (event.key !== 'Escape' || !storeHelp.open) return;
+    event.stopPropagation();
+    storeHelp.open = false;
+    storeHelp.querySelector('summary').focus();
+  });
+}
 const year = document.querySelector('#year');
 if (year) year.textContent = new Date().getFullYear();

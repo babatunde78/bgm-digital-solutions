@@ -29,3 +29,8 @@
 .product-comparison thead{background:var(--soft)}
 .product-comparison tbody a{text-decoration:underline;text-underline-offset:3px}
 .product-comparison td p{margin:6px 0 0;padding:0}
+.store-help{position:fixed;right:max(16px,env(safe-area-inset-right));bottom:max(16px,env(safe-area-inset-bottom));z-index:30;border:0}
+.store-help>summary{padding:12px 18px;min-height:44px;border-radius:24px;background:var(--ink);color:var(--white);box-shadow:0 4px 16px #17272030}
+.store-help-options{position:absolute;right:0;bottom:calc(100% + 8px);width:min(290px,calc(100vw - 32px));padding:8px 14px;background:var(--white);border:1px solid var(--line);border-radius:8px;box-shadow:0 4px 16px #17272025}
+.store-help-options a{display:flex;align-items:center;min-height:44px;padding:8px 0;font-size:.88rem;text-decoration:underline;text-underline-offset:3px}
+.store-help-options a+a{border-top:1px solid var(--line)}

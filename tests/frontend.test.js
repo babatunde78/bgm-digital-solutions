@@ -50,3 +50,24 @@ test('store and purchase support links use the supplied WhatsApp number',()=>{
     dom.window.close();
   }
 });
+test('help box opens the comparison and returns focus to the toggle on Escape',()=>{
+  const dom=new JSDOM(fs.readFileSync('index.html','utf8'),{url:'https://store.example',runScripts:'outside-only'});
+  const {window}=dom;
+  const document=window.document;
+  window.eval(fs.readFileSync('site.js','utf8'));
+  const help=document.querySelector('#store-help');
+  const comparison=document.querySelector('#compare');
+  comparison.hidden=false;
+  help.open=true;
+  help.querySelector('a[href="#compare"]').click();
+  assert.equal(comparison.open,true);
+  assert.equal(help.open,false);
+  assert.equal(document.activeElement,comparison.querySelector('summary'));
+  help.open=true;
+  const faqLink=help.querySelector('a[href="#faq"]');
+  faqLink.focus();
+  faqLink.dispatchEvent(new window.KeyboardEvent('keydown',{key:'Escape',bubbles:true}));
+  assert.equal(help.open,false);
+  assert.equal(document.activeElement,help.querySelector('summary'));
+  dom.window.close();
+});
