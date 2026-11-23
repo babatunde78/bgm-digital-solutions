@@ -1,0 +1,9 @@
+{
+  "name": "bgm-sales-settlement-reconciler",
+  "version": "0.2.0",
+  "private": true,
+  "description": "Local Excel transaction reconciliation utility",
+  "main": "main.js",
+  "scripts": { "start": "electron .", "test": "node --test tests/*.test.js", "samples": "node scripts/generate-samples.js" },
+  "devDependencies": { "electron": "45.2.3" }
+}
