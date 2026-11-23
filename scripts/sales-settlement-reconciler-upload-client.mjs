@@ -22,12 +22,6 @@ async function main() {
   const bytes = await readFile(join(release, filename));
   if (!entry || bytes.length !== entry.size || bytes.length !== 47931 || !/^[a-f0-9]{64}$/.test(entry.sha256)) throw new Error('Release package failed its local manifest check.');
   const headers = { Authorization: `Bearer ${token}`, 'x-vercel-protection-bypass': bypass, 'Content-Type': 'application/json' };
-  const preflight = await fetch(endpoint, {
-    method: 'POST', headers,
-    body: JSON.stringify({ type: 'blob.generate-presigned-url', payload: { pathname, clientPayload: token, multipart: true } }),
-    signal: AbortSignal.timeout(30000),
-  });
-  if (!preflight.ok) throw new Error(`Upload endpoint returned ${preflight.status}.`);
   const uploaded = await uploadPresigned(pathname, bytes, {
     access: 'private', handleUploadUrl: endpoint, clientPayload: token,
     headers: { Authorization: `Bearer ${token}`, 'x-vercel-protection-bypass': bypass },
