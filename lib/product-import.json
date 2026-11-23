@@ -1,5 +1,29 @@
 [
   {
+    "id": "questionnaire-data-checking",
+    "name": "Questionnaire Data Checking & Correction Workbook",
+    "category": "Research Tools",
+    "short": "Check questionnaire responses, record correction decisions and review the resulting dataset in Excel.",
+    "description": "A guided data checking package for first-time student researchers preparing one-row-per-respondent questionnaire data. Configure a data dictionary, paste responses, review flagged values, document and approve changes, then export checked data while retaining the original responses. The offline browser companion previews and stages CSV or XLSX files, and explores saved workbook findings with interactive filters and charts.\n\nIncludes the blank macro-free workbook, a clearly labelled fictional example, an offline dashboard companion, a sample CSV and a quick-start guide. The workbook is designed for desktop Excel 2021 and Microsoft 365, with up to 1,000 respondents, 50 variables and 1,000 correction entries. The companion accepts CSV or XLSX files up to 35 MB, with up to 100 source columns before mapping. The workflow supports local processing. It does not impute responses, remove outliers, detect questionnaire skip logic or provide an immutable audit trail. The editable correction log does not enforce access control. Review all suggestions against original source records.",
+    "features": [
+      "Data dictionary for IDs, categories, numbers, dates, required fields, ranges and missing-value codes",
+      "Issue register for missing, duplicate, invalid, unexpected and suspected duplicate responses",
+      "Separate correction log with explicit approval, rejection and ambiguity blocking",
+      "Checked data output that preserves raw questionnaire responses",
+      "Offline companion for CSV/XLSX import preview, column mapping and staged XLSX export",
+      "Clickable dashboard KPIs, issue charts, filters and saved-review drill-down",
+      "Blank workbook, fictional example, sample CSV and quick-start guide"
+    ],
+    "amounts": {
+      "NGN": 1500000
+    },
+    "status": "draft",
+    "delivery_ready": false,
+    "blob_pathnames": [
+      "questionnaire-data-checking/v1.0.0/questionnaire-data-checking-v1.0.0-customer.zip"
+    ]
+  },
+  {
     "id": "500-business-prompts",
     "name": "500 ChatGPT Prompts for Business Owners",
     "category": "Business Resources",

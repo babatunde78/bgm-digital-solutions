@@ -7,6 +7,7 @@ const path = require('node:path');
 const { JSDOM } = require('jsdom');
 
 const products = [
+  ['questionnaire-data-checking', 'questionnaire-data-checking-mockup-v1.png'],
   ['client-pack-assembler', 'client-pack-assembler-mockup.png'],
   ['contractor-cash-flow-planner', 'contractor-cash-flow-planner-mockup.jpg'],
   ['drinks-stock-customer-book', 'drinks-stock-customer-book-mockup-v2.jpg'],

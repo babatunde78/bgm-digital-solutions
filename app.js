@@ -6,6 +6,7 @@ const modal = $('#modal'), checkoutModal = $('#checkout-modal');
 const form = $('#checkout-form'), errorBox = $('#checkout-error'), submit = $('#checkout-submit');
 let selection = null, requestVersion = 0, lastFocus, audience = 'all';
 const presentations = {
+  'questionnaire-data-checking': { image: 'questionnaire-data-checking-mockup-v1', extension: 'png', width: 1536, height: 1024, format: 'Research data checking · Excel + offline browser companion', audience: 'For first-time student researchers preparing rectangular questionnaire datasets.' },
   'client-pack-assembler': { image: 'client-pack-assembler-mockup', extension: 'png', width: 1536, height: 1024, usdReference: 18.45, usdRateDate: '2026-11-17', usdRateSource: 'CBN central reference displayed by Canjean' },
   'contractor-cash-flow-planner': { image: 'contractor-cash-flow-planner-mockup', extension: 'jpg', width: 1200, height: 800, usdReference: 11.05, usdRateDate: '2026-11-17', usdRateSource: 'Proshare daily NAFEM rate (FMDQ source)' },
   'drinks-stock-customer-book': { image: 'drinks-stock-customer-book-mockup-v2', extension: 'jpg', width: 1200, height: 800, usdReference: 9.24, usdRateDate: '2026-11-15', usdRateSource: 'CEII USD/NGN mid-market reference' },

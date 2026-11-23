@@ -9,6 +9,7 @@ for (const file of assets) fs.copyFileSync(path.resolve(__dirname, '..', file), 
 fs.copyFileSync(path.resolve(__dirname, '../site.js'), path.join(output, 'site.js'));
 const images = ['bgm-guides-mockup','business-prompts','ai-side-hustles','remote-jobs','scholarships','upwork','five-guide-bundle','collections-bank','campus-bursary-a','campus-bursary-b','campus-bursary-full-excel','batch-and-balance','school-fee-reconciliation','aluminium-job-costing','bakery-recipe-costing','contractor-cash-flow-planner-mockup','drinks-stock-customer-book-mockup-v2','rental-income-arrears-ledger-mockup-v2'];
 fs.mkdirSync(path.join(output, 'assets'), { recursive: true });
+fs.copyFileSync(path.resolve(__dirname, '../assets/questionnaire-data-checking-mockup-v1.png'), path.join(output, 'assets', 'questionnaire-data-checking-mockup-v1.png'));
 for (const name of images) fs.copyFileSync(path.resolve(__dirname, '../assets', name + '.jpg'), path.join(output, 'assets', name + '.jpg'));
 fs.copyFileSync(path.resolve(__dirname, '../assets/campus-documents-pdf-mockup-v0.1.1.png'), path.join(output, 'assets/campus-documents-pdf-mockup-v0.1.1.png'));
 for (const name of ['paint-job-ledger-mockup','rent-clear-mockup']) fs.copyFileSync(path.resolve(__dirname, '../assets', name + '.png'), path.join(output, 'assets', name + '.png'));
