@@ -16,7 +16,8 @@ const presentations = {
   'campus-bursary-package-a': { image: 'campus-bursary-a', format: 'Student revenue & treasury · Excel', audience: 'For student-accounts and treasury teams that need traceable schedules from fee billing through receipt allocation and settlement review.' },
   'campus-bursary-package-b': { image: 'campus-bursary-b', format: 'Budget & expenditure control · Excel', audience: 'For bursary teams reviewing budgets, commitments, supplier bills, payments, advances and actual expenditure.' },
   'campus-bursary-full-excel': { image: 'campus-bursary-full-excel', format: 'Full bursary suite · Excel', audience: 'For institutions that want both operational packages plus manual ledger and control-account review schedules.' },
-  'campus-bursary-documents': { image: 'campus-documents-pdf-mockup-v0.1.1', extension: 'png', imageFit: 'contain', width: 1102, height: 1378, usdReference: 148.11, usdRateDate: '2026-11-10', usdRateSource: 'CBN central rate', format: 'Offline Windows document software', audience: 'A focused offline Windows tool for receipts, student statements and payment vouchers; separate from the broader Campus Excel suites.' }
+  'campus-bursary-documents': { image: 'campus-documents-pdf-mockup-v0.1.1', extension: 'png', imageFit: 'contain', width: 1102, height: 1378, usdReference: 148.11, usdRateDate: '2026-11-10', usdRateSource: 'CBN central rate', format: 'Offline Windows document software', audience: 'A focused offline Windows tool for receipts, student statements and payment vouchers; separate from the broader Campus Excel suites.' },
+  'questionnaire-scale-scoring': { image: 'questionnaire-scale-scoring-dashboard', width: 1536, height: 1024, imageAlt: 'Excel dashboard showing scale results for a fictional questionnaire', usdReference: 10.76, usdRateDate: '2026-11-24', usdRateSource: 'CBN central USD/NGN reference', format: 'Macro-free offline Excel workbook', audience: 'For researchers who have a documented questionnaire scoring specification.' }
 };
 
 function node(tag, text, className) {
@@ -58,7 +59,7 @@ function cover(product) {
   if (presentation?.image) {
     const image = document.createElement('img');
     image.src = 'assets/' + presentation.image + '.' + (presentation.extension || 'jpg');
-    image.alt = product.name + ' — illustrative product mockup';
+    image.alt = presentation.imageAlt || product.name + ' — illustrative product mockup';
     if (presentation.imageFit === 'contain') image.classList.add('cover-contained');
     image.width = presentation.width || 1200; image.height = presentation.height || 800; image.loading = 'lazy'; image.decoding = 'async';
     wrapper.append(image);
