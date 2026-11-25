@@ -35,7 +35,22 @@ const presentations = {
   'campus-bursary-package-a': { image: 'campus-bursary-a', format: 'Student revenue & treasury · Excel', audience: 'For student-accounts and treasury teams that need traceable schedules from fee billing through receipt allocation and settlement review.' },
   'campus-bursary-package-b': { image: 'campus-bursary-b', format: 'Budget & expenditure control · Excel', audience: 'For bursary teams reviewing budgets, commitments, supplier bills, payments, advances and actual expenditure.' },
   'campus-bursary-full-excel': { image: 'campus-bursary-full-excel', format: 'Full bursary suite · Excel', audience: 'For institutions that want both operational packages plus manual ledger and control-account review schedules.' },
-  'campus-bursary-documents': { image: 'campus-documents-pdf-mockup-v0.1.1', extension: 'png', imageFit: 'contain', width: 1102, height: 1378, usdReference: 148.11, usdRateDate: '2026-11-10', usdRateSource: 'CBN central rate', format: 'Offline Windows document software', audience: 'A focused offline Windows tool for receipts, student statements and payment vouchers; separate from the broader Campus Excel suites.' }
+  'campus-bursary-documents': { image: 'campus-documents-pdf-mockup-v0.1.1', extension: 'png', imageFit: 'contain', width: 1102, height: 1378, usdReference: 148.11, usdRateDate: '2026-11-10', usdRateSource: 'CBN central rate', format: 'Offline Windows document software', audience: 'A focused offline Windows tool for receipts, student statements and payment vouchers; separate from the broader Campus Excel suites.' },
+  'client-pack-assembler': { usdReference: 18.45, usdRateDate: '2026-11-17', usdRateSource: 'CBN central reference displayed by Canjean' },
+  'drinks-stock-customer-book': { usdReference: 9.24, usdRateDate: '2026-11-15', usdRateSource: 'CEII USD/NGN mid-market reference' },
+  'aluminium-job-costing': { usdReference: 18.49, usdRateDate: '2026-11-14', usdRateSource: 'CEII mid-market reference (ExchangeRate-API)' },
+  'school-fee-reconciliation': { usdReference: 7.39, usdRateDate: '2026-11-14', usdRateSource: 'CEII mid-market reference (ExchangeRate-API)' },
+  'paint-job-ledger': { usdReference: 29 },
+  'rent-clear': { usdReference: 29 },
+  'rental-income-arrears-ledger': { usdReference: 9.30, usdRateDate: '2026-11-15', usdRateSource: 'Public USD/NGN exchange-rate reference' },
+  'furniture-quote-invoice': { usdReference: 14.82, usdRateDate: '2026-11-17', usdRateSource: 'ForexInvestors indicative USD/NGN reference' },
+  'batch-and-balance': { usdReference: 16.57, usdRateDate: '2026-11-11', usdRateSource: 'CBN central rate' },
+  'contractor-cash-flow-planner': { usdReference: 11.05, usdRateDate: '2026-11-17', usdRateSource: 'Proshare daily NAFEM rate (FMDQ source)' },
+  'sales-settlement-reconciler': { usdReference: 11.07, usdRateDate: '2026-11-17', usdRateSource: 'CBN central reference, displayed by Canjean' },
+  'herbal-plant-research-workbook': { usdReference: 25.11, usdRateDate: '2026-11-24', usdRateSource: 'published rate of NGN 1,394.12 per US dollar' },
+  'nigeria-small-employer-payroll': { usdReference: 18.35, usdRateDate: '2026-11-18', usdRateSource: 'CBN central reference reported at ₦1,362.73/USD' },
+  'questionnaire-research-design-alignment': { usdReference: 5.38, usdRateDate: '2026-11-23', usdRateSource: 'reported Nigerian Foreign Exchange Market closing rate of ₦1,394.01 per US dollar' },
+  'questionnaire-scale-scoring': { usdReference: 10.76, usdRateDate: '2026-11-24', usdRateSource: 'CBN central USD/NGN reference' },
 };
 
 function node(tag, text, className) {
