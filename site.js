@@ -28,5 +28,17 @@ if (menu && navigation) {
     menu.focus();
   });
 }
+const storeHelp = document.querySelector('#store-help');
+if (storeHelp) {
+  storeHelp.addEventListener('click', event => {
+    if (event.target.closest('a')) storeHelp.open = false;
+  });
+  storeHelp.addEventListener('keydown', event => {
+    if (event.key !== 'Escape' || !storeHelp.open) return;
+    event.preventDefault();
+    storeHelp.open = false;
+    storeHelp.querySelector('summary').focus();
+  });
+}
 const year = document.querySelector('#year');
 if (year) year.textContent = new Date().getFullYear();
