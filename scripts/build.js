@@ -9,6 +9,7 @@ for (const file of assets) fs.copyFileSync(path.resolve(__dirname, '..', file), 
 fs.copyFileSync(path.resolve(__dirname, '../site.js'), path.join(output, 'site.js'));
 const images = ['bgm-guides-mockup','business-prompts','ai-side-hustles','remote-jobs','scholarships','upwork','five-guide-bundle','collections-bank','campus-bursary-a','campus-bursary-b','campus-bursary-full-excel','batch-and-balance','contractor-cash-flow-planner-mockup','school-fee-reconciliation','social-seller-bookkeeping'];
 fs.mkdirSync(path.join(output, 'assets'), { recursive: true });
+for (const file of ['campus-package-a-dashboard.jpg', 'campus-package-b-dashboard.jpg', 'campus-full-excel-dashboard.jpg']) fs.copyFileSync(path.resolve(__dirname, '../assets', file), path.join(output, 'assets', file));
 for (const name of images) fs.copyFileSync(path.resolve(__dirname, '../assets', name + '.jpg'), path.join(output, 'assets', name + '.jpg'));
 const productMockups = [
   'herbal-research-analysis-toolkit-mockup.jpg',
