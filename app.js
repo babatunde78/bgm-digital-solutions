@@ -6,6 +6,10 @@ const modal = $('#modal'), checkoutModal = $('#checkout-modal');
 const form = $('#checkout-form'), errorBox = $('#checkout-error'), submit = $('#checkout-submit');
 let selection = null, requestVersion = 0, lastFocus, audience = 'all';
 const presentations = {
+  'batch-and-balance': { image: 'batch-and-balance' },
+  'contractor-cash-flow-planner': { image: 'contractor-cash-flow-planner-mockup', extension: 'jpg', width: 1200, height: 800 },
+  'school-fee-reconciliation': { image: 'school-fee-reconciliation' },
+  'social-seller-bookkeeping': { image: 'social-seller-bookkeeping' },
   '500-business-prompts': { image: 'business-prompts', usdReference: 9, format: 'Business resource', audience: 'For business owners planning, marketing and running their business.' },
   'ai-side-hustles': { image: 'ai-side-hustles', usdReference: 15, format: 'Business guide', audience: 'For people exploring and validating an AI-assisted service offer.' },
   'remote-job-2026-2027': { image: 'remote-jobs', usdReference: 12, format: 'Career guide', audience: 'For job seekers preparing applications and screening remote opportunities.' },
