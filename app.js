@@ -165,6 +165,32 @@ function renderDetail() {
   access.append(node('h2', 'Your files & support'), node('p', 'After payment, return to the confirmation page to download your files. Keep the page in the same browser. For access on another device, contact support with your payment reference and checkout email.'));
   const support = node('a', 'Downloads, support & 7-day refunds →', 'text-link'); support.href = 'support.html'; access.append(support);
   content.append(included, requirements);
+  const campusDashboardVideoPosters = {
+    'campus-bursary-package-a': 'assets/campus-package-a-dashboard.jpg',
+    'campus-bursary-package-b': 'assets/campus-package-b-dashboard.jpg',
+    'campus-bursary-full-excel': 'assets/campus-full-excel-dashboard.jpg'
+  };
+  const campusPoster = campusDashboardVideoPosters[product.id];
+  if (campusPoster) {
+    const preview = node('section', undefined, 'campus-video-preview');
+    const video = document.createElement('video');
+    video.controls = true;
+    video.playsInline = true;
+    video.preload = 'none';
+    video.poster = campusPoster;
+    video.setAttribute('aria-label', 'Silent Campus Bursary dashboard preview');
+    const source = document.createElement('source');
+    source.src = 'https://assets.vidiq.com/compositions/4c3f39ac-4f49-4706-9de1-b7996cb7c215/zccp673aa19tyfsoejpw061m.mp4';
+    source.type = 'video/mp4';
+    video.append(source);
+    const fileLink = node('a', 'Open the video preview in a new tab', 'text-link');
+    fileLink.href = source.src;
+    fileLink.target = '_blank';
+    fileLink.rel = 'noopener noreferrer';
+    preview.append(node('p', 'Short video preview', 'eyebrow'), node('h2', 'Preview the Campus dashboards'), video,
+      node('p', 'This silent preview shows the layouts of Packages A, B and Full Excel. All figures are fictional demo data.', 'small'), fileLink);
+    content.append(preview);
+  }
   if (product.status !== 'service') content.append(access);
   if (product.id === 'five-guide-bundle') {
     const ids = ['500-business-prompts', 'ai-side-hustles', 'remote-job-2026-2027', 'scholarships-abroad', 'first-upwork-client'];

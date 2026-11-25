@@ -17,3 +17,5 @@
 .cover img.cover-contained{object-fit:contain;padding:10px;background:var(--paper)}
 
 .detail-content .product-description{white-space:pre-line}
+
+.campus-video-preview{margin-block:2.5rem;padding:clamp(1.25rem,3vw,2rem);border:1px solid var(--line);background:linear-gradient(145deg,var(--soft),var(--white))}.campus-video-preview video{display:block;width:100%;height:auto;aspect-ratio:16/9;background:var(--ink);border:1px solid var(--line)}.campus-video-preview .small{max-width:70ch;margin-top:.85rem}
