@@ -37,6 +37,12 @@ const presentations = {
   'campus-bursary-full-excel': { image: 'campus-bursary-full-excel', format: 'Full bursary suite · Excel', audience: 'For institutions that want both operational packages plus manual ledger and control-account review schedules.' },
   'campus-bursary-documents': { image: 'campus-documents-pdf-mockup-v0.1.1', extension: 'png', imageFit: 'contain', width: 1102, height: 1378, usdReference: 148.11, usdRateDate: '2026-11-10', usdRateSource: 'CBN central rate', format: 'Offline Windows document software', audience: 'A focused offline Windows tool for receipts, student statements and payment vouchers; separate from the broader Campus Excel suites.' }
 };
+const campusDashboardPreviews = {
+  'campus-bursary-documents': ['campus-documents-dashboard.jpg', 'Document work queue'],
+  'campus-bursary-package-a': ['campus-package-a-dashboard.jpg', 'Collections and reconciliation'],
+  'campus-bursary-package-b': ['campus-package-b-dashboard.jpg', 'Budget and payment control'],
+  'campus-bursary-full-excel': ['campus-full-excel-dashboard.jpg', 'Bursar’s overview and ledger control checks']
+};
 
 function node(tag, text, className) {
   const element = document.createElement(tag);
@@ -190,6 +196,30 @@ function renderDetail() {
     preview.append(node('p', 'Short video preview', 'eyebrow'), node('h2', 'Preview the Campus dashboards'), video,
       node('p', 'This silent preview shows the layouts of Packages A, B and Full Excel. All figures are fictional demo data.', 'small'), fileLink);
     content.append(preview);
+  }
+  const dashboardPreview = campusDashboardPreviews[product.id];
+  if (dashboardPreview) {
+    const [file, title] = dashboardPreview;
+    const previewUrl = 'assets/' + file;
+    const section = node('section', undefined, 'dashboard-preview');
+    const figure = node('figure');
+    const image = document.createElement('img');
+    image.src = previewUrl;
+    image.alt = title + ' dashboard with fictional demonstration data';
+    image.loading = 'lazy';
+    image.decoding = 'async';
+    const fullSize = node('a');
+    fullSize.href = previewUrl;
+    fullSize.setAttribute('aria-label', 'Open full-size ' + title + ' dashboard preview');
+    fullSize.append(image);
+    const caption = product.id === 'campus-bursary-documents'
+      ? 'Fictional demonstration view of the offline document workflow.'
+      : product.features.includes('Redesigned dashboard included')
+        ? 'Dashboard shown with fictional data.'
+        : 'Dashboard design preview with fictional data. The current download uses the previous layout.';
+    figure.append(fullSize, node('figcaption', caption));
+    section.append(node('h2', title), figure);
+    content.append(section);
   }
   if (product.status !== 'service') content.append(access);
   if (product.id === 'five-guide-bundle') {

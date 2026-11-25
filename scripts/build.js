@@ -30,6 +30,20 @@ const productMockups = [
 ];
 for (const file of productMockups) fs.copyFileSync(path.resolve(__dirname, '../assets', file), path.join(output, 'assets', file));
 fs.copyFileSync(path.resolve(__dirname, '../assets/campus-documents-pdf-mockup-v0.1.1.png'), path.join(output, 'assets/campus-documents-pdf-mockup-v0.1.1.png'));
+const appSource = fs.readFileSync(path.resolve(__dirname, '../app.js'), 'utf8');
+const presentationBlock = appSource.match(/const presentations = \{([\s\S]*?)\n\};/);
+if (!presentationBlock) throw new Error('Product presentation map is missing from app.js.');
+for (const [, image, extension] of presentationBlock[1].matchAll(/image: '([^']+)'(?:, extension: '([^']+)')?/g)) {
+  const file = image + '.' + (extension || 'jpg');
+  const destination = path.join(output, 'assets', file);
+  if (!fs.existsSync(destination)) fs.copyFileSync(path.resolve(__dirname, '../assets', file), destination);
+}
+const dashboardPreviewBlock = appSource.match(/const campusDashboardPreviews = \{([\s\S]*?)\n\};/);
+if (!dashboardPreviewBlock) throw new Error('Campus dashboard preview map is missing from app.js.');
+for (const [, file] of dashboardPreviewBlock[1].matchAll(/: \['([^']+\.jpg)'/g)) {
+  const destination = path.join(output, 'assets', file);
+  if (!fs.existsSync(destination)) fs.copyFileSync(path.resolve(__dirname, '../assets', file), destination);
+}
 const sampleDir = path.join(output, 'assets', 'campus-documents-samples');
 fs.mkdirSync(sampleDir, { recursive: true });
 for (const name of ['receipt', 'statement', 'voucher']) fs.copyFileSync(path.resolve(__dirname, '../assets/campus-documents-samples', name + '.pdf'), path.join(sampleDir, name + '.pdf'));
