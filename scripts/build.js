@@ -10,6 +10,24 @@ fs.copyFileSync(path.resolve(__dirname, '../site.js'), path.join(output, 'site.j
 const images = ['bgm-guides-mockup','business-prompts','ai-side-hustles','remote-jobs','scholarships','upwork','five-guide-bundle','collections-bank','campus-bursary-a','campus-bursary-b','campus-bursary-full-excel','batch-and-balance','contractor-cash-flow-planner-mockup','school-fee-reconciliation','social-seller-bookkeeping'];
 fs.mkdirSync(path.join(output, 'assets'), { recursive: true });
 for (const name of images) fs.copyFileSync(path.resolve(__dirname, '../assets', name + '.jpg'), path.join(output, 'assets', name + '.jpg'));
+const productMockups = [
+  'herbal-research-analysis-toolkit-mockup.jpg',
+  'questionnaire-research-design-alignment-mockup.jpg',
+  'questionnaire-scale-scoring-dashboard.jpg',
+  'questionnaire-data-checking-mockup-v1.png',
+  'nigeria-small-employer-payroll-mockup-v1.png',
+  'client-pack-assembler-mockup.png',
+  'sales-settlement-reconciler-mockup.png',
+  'furniture-quote-invoice-mockup.png',
+  'training-certificate-generator-v1.1.0.png',
+  'rental-income-arrears-ledger-mockup-v2.jpg',
+  'drinks-stock-customer-book-mockup-v2.jpg',
+  'bakery-recipe-costing.jpg',
+  'aluminium-job-costing.jpg',
+  'paint-job-ledger-mockup.png',
+  'rent-clear-mockup.png',
+];
+for (const file of productMockups) fs.copyFileSync(path.resolve(__dirname, '../assets', file), path.join(output, 'assets', file));
 fs.copyFileSync(path.resolve(__dirname, '../assets/campus-documents-pdf-mockup-v0.1.1.png'), path.join(output, 'assets/campus-documents-pdf-mockup-v0.1.1.png'));
 const sampleDir = path.join(output, 'assets', 'campus-documents-samples');
 fs.mkdirSync(sampleDir, { recursive: true });

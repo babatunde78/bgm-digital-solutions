@@ -6,6 +6,21 @@ const modal = $('#modal'), checkoutModal = $('#checkout-modal');
 const form = $('#checkout-form'), errorBox = $('#checkout-error'), submit = $('#checkout-submit');
 let selection = null, requestVersion = 0, lastFocus, audience = 'all';
 const presentations = {
+  'herbal-plant-research-workbook': { image: 'herbal-research-analysis-toolkit-mockup', width: 1536, height: 1024, imageAlt: 'Illustrative cover of the Herbal Research Analysis Toolkit beside a pressed leaf and sample vial' },
+  'questionnaire-research-design-alignment': { image: 'questionnaire-research-design-alignment-mockup', width: 1536, height: 1024, imageAlt: 'Illustrative mockup of the Questionnaire Research Design Alignment Pack cover and printable worksheets' },
+  'questionnaire-scale-scoring': { image: 'questionnaire-scale-scoring-dashboard', width: 1536, height: 1024, imageAlt: 'Excel dashboard showing scale results for a fictional questionnaire' },
+  'questionnaire-data-checking': { image: 'questionnaire-data-checking-mockup-v1', extension: 'png', width: 1536, height: 1024 },
+  'nigeria-small-employer-payroll': { image: 'nigeria-small-employer-payroll-mockup-v1', extension: 'png', width: 1536, height: 1024 },
+  'client-pack-assembler': { image: 'client-pack-assembler-mockup', extension: 'png', width: 1536, height: 1024 },
+  'sales-settlement-reconciler': { image: 'sales-settlement-reconciler-mockup', extension: 'png', width: 1536, height: 1024 },
+  'furniture-quote-invoice': { image: 'furniture-quote-invoice-mockup', extension: 'png', width: 1536, height: 1024 },
+  'training-certificate-generator': { image: 'training-certificate-generator-v1.1.0', extension: 'png', width: 1536, height: 1024 },
+  'rental-income-arrears-ledger': { image: 'rental-income-arrears-ledger-mockup-v2', extension: 'jpg', width: 1200, height: 800 },
+  'drinks-stock-customer-book': { image: 'drinks-stock-customer-book-mockup-v2', extension: 'jpg', width: 1200, height: 800 },
+  'bakery-recipe-costing': { image: 'bakery-recipe-costing', width: 1536, height: 1024 },
+  'aluminium-job-costing': { image: 'aluminium-job-costing', width: 1536, height: 1024 },
+  'paint-job-ledger': { image: 'paint-job-ledger-mockup', extension: 'png', width: 1536, height: 1024 },
+  'rent-clear': { image: 'rent-clear-mockup', extension: 'png', width: 1536, height: 1024 },
   'batch-and-balance': { image: 'batch-and-balance' },
   'contractor-cash-flow-planner': { image: 'contractor-cash-flow-planner-mockup', extension: 'jpg', width: 1200, height: 800 },
   'school-fee-reconciliation': { image: 'school-fee-reconciliation' },
